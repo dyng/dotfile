@@ -1,0 +1,13 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=3736
+
+Fuzzy file, buffer, MRU, and tag finder with regexp support.
+
+    * Written in pure Vimscript for MacVim and Vim 7.0+.
+    * Full support for Vims regexp as search pattern.
+    * Built-in Most Recently Used (MRU) files monitoring.
+    * Built-in project's root finder.
+
+    Homepage with screenshot: http://kien.github.com/ctrlp.vim/
+
+    Git repository:            https://github.com/kien/ctrlp.vim
+    Mercurial repository: https://bitbucket.org/kien/ctrlp.vim

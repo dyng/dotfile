@@ -14,23 +14,21 @@ Bundle 'gmarik/vundle'
 
 Bundle 'mileszs/ack.vim'
 Bundle 'G-virus/auto_mkdir'
-"Bundle 'G-virus/AutoTag'
 Bundle 'G-virus/bufexplorer.zip'
-Bundle 'wincent/Command-T'
+Bundle 'kien/ctrlp.vim'
+Bundle 'AutoClose'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'sjl/gundo.vim'
 Bundle 'tsaleh/vim-matchit'
-Bundle 'fholgado/minibufexpl.vim'
-Bundle 'mru.vim'
+""Bundle 'fholgado/minibufexpl.vim'
 Bundle 'Shougo/neocomplcache'
 Bundle 'rename.vim'
-"Bundle 'garbas/vim-snipmate'
-"Bundle 'tsaleh/vim-supertab'
 Bundle 'tpope/vim-surround'
 Bundle 'godlygeek/tabular'
 Bundle 'taglist.vim'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'VimIM'
+Bundle 'tpope/vim-fugitive'
 Bundle 'G-virus/YankRing.vim'
 Bundle 'mattn/zencoding-vim'
 
@@ -193,15 +191,6 @@ function! InvokeTL()
 endfunction
 nnoremap <silent>gl :call InvokeTL()<CR>
 
-"MRU
-if has('win32')
-    let MRU_File = $VIM.'\vimfiles\bundle\mru.vim\_vim_mru_files'
-else
-    let MRU_File = $HOME.'/.vim/bundle/mru.vim/.vim_mru_files'
-endif
-let MRU_Add_Menu = 0
-nnoremap <silent>gm :MRU<CR>
-
 "BufExplorer
 function! InvokeBE()
     if v:count == 0
@@ -214,13 +203,17 @@ nnoremap <silent><expr> <CR> &buftype != '' ? "<CR>" : ":<C-U>call InvokeBE()<CR
 
 "minibufexplorer
 
-"Command-T
-nnoremap <silent> gc :CommandT<CR>
-nnoremap <silent> gC :exec 'CommandT ' . @c<CR>
-augroup CommandTExtension
-  autocmd!
-  autocmd FocusGained * CommandTFlush
-  autocmd BufWritePost * CommandTFlush
+"ctrlp
+nnoremap <silent> gl :CtrlP<CR>
+nnoremap <silent> gL :exec 'CtrlP ' . getcwd()<CR>
+nnoremap <silent> gb :CtrlPBuffer<CR>
+nnoremap <silent> gm :CtrlPMRU<CR>
+nnoremap <silent> go :CtrlPMixed<CR>
+let g:ctrlp_mruf_max = 800
+let g:ctrlp_mruf_case_sensitive = 0
+augroup CtrlPExtension
+  autocmd FocusGained * CtrlPClearCache
+  autocmd BufWritePost * CtrlPClearCache
 augroup END
 
 "yankring
@@ -251,5 +244,7 @@ vnoremap <silent> <leader>: :Tabularize /:<CR>
 nnoremap <silent> <leader>> :Tabularize /=><CR>
 vnoremap <silent> <leader>> :Tabularize /=><CR>
 
-" AutoTag
-let g:autotagStopAt = $HOME.'/Project/\w+' "Python Regex
+"Fugitive
+nnoremap <silent> gs :Gstatus<CR>
+nnoremap <silent> gC :Gcommit<CR>
+nnoremap <silent> <leader>g :Git 
