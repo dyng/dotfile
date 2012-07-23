@@ -14,7 +14,7 @@ Bundle 'gmarik/vundle'
 
 Bundle 'mileszs/ack.vim'
 Bundle 'G-virus/auto_mkdir'
-Bundle 'G-virus/AutoTag'
+"Bundle 'G-virus/AutoTag'
 Bundle 'G-virus/bufexplorer.zip'
 Bundle 'wincent/Command-T'
 Bundle 'Lokaltog/vim-easymotion'
