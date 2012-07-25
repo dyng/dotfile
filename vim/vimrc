@@ -254,3 +254,6 @@ vnoremap <silent> <leader>> :Tabularize /=><CR>
 nnoremap <silent> gs :Gstatus<CR>
 nnoremap <silent> gC :Gcommit<CR>
 nnoremap <silent> <leader>g :Git 
+
+"Vundle
+nnoremap <leader>b :BundleList<CR>
