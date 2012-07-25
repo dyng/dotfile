@@ -244,14 +244,15 @@ nnoremap <leader>b :BundleList<CR>
 
 "Tagbar
 let g:tagbar_left = 1
+let g:tagbar_width = 30
 
-let s:previous_window = 1
 function! InvokeTB()
     if bufname("%") != "__Tagbar__"
-        let s:previous_window = winnr()
+        let s:previous_bufname = bufname("%")
         exec "TagbarOpen fj"
     else
+        silent let s:previous_window = bufwinnr(s:previous_bufname)
         exec s:previous_window . "wincmd w"
     endif
 endfunction
-nnoremap gn :call InvokeTB()<CR>
+nnoremap <silent> gn :call InvokeTB()<CR>
