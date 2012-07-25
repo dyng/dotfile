@@ -211,6 +211,12 @@ nnoremap <silent> gm :CtrlPMRU<CR>
 nnoremap <silent> go :CtrlPMixed<CR>
 let g:ctrlp_mruf_max = 800
 let g:ctrlp_mruf_case_sensitive = 0
+let g:ctrlp_switch_buffer = 0
+let g:ctrlp_custom_ignore = {
+  \ 'dir':  '\.neocon$',
+  \ 'file': '',
+  \ 'link': '',
+  \ }
 augroup CtrlPExtension
   autocmd FocusGained * CtrlPClearCache
   autocmd BufWritePost * CtrlPClearCache
