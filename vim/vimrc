@@ -16,7 +16,6 @@ Bundle 'mileszs/ack.vim'
 Bundle 'G-virus/auto_mkdir'
 Bundle 'G-virus/bufexplorer.zip'
 Bundle 'kien/ctrlp.vim'
-"Bundle 'AutoClose'
 Bundle 'Lokaltog/vim-easymotion'
 "Bundle 'G-virus/CommentReader'
 Bundle 'sjl/gundo.vim'
@@ -27,7 +26,6 @@ Bundle 'Shougo/neocomplcache'
 Bundle 'rename.vim'
 Bundle 'tpope/vim-surround'
 Bundle 'godlygeek/tabular'
-Bundle 'taglist.vim'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'VimIM'
 Bundle 'tpope/vim-fugitive'
@@ -177,21 +175,6 @@ let g:SuperTabMappingBackward = '<tab>'
 
 "VimIM
 let g:vimim_map="no-gi"
-
-"Taglist
-let Tlist_Exit_OnlyWindow = 1
-let Tlist_Show_One_File = 1
-
-let s:previous_window = 1
-function! InvokeTL()
-    if bufname("%") != "__Tag_List__"
-        let s:previous_window = winnr()
-        exec "TlistOpen"
-    else
-        exec s:previous_window . "wincmd w"
-    endif
-endfunction
-nnoremap <silent>gl :call InvokeTL()<CR>
 
 "BufExplorer
 function! InvokeBE()
