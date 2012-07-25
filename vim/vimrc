@@ -16,11 +16,13 @@ Bundle 'mileszs/ack.vim'
 Bundle 'G-virus/auto_mkdir'
 Bundle 'G-virus/bufexplorer.zip'
 Bundle 'kien/ctrlp.vim'
-Bundle 'AutoClose'
+"Bundle 'AutoClose'
 Bundle 'Lokaltog/vim-easymotion'
+"Bundle 'G-virus/CommentReader'
 Bundle 'sjl/gundo.vim'
 Bundle 'tsaleh/vim-matchit'
-""Bundle 'fholgado/minibufexpl.vim'
+Bundle 'Tagbar'
+"Bundle 'fholgado/minibufexpl.vim'
 Bundle 'Shougo/neocomplcache'
 Bundle 'rename.vim'
 Bundle 'tpope/vim-surround'
@@ -206,7 +208,6 @@ nnoremap <silent><expr> <CR> &buftype != '' ? "<CR>" : ":<C-U>call InvokeBE()<CR
 "ctrlp
 nnoremap <silent> gl :CtrlP<CR>
 nnoremap <silent> gL :exec 'CtrlP ' . getcwd()<CR>
-nnoremap <silent> gb :CtrlPBuffer<CR>
 nnoremap <silent> gm :CtrlPMRU<CR>
 nnoremap <silent> go :CtrlPMixed<CR>
 let g:ctrlp_mruf_max = 800
@@ -257,3 +258,17 @@ nnoremap <silent> <leader>g :Git
 
 "Vundle
 nnoremap <leader>b :BundleList<CR>
+
+"Tagbar
+let g:tagbar_left = 1
+
+let s:previous_window = 1
+function! InvokeTB()
+    if bufname("%") != "__Tagbar__"
+        let s:previous_window = winnr()
+        exec "TagbarOpen fj"
+    else
+        exec s:previous_window . "wincmd w"
+    endif
+endfunction
+nnoremap gn :call InvokeTB()<CR>
