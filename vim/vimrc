@@ -23,6 +23,7 @@ Bundle 'tsaleh/vim-matchit'
 Bundle 'Tagbar'
 "Bundle 'fholgado/minibufexpl.vim'
 Bundle 'Shougo/neocomplcache'
+Bundle 'Shougo/neocomplcache-snippets_complete'
 Bundle 'rename.vim'
 Bundle 'tpope/vim-surround'
 Bundle 'godlygeek/tabular'
@@ -152,26 +153,36 @@ let g:neocomplcache_enable_ignore_case = 0
 let g:neocomplcache_enable_smart_case = 0
 let g:neocomplcache_enable_camel_case_completion = 1
 let g:neocomplcache_enable_underbar_completion = 1
+let g:neocomplcache_enable_auto_delimiter = 1
 if !exists('g:neocomplcache_keyword_patterns')
     let g:neocomplcache_keyword_patterns = {}
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
 function! s:MiniSuperTab()
-    if pumvisible()
-        return "\<C-n>"
-    elseif neocomplcache#sources#snippets_complete#expandable()
-        return "\<Plug>(neocomplcache_snippets_expand)"
+    if neocomplcache#sources#snippets_complete#expandable()
+        if pumvisible()
+            call neocomplcache#cancel_popup()
+            return
+        else
+            return "\<Plug>(neocomplcache_snippets_expand)"
+        endif
     else
-        return "\<Tab>"
+        if pumvisible()
+            return "\<C-n>"
+        else
+            return "\<Tab>"
+        endif
     endif
 endfunction
-imap <expr><tab> <SID>MiniSuperTab()
+imap <expr><Tab> <SID>MiniSuperTab()
 
-"SuperTab
-let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabMappingForward = '<s-tab>'
-let g:SuperTabMappingBackward = '<tab>'
+"补全时空格接受匹配+空格
+inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() . "<Space>" : "<Space>"
+"补全时Enter接收匹配
+inoremap <expr><Enter> pumvisible() ? neocomplcache#close_popup() : "\<Enter>"
+"补全时Esc结束补全
+inoremap <expr><Esc>   pumvisible() ? neocomplcache#cancel_popup() : "\<Esc>"
 
 "VimIM
 let g:vimim_map="no-gi"
