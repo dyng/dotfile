@@ -216,7 +216,6 @@ endif
 nnoremap <silent> gy :YRShow<CR>
 
 "gundo
-let g:gundo_right = 1
 let g:gundo_close_on_revert = 1
 nnoremap <silent> gG :GundoToggle<CR>
 
@@ -240,7 +239,7 @@ nnoremap <silent> gC :Gcommit<CR>
 nnoremap <silent> <leader>g :Git 
 
 "Vundle
-nnoremap <leader>b :BundleList<CR>
+nnoremap <leader>v :BundleList<CR>
 
 "Tagbar
 let g:tagbar_left = 1
