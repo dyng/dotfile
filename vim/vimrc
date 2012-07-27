@@ -284,7 +284,7 @@ if has('win32')
 else
     let g:session_directory = $HOME . '/.vim-infos/vim-session'
 endif
-let g:session_autoload = 'no'
+let g:session_autoload = 'prompt'
 let g:session_autosave = 'yes'
 let g:session_command_aliases = 1
 " }
