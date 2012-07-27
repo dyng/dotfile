@@ -22,6 +22,7 @@ Bundle 'Shougo/neocomplcache-snippets_complete'
 "Bundle 'scrooloose/syntastic'
 Bundle 'rename.vim'
 Bundle 'tpope/vim-surround'
+Bundle 'xolox/vim-session'
 Bundle 'godlygeek/tabular'
 Bundle 'Lokaltog/vim-powerline'
 Bundle 'VimIM'
@@ -223,9 +224,9 @@ augroup END
 " yankring {
 let g:yankring_min_element_length = 2
 if has('win32')
-    let g:yankring_history_dir = $VIM.'\vimfiles\bundle\YankRing.vim'
+    let g:yankring_history_dir = $HOME.'\_vim-infos\YankRing.vim'
 else
-    let g:yankring_history_dir = $HOME.'/.vim/bundle/YankRing.vim'
+    let g:yankring_history_dir = $HOME.'/.vim-infos/YankRing.vim'
 endif
 nnoremap <silent> gy :YRShow<CR>
 " }
@@ -275,6 +276,18 @@ function! InvokeTB()
     endif
 endfunction
 nnoremap <silent> gn :call InvokeTB()<CR>
+" }
+
+" Session {
+if has('win32')
+    let g:session_directory = $HOME . '\_vim-infos\vim-session'
+else
+    let g:session_directory = $HOME . '/.vim-infos/vim-session'
+endif
+let g:session_autoload = 'no'
+let g:session_autosave = 'yes'
+let g:session_command_aliases = 1
+" }
 " }
 
 " vim: set foldmarker={,} foldlevel=0 foldmethod=marker spell:
