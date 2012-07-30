@@ -11,6 +11,7 @@ Bundle 'mileszs/ack.vim'
 Bundle 'gvirus/auto_mkdir'
 Bundle 'gvirus/bufexplorer.zip'
 Bundle 'kien/ctrlp.vim'
+Bundle 'vim-scripts/mru.vim'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'gvirus/CommentReader'
 Bundle 'sjl/gundo.vim'
@@ -287,6 +288,16 @@ endif
 let g:session_autoload = 'prompt'
 let g:session_autosave = 'yes'
 let g:session_command_aliases = 1
+" }
+
+" MRU {
+if has('win32')
+    let MRU_File = $HOME.'\_vim-infos\mru\_vim_mru_files'
+else
+    let MRU_File = $HOME.'/.vim-infos/mru/.vim_mru_files'
+endif
+let MRU_Add_Menu = 0
+nnoremap <silent>gm :MRU<CR>
 " }
 " }
 
