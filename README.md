@@ -8,3 +8,4 @@ list
 - vim
 - pentadactyl
 - shell
+- irssi
