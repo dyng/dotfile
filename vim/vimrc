@@ -26,7 +26,7 @@ Bundle 'tpope/vim-surround'
 Bundle 'xolox/vim-session'
 Bundle 'godlygeek/tabular'
 Bundle 'Lokaltog/vim-powerline'
-Bundle 'vim-scripts/VimIM'
+"Bundle 'vim-scripts/VimIM'
 Bundle 'tpope/vim-fugitive'
 Bundle 'gvirus/YankRing.vim'
 Bundle 'mattn/zencoding-vim'
@@ -102,6 +102,7 @@ inoremap <Home> <C-O>g^
 inoremap <End>  <c-O>g$
 " 快速翻页
 nnoremap <Space> <C-D>
+vnoremap <Space> <C-D>
 " 复制至行尾
 nnoremap Y y$
 " 长行移动
