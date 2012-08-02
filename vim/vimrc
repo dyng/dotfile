@@ -13,7 +13,7 @@ Bundle 'gvirus/bufexplorer.zip'
 Bundle 'kien/ctrlp.vim'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'Lokaltog/vim-easymotion'
-Bundle 'gvirus/CommentReader'
+"Bundle 'gvirus/CommentReader'
 Bundle 'sjl/gundo.vim'
 Bundle 'tsaleh/vim-matchit'
 Bundle 'vim-scripts/Tagbar'
@@ -164,8 +164,7 @@ let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 function! s:MiniSuperTab()
     if neocomplcache#sources#snippets_complete#expandable()
         if pumvisible()
-            call neocomplcache#cancel_popup()
-            return
+            return "\<C-O>:call neocomplcache#cancel_popup()\<CR>"
         else
             return "\<Plug>(neocomplcache_snippets_expand)"
         endif
@@ -303,3 +302,4 @@ nnoremap <silent>gm :MRU<CR>
 " }
 
 " vim: set foldmarker={,} foldlevel=0 foldmethod=marker spell:
+
