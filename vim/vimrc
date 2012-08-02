@@ -234,7 +234,7 @@ nnoremap <silent> gy :YRShow<CR>
 
 " gundo {
 let g:gundo_close_on_revert = 1
-nnoremap <silent> gG :GundoToggle<CR>
+nnoremap <silent> <leader>u :GundoToggle<CR>
 " }
 
 " zen-coding {
@@ -256,8 +256,6 @@ vnoremap <silent> <leader>> :Tabularize /=><CR>
 
 " Fugitive {
 nnoremap <silent> gs :Gstatus<CR>
-nnoremap <silent> gC :Gcommit<CR>
-nnoremap <silent> <leader>g :Git 
 " }
 
 " Vundle {
