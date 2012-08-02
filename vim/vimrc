@@ -213,7 +213,7 @@ let g:ctrlp_mruf_case_sensitive = 0
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\.neocon$\|\.git$\|\.hg$\|\.svn$',
-  \ 'file': '\.exe$\|\.so$\|\.dll$',
+  \ 'file': '\.exe$\|\.so$\|\.dll$|\.sw[po]$',
   \ 'link': '',
   \ }
 augroup CtrlPExtension
