@@ -1,0 +1,26 @@
+"3.4 (created: 2012/04/02 20:07:29)
+
+"""""""""""""""""""""""""""""
+" basic config
+"""""""""""""""""""""""""""""
+" basic map
+noremap h gT
+noremap l gt
+noremap j 5j
+noremap k 5k
+" exchange d and D
+noremap d D
+noremap D d
+
+" return to last active tab
+noremap ga <C-^>
+
+" set next/previous pattern
+noremap J [[
+noremap K ]]
+set nextpattern^=^\s*(下一页|下一章|下一张|下一篇|下页|后页)\s*$
+set previouspattern^=^\s*(上一页|上一章|上一张|上一篇|上页|前页)\s*$
+set previouspattern^=^\s*(次へ)\s*$
+set nextpattern^=^\s*(前へ)\s*$
+
+" vim: set ft=vimperator:
