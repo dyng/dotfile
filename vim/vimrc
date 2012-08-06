@@ -213,7 +213,7 @@ let g:ctrlp_mruf_case_sensitive = 0
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_custom_ignore = {
   \ 'dir':  '\.neocon$\|\.git$\|\.hg$\|\.svn$',
-  \ 'file': '\.exe$\|\.so$\|\.dll$|\.sw[po]$',
+  \ 'file': '\.exe$\|\.so$\|\.dll$\|\.sw[po]$',
   \ 'link': '',
   \ }
 augroup CtrlPExtension
@@ -300,4 +300,3 @@ nnoremap <silent>gm :MRU<CR>
 " }
 
 " vim: set foldmarker={,} foldlevel=0 foldmethod=marker spell:
-
