@@ -1,0 +1,12 @@
+[user]
+	name = tei-you
+	email = tei-you@kayac.com
+[core]
+	excludesfile = /Users/tei-you/.gitignore_global
+	editor = /usr/bin/vim
+[alias]
+	st = status
+	ck = checkout
+	cm = commit
+	ad = add
+	gog = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
