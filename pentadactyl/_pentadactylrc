@@ -51,15 +51,9 @@ map -modes=caret,v -builtin H ^
 map -modes=caret,v -builtin L $
 map -modes=v <ESC> -builtin <ESC><ESC>
 
-" passkeys for webqq
+" passkeys for *
 set passkeys+=www\.google\.co\.hk:<up><down>
 set passkeys+=www\.google\.com/reader/:u
-set passkeys+=web\.qq\.com/:<C-v>
-set passkeys+=www\.evernote\.com/:<C-v>
-
-" auto pass through
-autocmd LocationChange web.qq.com :normal! <C-z>
-autocmd LocationChange evernote.com :normal! <C-z>
 
 """""""""""""""""""""""""""""
 " user defined Commands
