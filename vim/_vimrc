@@ -11,8 +11,11 @@ Bundle 'mileszs/ack.vim'
 Bundle 'gvirus/auto_mkdir'
 Bundle 'gvirus/bufexplorer.zip'
 Bundle 'kien/ctrlp.vim'
+Bundle 'scrooloose/nerdtree'
+"Bundle 'jistr/vim-nerdtree-tabs'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'Lokaltog/vim-easymotion'
+Bundle 'thinca/vim-quickrun'
 "Bundle 'gvirus/CommentReader'
 Bundle 'sjl/gundo.vim'
 Bundle 'tsaleh/vim-matchit'
@@ -185,11 +188,21 @@ inoremap <expr><Enter> pumvisible() ? neocomplcache#close_popup() : "\<Enter>"
 inoremap <expr><Esc>   pumvisible() ? neocomplcache#cancel_popup() : "\<Esc>"
 " }
 
+" Nerdtree {
+nnoremap <silent> gn :NERDTreeFind<CR>
+let NERDTreeShowBookmarks = 1
+let NERDTreeIgnore = ['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
+let NERDTreeQuitOnOpen = 1
+let NERDTreeBookmarksFile = $HOME.'/.vim-infos/NERDTreeBookmarks'
+" }
+
 " VimIM {
 let g:vimim_map="no-gi"
 " }
 
 " BufExplorer {
+" let g:BufNumLimit = 1  # 是否自动关闭LRU Buffer. 1: 是 2: 否
+" let g:MaxBufNum = 8    # 设定最大Buffer数. 默认: 8
 function! InvokeBE()
     if v:count == 0
         exec "BufExplorer"
@@ -198,9 +211,6 @@ function! InvokeBE()
     endif
 endfunction
 nnoremap <silent><expr> <CR> &buftype != '' ? "<CR>" : ":<C-U>call InvokeBE()<CR>"
-" }
-
-" minibufexplorer {
 " }
 
 " ctrlp {
@@ -225,9 +235,9 @@ augroup END
 " yankring {
 let g:yankring_min_element_length = 2
 if has('win32')
-    let g:yankring_history_dir = $HOME.'\_vim-infos\YankRing.vim'
+    let g:yankring_history_dir = $HOME.'\_vim-infos\'
 else
-    let g:yankring_history_dir = $HOME.'/.vim-infos/YankRing.vim'
+    let g:yankring_history_dir = $HOME.'/.vim-infos/'
 endif
 nnoremap <silent> gy :YRShow<CR>
 " }
@@ -274,7 +284,7 @@ function! InvokeTB()
         exec s:previous_window . "wincmd w"
     endif
 endfunction
-nnoremap <silent> gn :call InvokeTB()<CR>
+nnoremap <silent> gb :call InvokeTB()<CR>
 " }
 
 " Session {
@@ -291,9 +301,9 @@ let g:session_default_to_last = 1
 
 " MRU {
 if has('win32')
-    let MRU_File = $HOME.'\_vim-infos\mru\_vim_mru_files'
+    let MRU_File = $HOME.'\_vim-infos\vim_mru_files'
 else
-    let MRU_File = $HOME.'/.vim-infos/mru/.vim_mru_files'
+    let MRU_File = $HOME.'/.vim-infos/vim_mru_files'
 endif
 let MRU_Add_Menu = 0
 nnoremap <silent>gm :MRU<CR>
