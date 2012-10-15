@@ -189,7 +189,8 @@ inoremap <expr><Esc>   pumvisible() ? neocomplcache#cancel_popup() : "\<Esc>"
 " }
 
 " Nerdtree {
-nnoremap <silent> gn :NERDTreeFind<CR>
+nnoremap <silent> gn :NERDTreeToggle<CR>
+nnoremap <silent> gN :NERDTreeFind<CR>
 let NERDTreeShowBookmarks = 1
 let NERDTreeIgnore = ['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
 let NERDTreeQuitOnOpen = 1
