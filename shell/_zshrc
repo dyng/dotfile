@@ -29,18 +29,34 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git)
+plugins=(git vagrant brew perl cpanm rails ruby rvm vundle)
 
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
-export PATH=$HOME/perl5/perlbrew/bin:$HOME/perl5/perlbrew/perls/5.14.2/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/X11/bin:/opt/local/bin:/usr/local/mysql/bin:$HOME/script
 
+# HistorySize
+HISTSIZE=100000
+
+# PATH
+SCRIPTPATH="$HOME/script"
+BREWPATH="/usr/local/bin"
+MYSQLPATH="/usr/local/mysql/bin"
+PERLPATH="$HOME/perl5/perlbrew/bin:$HOME/perl5/perlbrew/perls/5.14.2/bin"
+export PATH="$PERLPATH:$BREWPATH:$PATH:$MYSQLPATH:$SCRIPTPATH"
+
+# Alias
 alias ll="ls -al"
 alias grep="grep --color='auto'"
-alias ctags="/usr/local/bin/ctags"
 alias tia="tig --all"
 
-PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+# Import Z-Zsh
+. $HOME/script/z.sh
+function precmd () {
+    z --add "$(pwd -P)"
+}
+
+# RVM
+PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
