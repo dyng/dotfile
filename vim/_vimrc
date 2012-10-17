@@ -1,8 +1,8 @@
-" vi不兼容 {
+" vi不兼容 {{{
 set nocompatible
-" }
+" }}}
 
-" 载入插件 {
+" 载入插件 {{{
 filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
@@ -33,17 +33,17 @@ Bundle 'Lokaltog/vim-powerline'
 Bundle 'tpope/vim-fugitive'
 Bundle 'gvirus/YankRing.vim'
 Bundle 'mattn/zencoding-vim'
-" }
+" }}}
 
-" 基本配置 {
-" 编码相关 {
+" 基本配置 {{{
+" 编码相关 {{{
 set encoding=utf-8
 set langmenu=zh_CN.UTF-8
 language message zh_CN.UTF-8
 set fileencodings=ucs-bom,utf-8,sjis,cp936,gb18030,big5,euc-jp,euc-kr,latin1
-" }
+" }}}
 
-" 缩进相关 {
+" 缩进相关 {{{
 set magic
 set ruler            "标尺信息
 set autoindent
@@ -53,15 +53,15 @@ set softtabstop=4
 set smarttab
 set expandtab
 set display=lastline "显示最多行，不用@@
-" }
+" }}}
 
-" 搜索相关 {
+" 搜索相关 {{{
 set incsearch
 set ignorecase
 set smartcase
-" }
+" }}}
 
-" 显示相关 {
+" 显示相关 {{{
 set backspace=indent,eol,start
 set guioptions= "无菜单、工具栏
 set hlsearch
@@ -71,21 +71,21 @@ if has("gui_running")
 else
     colorscheme torte
 endif
-" }
+" }}}
 
-" 缓冲区相关 {
+" 缓冲区相关 {{{
 set hidden "自动隐藏缓冲区
-" }
+" }}}
 
-" 编程环境 {
+" 编程环境 {{{
 syntax on
 filetype plugin indent on
 set modeline                 "因为debian基于安全原因把modeline禁用了
 set completeopt=longest,menu "自动补全命令时候使用菜单式匹配列表  
 set wildmenu
-" }
+" }}}
 
-" 补全快捷键 {
+" 补全快捷键 {{{
 if has("gui_running")
     "补全时空格接受匹配+空格
     inoremap <Space> <C-R>=pumvisible() ? "\<lt>C-Y>\<lt>Space>" : "\<lt>Space>"<CR>
@@ -94,9 +94,9 @@ if has("gui_running")
     "补全时Esc结束补全
     inoremap <Esc> <C-R>=pumvisible() ? "\<lt>C-E>" : "\<lt>Esc>"<CR>
 endif
-" }
+" }}}
 
-" 设置Map {
+" 设置Map {{{
 let mapleader = ','
 " 行首行尾移动
 noremap H ^
@@ -148,12 +148,12 @@ cab Qa qa
 cab W w
 cab Wq wq
 cab Wa wa
-" }
+" }}}
 "
-" }
+" }}}
 
-" 插件配置 {
-" neocomplcache {
+" 插件配置 {{{
+" neocomplcache {{{
 let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_ignore_case = 0
 let g:neocomplcache_enable_smart_case = 0
@@ -186,22 +186,22 @@ inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() . "<Space>" : 
 inoremap <expr><Enter> pumvisible() ? neocomplcache#close_popup() : "\<Enter>"
 " 补全时Esc结束补全
 inoremap <expr><Esc>   pumvisible() ? neocomplcache#cancel_popup() : "\<Esc>"
-" }
+" }}}
 
-" Nerdtree {
+" Nerdtree {{{
 nnoremap <silent> gn :NERDTreeToggle<CR>
 nnoremap <silent> gN :NERDTreeFind<CR>
 let NERDTreeShowBookmarks = 1
 let NERDTreeIgnore = ['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
 let NERDTreeQuitOnOpen = 1
 let NERDTreeBookmarksFile = $HOME.'/.vim-infos/NERDTreeBookmarks'
-" }
+" }}}
 
-" VimIM {
+" VimIM {{{
 let g:vimim_map="no-gi"
-" }
+" }}}
 
-" BufExplorer {
+" BufExplorer {{{
 " let g:BufNumLimit = 1  # 是否自动关闭LRU Buffer. 1: 是 2: 否
 " let g:MaxBufNum = 8    # 设定最大Buffer数. 默认: 8
 function! InvokeBE()
@@ -212,9 +212,9 @@ function! InvokeBE()
     endif
 endfunction
 nnoremap <silent><expr> <CR> &buftype != '' ? "<CR>" : ":<C-U>call InvokeBE()<CR>"
-" }
+" }}}
 
-" ctrlp {
+" ctrlp {{{
 nnoremap <silent> gl :CtrlP<CR>
 nnoremap <silent> gL :exec 'CtrlP ' . getcwd()<CR>
 nnoremap <silent> gm :CtrlPMRU<CR>
@@ -228,12 +228,11 @@ let g:ctrlp_custom_ignore = {
   \ 'link': '',
   \ }
 augroup CtrlPExtension
-  autocmd FocusGained * CtrlPClearCache
-  autocmd BufWritePost * CtrlPClearCache
+  autocmd BufNewFile * CtrlPClearCache
 augroup END
-" }
+" }}}
 
-" yankring {
+" yankring {{{
 let g:yankring_min_element_length = 2
 if has('win32')
     let g:yankring_history_dir = $HOME.'\_vim-infos\'
@@ -241,39 +240,39 @@ else
     let g:yankring_history_dir = $HOME.'/.vim-infos/'
 endif
 nnoremap <silent> gy :YRShow<CR>
-" }
+" }}}
 
-" gundo {
+" gundo {{{
 let g:gundo_close_on_revert = 1
 nnoremap <silent> <leader>u :GundoToggle<CR>
-" }
+" }}}
 
-" zen-coding {
+" zen-coding {{{
 let g:user_zen_leader_key = '<C-Z>'
-" }
+" }}}
 
-" EasyMotion {
+" EasyMotion {{{
 let g:EasyMotion_leader_key = 'z'
-" }
+" }}}
 
-" Tabular {
+" Tabular {{{
 nnoremap <silent> <leader>= :Tabularize /=<CR>
 vnoremap <silent> <leader>= :Tabularize /=<CR>
 nnoremap <silent> <leader>: :Tabularize /:<CR>
 vnoremap <silent> <leader>: :Tabularize /:<CR>
 nnoremap <silent> <leader>> :Tabularize /=><CR>
 vnoremap <silent> <leader>> :Tabularize /=><CR>
-" }
+" }}}
 
-" Fugitive {
+" Fugitive {{{
 nnoremap <silent> gs :Gstatus<CR>
-" }
+" }}}
 
-" Vundle {
+" Vundle {{{
 nnoremap <leader>v :BundleList<CR>
-" }
+" }}}
 
-" Tagbar {
+" Tagbar {{{
 let g:tagbar_left = 1
 let g:tagbar_width = 30
 function! InvokeTB()
@@ -286,9 +285,9 @@ function! InvokeTB()
     endif
 endfunction
 nnoremap <silent> gb :call InvokeTB()<CR>
-" }
+" }}}
 
-" Session {
+" Session {{{
 if has('win32')
     let g:session_directory = $HOME . '\_vim-infos\vim-session'
 else
@@ -298,9 +297,9 @@ let g:session_autoload = 'prompt'
 let g:session_autosave = 'yes'
 let g:session_command_aliases = 1
 let g:session_default_to_last = 1
-" }
+" }}}
 
-" MRU {
+" MRU {{{
 if has('win32')
     let MRU_File = $HOME.'\_vim-infos\vim_mru_files'
 else
@@ -308,7 +307,7 @@ else
 endif
 let MRU_Add_Menu = 0
 nnoremap <silent>gm :MRU<CR>
-" }
-" }
+" }}}
+" }}}
 
-" vim: set foldmarker={,} foldlevel=0 foldmethod=marker spell:
+" vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:
