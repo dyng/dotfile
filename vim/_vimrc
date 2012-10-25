@@ -12,7 +12,6 @@ Bundle 'gvirus/auto_mkdir'
 Bundle 'gvirus/bufexplorer.zip'
 Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/nerdtree'
-"Bundle 'jistr/vim-nerdtree-tabs'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'thinca/vim-quickrun'
@@ -189,8 +188,8 @@ inoremap <expr><Esc>   pumvisible() ? neocomplcache#cancel_popup() : "\<Esc>"
 " }}}
 
 " Nerdtree {{{
-nnoremap <silent> gn :NERDTreeToggle<CR>
-nnoremap <silent> gN :NERDTreeFind<CR>
+nnoremap <silent> gn :NERDTreeFind<CR>
+nnoremap <silent> gN :NERDTreeToggle<CR>
 let NERDTreeShowBookmarks = 1
 let NERDTreeIgnore = ['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
 let NERDTreeQuitOnOpen = 1
@@ -248,7 +247,6 @@ nnoremap <silent> <leader>u :GundoToggle<CR>
 " }}}
 
 " zen-coding {{{
-let g:user_zen_leader_key = '<C-Z>'
 " }}}
 
 " EasyMotion {{{
