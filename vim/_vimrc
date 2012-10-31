@@ -189,7 +189,7 @@ inoremap <expr><Esc>   pumvisible() ? neocomplcache#cancel_popup() : "\<Esc>"
 
 " Nerdtree {{{
 nnoremap <silent> gn :NERDTreeFind<CR>
-nnoremap <silent> gN :NERDTreeToggle<CR>
+nnoremap <silent> gN :NERDTree<CR>
 let NERDTreeShowBookmarks = 1
 let NERDTreeIgnore = ['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
 let NERDTreeQuitOnOpen = 1
@@ -203,14 +203,14 @@ let g:vimim_map="no-gi"
 " BufExplorer {{{
 " let g:BufNumLimit = 1  # 是否自动关闭LRU Buffer. 1: 是 2: 否
 " let g:MaxBufNum = 8    # 设定最大Buffer数. 默认: 8
-function! InvokeBE()
+function! s:InvokeBE()
     if v:count == 0
         exec "BufExplorer"
     else
         exec "buffer " . v:count
     endif
 endfunction
-nnoremap <silent><expr> <CR> &buftype != '' ? "<CR>" : ":<C-U>call InvokeBE()<CR>"
+nnoremap <silent><expr> <CR> &buftype != '' ? "<CR>" : ":<C-U>call <SID>InvokeBE()<CR>"
 " }}}
 
 " ctrlp {{{
@@ -226,8 +226,13 @@ let g:ctrlp_custom_ignore = {
   \ 'file': '\.exe$\|\.so$\|\.dll$\|\.sw[po]$',
   \ 'link': '',
   \ }
+function! s:AutoClearCache()
+    if !filereadable(expand("<afile>:p"))
+        CtrlPClearCache
+    endif
+endfunction
 augroup CtrlPExtension
-  autocmd BufNewFile * CtrlPClearCache
+  autocmd BufWritePre,FileWritePre * call <SID>AutoClearCache()
 augroup END
 " }}}
 
@@ -273,7 +278,7 @@ nnoremap <leader>v :BundleList<CR>
 " Tagbar {{{
 let g:tagbar_left = 1
 let g:tagbar_width = 30
-function! InvokeTB()
+function! s:InvokeTB()
     if bufname("%") != "__Tagbar__"
         let s:previous_bufname = bufname("%")
         exec "TagbarOpen fj"
@@ -282,7 +287,7 @@ function! InvokeTB()
         exec s:previous_window . "wincmd w"
     endif
 endfunction
-nnoremap <silent> gb :call InvokeTB()<CR>
+nnoremap <silent> gb :call <SID>InvokeTB()<CR>
 " }}}
 
 " Session {{{
