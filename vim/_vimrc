@@ -32,6 +32,10 @@ Bundle 'Lokaltog/vim-powerline'
 Bundle 'tpope/vim-fugitive'
 Bundle 'gvirus/YankRing.vim'
 Bundle 'mattn/zencoding-vim'
+
+" 语言特定插件
+" Javascript
+Bundle "pangloss/vim-javascript"
 " }}}
 
 " 基本配置 {{{
@@ -278,6 +282,7 @@ nnoremap <leader>v :BundleList<CR>
 " Tagbar {{{
 let g:tagbar_left = 1
 let g:tagbar_width = 30
+let g:tagbar_autoclose = 1
 function! s:InvokeTB()
     if bufname("%") != "__Tagbar__"
         let s:previous_bufname = bufname("%")
