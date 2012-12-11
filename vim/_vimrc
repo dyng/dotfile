@@ -15,7 +15,7 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'vim-scripts/mru.vim'
 Bundle 'Lokaltog/vim-easymotion'
 Bundle 'thinca/vim-quickrun'
-"Bundle 'gvirus/CommentReader'
+Bundle 'gvirus/CommentReader'
 Bundle 'sjl/gundo.vim'
 Bundle 'tsaleh/vim-matchit'
 Bundle 'vim-scripts/Tagbar'
@@ -195,7 +195,7 @@ inoremap <expr><Esc>   pumvisible() ? neocomplcache#cancel_popup() : "\<Esc>"
 nnoremap <silent> gn :NERDTreeFind<CR>
 nnoremap <silent> gN :NERDTree<CR>
 let NERDTreeShowBookmarks = 1
-let NERDTreeIgnore = ['\.pyc', '\~$', '\.swo$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
+let NERDTreeIgnore = ['\.pyc', '\~$', '\.swo$', '\.swp$']
 let NERDTreeQuitOnOpen = 1
 let NERDTreeBookmarksFile = $HOME.'/.vim-infos/NERDTreeBookmarks'
 " }}}
@@ -330,6 +330,11 @@ let g:quickrun_config['c'] = {
 \ 'hook/sweep/files': '%S:p:r',
 \ 'cmdopt': '-std=c99 -Wall'
 \ }
+" }}}
+
+" CommentReader {{{
+let g:creader_session_file = $HOME.'/.vim-infos/vim_creader_session'
+nnoremap <F8> :CRtoggle<CR>
 " }}}
 " }}}
 
