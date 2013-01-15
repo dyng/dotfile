@@ -2,3 +2,4 @@
 /vim/_vim/bundle/*
 /pentadactyl/_pentadactyl/info/*
 /vimperator/_vimperator/info/*
+*.log
