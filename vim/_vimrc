@@ -25,6 +25,7 @@ Bundle 'Shougo/neosnippet'
 "Bundle 'scrooloose/syntastic'
 Bundle 'vim-scripts/Rename'
 Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-repeat'
 Bundle 'xolox/vim-session'
 Bundle 'godlygeek/tabular'
 Bundle 'Lokaltog/vim-powerline'
@@ -336,6 +337,10 @@ let g:quickrun_config['c'] = {
 " CommentReader {{{
 let g:creader_session_file = $HOME.'/.vim-infos/vim_creader_session'
 nnoremap <F8> :CRtoggle<CR>
+" }}}
+
+" vim-repeat {{{
+silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
 " }}}
 " }}}
 
