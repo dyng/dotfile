@@ -33,10 +33,13 @@ Bundle 'Lokaltog/vim-powerline'
 Bundle 'tpope/vim-fugitive'
 Bundle 'gvirus/YankRing.vim'
 Bundle 'mattn/zencoding-vim'
+Bundle 'gvirus/VimRepress'
+Bundle 'aaronbieber/quicktask'
+Bundle 'vim-scripts/sudo.vim'
 
 " 语言特定插件
-" Javascript
-Bundle "pangloss/vim-javascript"
+Bundle 'pangloss/vim-javascript'
+Bundle 'tpope/vim-markdown'
 " }}}
 
 " 基本配置 {{{
@@ -341,6 +344,58 @@ nnoremap <F8> :CRtoggle<CR>
 
 " vim-repeat {{{
 silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
+" }}}
+
+" quicktask {{{
+let g:quicktask_mytaskfile = $HOME.'/MyQuicktask'
+let g:quicktask_taskwin_width = 20
+nnoremap <silent><F8> :call QuicktaskToggle()<CR> 
+
+function! s:QuicktaskInit()
+    file __MyQuicktask__
+endfunction
+
+function! s:QuicktaskOpen()
+    if !bufexists('__MyQuicktask__')
+        exec 'silent topleft vertical '.g:quicktask_taskwin_width.'split '.g:quicktask_mytaskfile
+        call s:QuicktaskInit()
+    else
+        let task_bufnr = bufnr('__MyQuicktask__')
+        let task_winnr = bufwinnr(task_bufnr)
+        if task_winnr != -1
+            exec task_winnr.'wincmd w'
+        else
+            silent topleft vertical new
+            exec "buffer ".task_bufnr
+        endif
+    endif
+endfunction
+
+function! s:QuicktaskClose()
+    let task_bufnr = bufnr('__MyQuicktask__')
+    let task_winnr = bufwinnr(task_bufnr)
+    if task_winnr == -1
+        return
+    else
+        let cur_bufnr = bufnr('%')
+        exec task_winnr.'wincmd w'
+        close
+        let pre_winnr = bufwinnr(cur_bufnr)
+        if winnr() != pre_winnr
+            exec pre_winnr.'wincmd w'
+        endif
+    endif
+endfunction
+
+function! QuicktaskToggle()
+    let task_bufnr = bufnr('__MyQuicktask__')
+    let task_winnr = bufwinnr(task_bufnr)
+    if task_winnr == -1
+        call s:QuicktaskOpen()
+    else
+        call s:QuicktaskClose()
+    endif
+endfunction
 " }}}
 " }}}
 
