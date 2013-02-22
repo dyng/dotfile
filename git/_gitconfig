@@ -9,6 +9,8 @@
 	ck = checkout
 	cm = commit
 	ad = add
+        cp = cherry-pick
+        bn = branch
 	gog = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 [push]
 	default = current
