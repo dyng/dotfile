@@ -39,6 +39,9 @@ Bundle 'vim-scripts/sudo.vim'
 " 语言特定插件
 Bundle 'pangloss/vim-javascript'
 Bundle 'tpope/vim-markdown'
+
+" 颜色方案
+Bundle 'altercation/vim-colors-solarized'
 " }}}
 
 " 基本配置 {{{
