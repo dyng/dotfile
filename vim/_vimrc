@@ -79,7 +79,7 @@ set laststatus=2
 
 " 颜色主题
 if has("gui_running")
-    colorscheme molokai
+    colorscheme solarized
 else
     colorscheme torte
 endif
