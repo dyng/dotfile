@@ -75,6 +75,9 @@ set backspace=indent,eol,start
 set guioptions= "无菜单、工具栏
 set hlsearch
 set showmatch   "显示匹配的括号
+set laststatus=2
+
+" 颜色主题
 if has("gui_running")
     colorscheme molokai
 else
@@ -347,6 +350,11 @@ nnoremap <F8> :CRtoggle<CR>
 
 " vim-repeat {{{
 silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
+" }}}
+
+" Powerline {{{
+set t_Co=256
+let g:Powerline_symbols = 'fancy'
 " }}}
 
 " }}}
