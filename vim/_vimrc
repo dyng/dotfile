@@ -21,7 +21,7 @@ Bundle 'tsaleh/vim-matchit'
 Bundle 'vim-scripts/Tagbar'
 "Bundle 'fholgado/minibufexpl.vim'
 Bundle 'Shougo/neocomplcache'
-Bundle 'Shougo/neosnippet'
+"Bundle 'Shougo/neosnippet'
 "Bundle 'scrooloose/syntastic'
 Bundle 'vim-scripts/Rename'
 Bundle 'tpope/vim-surround'
@@ -178,18 +178,10 @@ if !exists('g:neocomplcache_keyword_patterns')
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 function! s:MiniSuperTab()
-    if neocomplcache#sources#snippets_complete#expandable()
-        if pumvisible()
-            return "\<C-O>:call neocomplcache#cancel_popup()\<CR>"
-        else
-            return "\<Plug>(neocomplcache_snippets_expand)"
-        endif
+    if pumvisible()
+        return "\<C-n>"
     else
-        if pumvisible()
-            return "\<C-n>"
-        else
-            return "\<Tab>"
-        endif
+        return "\<Tab>"
     endif
 endfunction
 imap <expr><Tab> <SID>MiniSuperTab()
