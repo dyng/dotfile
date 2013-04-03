@@ -50,6 +50,10 @@ PERLPATH="$HOME/perl5/perlbrew/bin:$HOME/perl5/perlbrew/perls/5.14.2/bin"
 export PATH="$PERLPATH:$BREWPATH:$PATH:$MYSQLPATH:$SCRIPTPATH"
 
 # Regular Alias
+alias -r ll="ls -lAh"
+alias -r la="ls -aTlFh"
+alias -r lr="ls -Rlh"
+alias -r lR="ls -RAlh"
 alias -r tia="tig --all"
 alias -r diff="diff -u"
 
