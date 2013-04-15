@@ -36,6 +36,7 @@ Bundle 'mattn/zencoding-vim'
 Bundle 'gvirus/VimRepress'
 Bundle 'vim-scripts/sudo.vim'
 Bundle 'scrooloose/nerdcommenter'
+Bundle 'SirVer/ultisnips'
 
 " 语言特定插件
 Bundle 'pangloss/vim-javascript'
@@ -194,6 +195,14 @@ inoremap <expr><Enter> pumvisible() ? neocomplcache#close_popup() : "\<Enter>"
 inoremap <expr><Esc>   pumvisible() ? neocomplcache#cancel_popup() : "\<Esc>"
 " }}}
 
+" UltiSnips {{{
+let g:UltiSnipsNoPythonWarning     = 1
+let g:UltiSnipsExpandTrigger       = "<C-O><C-O>"
+let g:UltiSnipsListSnippets        = "<C-O>"
+let g:UltiSnipsJumpForwardTrigger  = "<C-J>"
+let g:UltiSnipsJumpBackwardTrigger = "<C-K>"
+" }}}
+
 " Nerdtree {{{
 nnoremap <silent> gn :NERDTreeFind<CR>
 nnoremap <silent> gN :NERDTree<CR>
@@ -350,7 +359,7 @@ set t_Co=256
 let g:Powerline_symbols = 'fancy'
 " }}}
 
-" NERDTree
+" NERDTree {{{
 nmap gc <Plug>NERDCommenterToggle
 vmap gc <Plug>NERDCommenterToggle
 " }}}
