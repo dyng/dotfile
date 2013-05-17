@@ -37,10 +37,12 @@ Bundle 'gvirus/VimRepress'
 Bundle 'vim-scripts/sudo.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
+Bundle 'rking/ag.vim'
 
 " 语言特定插件
 Bundle 'pangloss/vim-javascript'
 Bundle 'tpope/vim-markdown'
+Bundle 'me-vlad/python-syntax.vim'
 
 " 颜色方案
 Bundle 'altercation/vim-colors-solarized'
@@ -362,6 +364,14 @@ let g:Powerline_symbols = 'fancy'
 " NERDTree {{{
 nmap gc <Plug>NERDCommenterToggle
 vmap gc <Plug>NERDCommenterToggle
+" }}}
+
+" python-syntax {{{
+let python_highlight_builtin_objs  = 1
+let python_highlight_builtin_funcs = 1
+let python_highlight_exceptions    = 1
+let python_print_as_function       = 1
+" }}}
 " }}}
 
 " vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:
