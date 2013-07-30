@@ -33,7 +33,6 @@ Bundle 'Lokaltog/vim-powerline'
 Bundle 'tpope/vim-fugitive'
 Bundle 'gvirus/YankRing.vim'
 Bundle 'mattn/zencoding-vim'
-Bundle 'gvirus/VimRepress'
 Bundle 'vim-scripts/sudo.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
@@ -41,8 +40,9 @@ Bundle 'rking/ag.vim'
 
 " 语言特定插件
 Bundle 'pangloss/vim-javascript'
-Bundle 'tpope/vim-markdown'
+"Bundle 'tpope/vim-markdown'
 Bundle 'me-vlad/python-syntax.vim'
+Bundle 'tangledhelix/vim-octopress'
 
 " 颜色方案
 Bundle 'altercation/vim-colors-solarized'
