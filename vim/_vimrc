@@ -81,7 +81,7 @@ set hlsearch
 set showmatch   "显示匹配的括号
 set laststatus=2
 set list
-set listchars=tab:>+,trail:-
+set listchars=trail:-
 
 " 颜色主题
 if has("gui_running")
