@@ -37,6 +37,7 @@ Bundle 'vim-scripts/sudo.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
 Bundle 'rking/ag.vim'
+Bundle 'terryma/vim-multiple-cursors'
 
 " 语言特定插件
 Bundle 'pangloss/vim-javascript'
@@ -72,6 +73,8 @@ set display=lastline "显示最多行，不用@@
 set incsearch
 set ignorecase
 set smartcase
+nnoremap <expr> n v:searchforward ? "n" : "N"
+nnoremap <expr> N v:searchforward ? "N" : "n"
 " }}}
 
 " 显示相关 {{{
