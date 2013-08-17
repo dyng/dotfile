@@ -26,6 +26,7 @@ Bundle 'Shougo/neocomplcache'
 Bundle 'vim-scripts/Rename'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
+Bundle 'xolox/vim-misc'
 Bundle 'xolox/vim-session'
 Bundle 'godlygeek/tabular'
 Bundle 'Lokaltog/vim-powerline'
@@ -83,8 +84,10 @@ set guioptions= "无菜单、工具栏
 set hlsearch
 set showmatch   "显示匹配的括号
 set laststatus=2
+
 set list
-set listchars=trail:-
+set listchars=tab:>\ ,trail:-
+autocmd FileType help,gitconfig setlocal nolist
 
 " 颜色主题
 if has("gui_running")
@@ -363,7 +366,7 @@ silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
 
 " Powerline {{{
 set t_Co=256
-let g:Powerline_symbols = 'fancy'
+let g:Powerline_symbols = 'compatible'
 " }}}
 
 " NERDTree {{{
