@@ -2,7 +2,7 @@
 	name = tei-you
 	email = tei-you@kayac.com
 [core]
-	excludesfile = /Users/tei-you/.gitignore_global
+	excludesfile = /Users/dyng/.gitignore_global
 	editor = /usr/bin/vim
 [alias]
 	st = status

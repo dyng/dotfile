@@ -35,6 +35,16 @@ source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 
+# Load .bashrc
+[[ -s "$HOME/.bashrc" ]] && . "$HOME/.bashrc"
+
+# Set locale in case
+if [[ -z $LANG ]]; then
+    echo "Warning: \$LANG is not set in profile"
+    export LANG="en_US.UTF-8"
+    export LC_ALL="en_US.UTF-8"
+fi
+
 # History
 HISTFILE=~/.zsh_history
 HISTSIZE=20000
@@ -46,9 +56,8 @@ setopt share_history
 # PATH
 SCRIPTPATH="$HOME/script"
 BREWPATH="/usr/local/bin"
-MYSQLPATH="/usr/local/mysql/bin"
 PERLPATH="$HOME/perl5/perlbrew/bin:$HOME/perl5/perlbrew/perls/5.14.2/bin"
-export PATH="$PERLPATH:$BREWPATH:$PATH:$MYSQLPATH:$SCRIPTPATH"
+export PATH="$PERLPATH:$BREWPATH:$PATH:$SCRIPTPATH"
 
 # Regular Alias
 alias -r ll="ls -lAh"
