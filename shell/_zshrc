@@ -29,7 +29,7 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git gitfast git-extras vagrant brew perl cpanm ruby)
+plugins=(gitfast git-extras vagrant brew perl cpanm ruby z)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -40,7 +40,7 @@ source $ZSH/oh-my-zsh.sh
 
 # Set locale in case
 if [[ -z $LANG ]]; then
-    echo "Warning: \$LANG is not set in profile"
+    echo "Warning: \$LANG is not set in profile."
     export LANG="en_US.UTF-8"
     export LC_ALL="en_US.UTF-8"
 fi
@@ -72,15 +72,6 @@ alias -g L='| less'
 alias -g H='| head'
 alias -g T='| tail'
 alias -g G='| grep'
-
-# Import Z-Zsh
-. $HOME/script/z.sh
-function precmd () {
-    z --add "$(pwd -P)"
-}
-
-# SSH Host Completion
-zstyle -e ':completion::*:*:*:hosts' hosts 'reply=(${=${${(f)"$(cat {/etc/ssh_,~/.ssh/known_}hosts(|2)(N) /dev/null)"}%%[# ]*}//,/ })'
 
 # RVM
 PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
