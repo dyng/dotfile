@@ -87,7 +87,7 @@ set laststatus=2
 
 set list
 set listchars=tab:>\ ,trail:-
-autocmd FileType help,gitconfig setlocal nolist
+autocmd FileType git*,help setlocal nolist
 
 " 颜色主题
 if has("gui_running")
