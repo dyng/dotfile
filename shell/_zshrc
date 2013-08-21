@@ -35,9 +35,6 @@ source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
 
-# Load .bashrc
-[[ -s "$HOME/.bashrc" ]] && . "$HOME/.bashrc"
-
 # Set locale in case
 if [[ -z $LANG ]]; then
     echo "Warning: \$LANG is not set in profile."
