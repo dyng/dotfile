@@ -51,10 +51,25 @@ setopt hist_reduce_blanks
 setopt share_history
 
 # PATH
-SCRIPTPATH="$HOME/script"
-BREWPATH="/usr/local/bin"
-PERLPATH="$HOME/perl5/perlbrew/bin:$HOME/perl5/perlbrew/perls/5.14.2/bin"
-export PATH="$PERLPATH:$BREWPATH:$PATH:$SCRIPTPATH"
+# add script dir
+export PATH="$PATH:$HOME/script"
+
+# Homebrew
+if which brew 2>&1 1>/dev/null; then
+    export PATH="/usr/local/bin:$PATH"
+fi
+
+# Perlbrew
+if [[ -s "$HOME/perl5/perlbrew/etc/bashrc" ]]; then
+    source "$HOME/perl5/perlbrew/etc/bashrc"
+    export PATH="$HOME/perl5/perlbrew/bin:$PATH"
+fi
+
+# RVM
+if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
+    source "$HOME/.rvm/scripts/rvm"
+    export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+fi
 
 # Regular Alias
 alias -r ll="ls -lAh"
@@ -64,16 +79,14 @@ alias -r lR="ls -RAlh"
 alias -r tia="tig --all"
 alias -r diff="diff -u"
 
+# Json Parser
+alias -r pjson="python -mjson.tool"
+
 # Global Alias
 alias -g L='| less'
 alias -g H='| head'
 alias -g T='| tail'
 alias -g G='| grep'
-
-# RVM
-PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm"
 
 # Insert Unicode Character
 autoload insert-unicode-char
