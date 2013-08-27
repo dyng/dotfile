@@ -146,15 +146,15 @@ nnoremap <silent> <C-L> :wincmd l<CR>
 nnoremap <silent> <C-W>s :wincmd s\|wincmd j<CR>
 nnoremap <silent> <C-W>v :wincmd v\|wincmd l<CR>
 " 关闭搜索高亮
-nmap <silent> <F2>      :nohlsearch<CR>
-imap <silent> <F2> <C-O>:nohlsearch<CR>
+nnoremap <silent> <F2>      :nohlsearch<CR>
+inoremap <silent> <F2> <C-O>:nohlsearch<CR>
 " 快速添加替换命令
-cmap <Leader>s %s###cg<Left><Left><Left>
+cnoremap <Leader>s %s###cg<Left><Left><Left>
 " Win风格复制粘贴
-xmap <C-C> "+y
-nmap <C-Q> "+p
-imap <C-Q> <C-R>+
-cmap <C-Q> <C-R>+
+xnoremap <C-C> "+y
+nnoremap <C-Q> "+p
+inoremap <C-Q> <C-R>+
+cnoremap <C-Q> <C-R>+
 " Shell风格的命令行
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
@@ -196,7 +196,7 @@ function! s:MiniSuperTab()
         return "\<Tab>"
     endif
 endfunction
-imap <expr><Tab> <SID>MiniSuperTab()
+inoremap <expr><Tab> <SID>MiniSuperTab()
 " 补全时空格接受匹配+空格
 inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() . "<Space>" : "<Space>"
 " 补全时Enter接收匹配
