@@ -252,13 +252,17 @@ let g:ctrlp_custom_ignore = {
   \ 'file': '\.exe$\|\.so$\|\.dll$\|\.sw[po]$',
   \ 'link': '',
   \ }
-function! s:AutoClearCache()
+function! s:AutoClearCacheForNew()
     if !filereadable(expand("<afile>:p"))
-        CtrlPClearCache
+        exec "CtrlPClearCache"
     endif
 endfunction
+function! s:AutoClearCacheForChanged()
+    exec "CtrlPClearCache"
+endfunction
 augroup CtrlPExtension
-  autocmd BufWritePre,FileWritePre * call <SID>AutoClearCache()
+  autocmd BufWritePre,FileWritePre * call <SID>AutoClearCacheForNew()
+  autocmd FileChangedShellPost * call <SID>AutoClearCacheForChanged()
 augroup END
 " }}}
 
