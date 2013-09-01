@@ -27,6 +27,7 @@ Bundle 'vim-scripts/Rename'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
 Bundle 'xolox/vim-misc'
+Bundle 'xolox/vim-easytags'
 Bundle 'xolox/vim-session'
 Bundle 'godlygeek/tabular'
 Bundle 'Lokaltog/vim-powerline'
@@ -384,6 +385,13 @@ let python_highlight_builtin_funcs = 1
 let python_highlight_exceptions    = 1
 let python_print_as_function       = 1
 " }}}
+
+" easytags {{{
+let g:easytags_dynamic_files = 1
+let g:easytags_by_filetype = '~/.tags/'
+let g:easytags_file = '~/.tags/default'
+" }}}
+
 " }}}
 
 " vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:
