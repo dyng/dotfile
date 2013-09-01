@@ -1,0 +1,5 @@
+*.swp
+tags
+*.pyc
+.netrwhist
+.DS_Store
