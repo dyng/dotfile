@@ -374,9 +374,12 @@ set t_Co=256
 let g:Powerline_symbols = 'compatible'
 " }}}
 
-" NERDTree {{{
+" NERDCommenter {{{
+let g:NERDSpaceDelims = 1
 nmap gc <Plug>NERDCommenterToggle
 vmap gc <Plug>NERDCommenterToggle
+nmap gC <Plug>NERDCommenterSexy
+vmap gC <Plug>NERDCommenterSexy
 " }}}
 
 " python-syntax {{{
