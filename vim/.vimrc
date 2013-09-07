@@ -38,8 +38,7 @@ Bundle 'mattn/zencoding-vim'
 Bundle 'vim-scripts/sudo.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
-Bundle 'rking/ag.vim'
-Bundle 'terryma/vim-multiple-cursors'
+" Bundle 'terryma/vim-multiple-cursors'
 
 " 语言特定插件
 Bundle 'pangloss/vim-javascript'
@@ -393,6 +392,18 @@ let python_print_as_function       = 1
 let g:easytags_dynamic_files = 1
 let g:easytags_by_filetype = '~/.tags/'
 let g:easytags_file = '~/.tags/default'
+" }}}
+
+" ack.vim {{{
+let g:ackhighlight = 1
+if executable('ag')
+  let g:ackprg = "ag --nocolor --nogroup --column"
+elseif executable('ack-grep')
+  let g:ackprg = "ack-grep --nocolor --nogroup --column"
+elseif executable('ack')
+  let g:ackprg = "ack --nocolor --nogroup --column"
+endif
+cab ack Ack
 " }}}
 
 " }}}
