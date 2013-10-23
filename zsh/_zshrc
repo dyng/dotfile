@@ -99,10 +99,10 @@ alias -r tia="tig --all"
 alias -r diff="diff -u"
 
 # Global Alias
-alias -g L='| less'
-alias -g H='| head'
-alias -g T='| tail'
-alias -g G='| grep'
+alias -g /L='| less'
+alias -g /H='| head'
+alias -g /T='| tail'
+alias -g /G='| grep'
 
 # }}}
 
