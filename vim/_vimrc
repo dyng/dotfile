@@ -42,9 +42,8 @@ Bundle 'SirVer/ultisnips'
 
 " 语言特定插件
 Bundle 'pangloss/vim-javascript'
-"Bundle 'tpope/vim-markdown'
+" Bundle 'tpope/vim-markdown'
 Bundle 'me-vlad/python-syntax.vim'
-Bundle 'tangledhelix/vim-octopress'
 
 " 颜色方案
 Bundle 'altercation/vim-colors-solarized'
@@ -393,6 +392,8 @@ let python_print_as_function       = 1
 " }}}
 
 " easytags {{{
+let g:easytags_auto_update = 0
+let g:easytags_auto_highlight = 0
 let g:easytags_dynamic_files = 1
 let g:easytags_by_filetype = '~/.tags/'
 let g:easytags_file = '~/.tags/default'
