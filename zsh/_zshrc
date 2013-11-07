@@ -31,7 +31,7 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(gitfast git-extras vagrant brew ruby z)
+plugins=(gitfast git-extras vagrant brew ruby z knife)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -103,6 +103,9 @@ alias -g /L='| less'
 alias -g /H='| head'
 alias -g /T='| tail'
 alias -g /G='| grep'
+
+# Fixture Alias
+alias -r ssh="TERM=xterm ssh"
 
 # }}}
 
