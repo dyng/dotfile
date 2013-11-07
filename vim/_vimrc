@@ -53,7 +53,6 @@ Bundle 'altercation/vim-colors-solarized'
 " 基本配置 {{{
 " 编码相关 {{{
 set encoding=utf-8
-set langmenu=zh_CN.UTF-8
 language message zh_CN.UTF-8
 set fileencodings=ucs-bom,utf-8,sjis,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 " }}}
@@ -175,7 +174,6 @@ cab Wq wq
 cab Wa wa
 cab X x
 " }}}
-"
 " }}}
 
 " 插件配置 {{{
@@ -413,6 +411,10 @@ endif
 cab ack Ack
 " }}}
 
+" YouCompleteMe {{{
+let g:ycm_key_list_select_completion = ['<TAB>']
+let g:ycm_key_list_previous_completion = ['<S-TAB>']
+" }}}
 " }}}
 
 " vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:
