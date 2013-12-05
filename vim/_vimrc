@@ -299,6 +299,8 @@ vnoremap <silent> <leader>> :Tabularize /=><CR>
 
 " Fugitive {{{
 nnoremap <silent> gs :Gstatus<CR>
+nnoremap <silent> gss :Gstatus<CR>
+nnoremap <silent> gsb :Gblame<CR>
 " }}}
 
 " Vundle {{{

@@ -68,7 +68,7 @@ export PATH="$PATH:$HOME/script"
 
 # Homebrew
 if which brew 2>&1 1>/dev/null; then
-    export PATH="/usr/local/bin:$PATH"
+    export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 fi
 
 # Perlbrew
