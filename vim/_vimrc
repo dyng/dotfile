@@ -48,6 +48,7 @@ Bundle 'me-vlad/python-syntax.vim'
 
 " 颜色方案
 Bundle 'altercation/vim-colors-solarized'
+Bundle 'tomasr/molokai'
 " }}}
 
 " 基本配置 {{{
