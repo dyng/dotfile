@@ -23,7 +23,7 @@ Bundle 'vim-scripts/Tagbar'
 Bundle 'Valloric/YouCompleteMe'
 " Bundle 'fholgado/minibufexpl.vim'
 " Bundle 'Shougo/neosnippet'
-" Bundle 'scrooloose/syntastic'
+Bundle 'scrooloose/syntastic'
 Bundle 'vim-scripts/Rename'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
@@ -42,8 +42,7 @@ Bundle 'SirVer/ultisnips'
 " Bundle 'terryma/vim-multiple-cursors'
 
 " 语言特定插件
-Bundle 'pangloss/vim-javascript'
-" Bundle 'tpope/vim-markdown'
+Bundle 'jelera/vim-javascript-syntax'
 Bundle 'me-vlad/python-syntax.vim'
 
 " 颜色方案
