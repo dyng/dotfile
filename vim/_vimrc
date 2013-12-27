@@ -239,10 +239,10 @@ nnoremap <silent><expr> <CR> &buftype != '' ? "<CR>" : ":<C-U>call <SID>InvokeBE
 " }}}
 
 " ctrlp {{{
-nnoremap <silent> gl :CtrlP<CR>
-nnoremap <silent> gL :exec 'CtrlP ' . getcwd()<CR>
-nnoremap <silent> gm :CtrlPMRU<CR>
-nnoremap <silent> go :CtrlPMixed<CR>
+nnoremap <silent> gp :CtrlP<CR>
+nnoremap <silent> <C-P> :CtrlP<CR>
+nnoremap <silent> gP :exec 'CtrlP ' . getcwd()<CR>
+nnoremap <silent> gM :CtrlPMRU<CR>
 let g:ctrlp_mruf_max = 800
 let g:ctrlp_mruf_case_sensitive = 0
 let g:ctrlp_switch_buffer = 0
