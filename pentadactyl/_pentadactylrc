@@ -38,8 +38,8 @@ map -modes=n <C-h> :tabmove -1<CR>
 map -modes=n <C-l> :tabmove +1<CR>
 
 " set next/previous pattern
-map -modes=n J -builtin [[
-map -modes=n K -builtin ]]
+map -modes=n K -builtin [[
+map -modes=n J -builtin ]]
 set nextpattern^=^\s*(下一页|下一章|下一张|下一篇|下页|后页)\s*$
 set previouspattern^=^\s*(上一页|上一章|上一张|上一篇|上页|前页)\s*$
 set previouspattern^=^\s*(次へ)\s*$
