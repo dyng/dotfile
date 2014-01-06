@@ -31,15 +31,14 @@ Bundle 'xolox/vim-misc'
 Bundle 'xolox/vim-easytags'
 Bundle 'xolox/vim-session'
 Bundle 'godlygeek/tabular'
-Bundle 'Lokaltog/vim-powerline'
-" Bundle 'vim-scripts/VimIM'
+Bundle 'bling/vim-airline'
 Bundle 'tpope/vim-fugitive'
 Bundle 'dyng/YankRing.vim'
 Bundle 'mattn/emmet-vim'
 Bundle 'vim-scripts/sudo.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
-" Bundle 'terryma/vim-multiple-cursors'
+Bundle 'dyng/ctrlsf.vim'
 
 " 语言特定插件
 Bundle 'jelera/vim-javascript-syntax'
@@ -105,7 +104,7 @@ set hidden "自动隐藏缓冲区
 syntax on
 filetype plugin indent on
 set modeline                 "因为debian基于安全原因把modeline禁用了
-set completeopt=longest,menu "自动补全命令时候使用菜单式匹配列表  
+set completeopt=longest,menu "自动补全命令时候使用菜单式匹配列表
 set wildmenu
 " }}}
 
@@ -280,9 +279,6 @@ let g:gundo_close_on_revert = 1
 nnoremap <silent> <leader>u :GundoToggle<CR>
 " }}}
 
-" zen-coding {{{
-" }}}
-
 " EasyMotion {{{
 let g:EasyMotion_leader_key = 'z'
 " }}}
@@ -372,9 +368,26 @@ nnoremap <F8> :CRtoggle<CR>
 silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
 " }}}
 
-" Powerline {{{
-set t_Co=256
-let g:Powerline_symbols = 'compatible'
+" Airline {{{
+if has('gui')
+    if !exists('g:airline_symbols')
+        let g:airline_symbols = {}
+    endif
+
+    " unicode symbols
+    let g:airline_left_sep = '»'
+    let g:airline_left_sep = '▶'
+    let g:airline_right_sep = '«'
+    let g:airline_right_sep = '◀'
+    let g:airline_symbols.linenr = '␊'
+    let g:airline_symbols.linenr = '␤'
+    let g:airline_symbols.linenr = '¶'
+    let g:airline_symbols.branch = '⎇'
+    let g:airline_symbols.paste = 'ρ'
+    let g:airline_symbols.paste = 'Þ'
+    let g:airline_symbols.paste = '∥'
+    let g:airline_symbols.whitespace = 'Ξ'
+endif
 " }}}
 
 " NERDCommenter {{{
@@ -409,7 +422,6 @@ elseif executable('ack-grep')
 elseif executable('ack')
   let g:ackprg = "ack --nocolor --nogroup --column"
 endif
-cab ack Ack
 " }}}
 
 " YouCompleteMe {{{
@@ -417,6 +429,13 @@ let g:ycm_key_list_select_completion = ['<TAB>']
 let g:ycm_key_list_previous_completion = ['<S-TAB>']
 let g:ycm_filepath_completion_use_working_dir = 1
 " }}}
+
+" CtrlSF {{{
+nnoremap <C-F> :CtrlSF<Space>
 " }}}
 
+" }}}
+
+" modeline {{{
 " vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:
+" }}}
