@@ -7,7 +7,6 @@ filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
-Bundle 'dyng/ack.vim'
 Bundle 'dyng/auto_mkdir'
 Bundle 'dyng/bufexplorer.zip'
 Bundle 'kien/ctrlp.vim'
@@ -39,6 +38,7 @@ Bundle 'vim-scripts/sudo.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
 Bundle 'dyng/ctrlsf.vim'
+Bundle 'terryma/vim-multiple-cursors'
 
 " 语言特定插件
 Bundle 'jelera/vim-javascript-syntax'
@@ -404,17 +404,6 @@ let g:easytags_by_filetype = '~/.tags/'
 let g:easytags_file = '~/.tags/default'
 " }}}
 
-" ack.vim {{{
-let g:ackhighlight = 1
-if executable('ag')
-  let g:ackprg = "ag --nocolor --nogroup --column"
-elseif executable('ack-grep')
-  let g:ackprg = "ack-grep --nocolor --nogroup --column"
-elseif executable('ack')
-  let g:ackprg = "ack --nocolor --nogroup --column"
-endif
-" }}}
-
 " YouCompleteMe {{{
 let g:ycm_key_list_select_completion = ['<TAB>']
 let g:ycm_key_list_previous_completion = ['<S-TAB>']
@@ -422,9 +411,19 @@ let g:ycm_filepath_completion_use_working_dir = 1
 " }}}
 
 " CtrlSF {{{
-nnoremap <C-F> :CtrlSF<Space>
+nnoremap <C-F>f :CtrlSF<Space>
+nnoremap <C-F>o :CtrlSFOpen<CR>
+nnoremap <C-F>c :CtrlSFClose<CR>
 " }}}
 
+" vim-multiple-selection {{{
+let g:multi_cursor_use_default_mapping = 0
+
+" Default mapping
+let g:multi_cursor_next_key='<C-D>'
+let g:multi_cursor_prev_key='<C-U>'
+let g:multi_cursor_skip_key='<C-X>'
+let g:multi_cursor_quit_key='<Esc>'
 " }}}
 
 " modeline {{{
