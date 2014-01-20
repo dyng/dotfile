@@ -20,7 +20,6 @@ Bundle 'tsaleh/vim-matchit'
 Bundle 'vim-scripts/Tagbar'
 " Bundle 'Shougo/neocomplcache'
 Bundle 'Valloric/YouCompleteMe'
-" Bundle 'fholgado/minibufexpl.vim'
 " Bundle 'Shougo/neosnippet'
 Bundle 'scrooloose/syntastic'
 Bundle 'vim-scripts/Rename'
@@ -90,7 +89,7 @@ autocmd FileType git*,help setlocal nolist
 " 颜色主题
 if has("gui_running")
     set background=dark
-    colorscheme solarized
+    colorscheme molokai
 else
     colorscheme torte
 endif
@@ -293,7 +292,7 @@ vnoremap <silent> <leader>> :Tabularize /=><CR>
 " }}}
 
 " Fugitive {{{
-nnoremap <silent> gs :Gstatus<CR>
+nnoremap <silent> gs  :Gstatus<CR>
 nnoremap <silent> gss :Gstatus<CR>
 nnoremap <silent> gsb :Gblame<CR>
 " }}}
@@ -303,10 +302,10 @@ nnoremap <leader>v :BundleList<CR>
 " }}}
 
 " Tagbar {{{
-let g:tagbar_left = 1
-let g:tagbar_width = 30
+let g:tagbar_left      = 1
+let g:tagbar_width     = 30
+let g:tagbar_sort      = 0
 let g:tagbar_autoclose = 1
-let g:tagbar_sort = 0
 function! s:InvokeTB()
     if bufname("%") != "__Tagbar__"
         let s:previous_bufname = bufname("%")
