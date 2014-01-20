@@ -8,6 +8,9 @@ noremap h gT
 noremap l gt
 noremap j 5j
 noremap k 5k
+noremap <C-H> :tabm! -1<CR>
+noremap <C-L> :tabm! +1<CR>
+
 " exchange d and D
 noremap d D
 noremap D d
