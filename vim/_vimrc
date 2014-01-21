@@ -46,6 +46,10 @@ Bundle 'me-vlad/python-syntax.vim'
 " 颜色方案
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'tomasr/molokai'
+Bundle 'Pychimp/vim-luna'
+Bundle 'sickill/vim-monokai'
+Bundle 'w0ng/vim-hybrid'
+Bundle 'sjl/badwolf'
 " }}}
 
 " 基本配置 {{{
@@ -368,6 +372,8 @@ silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
 " }}}
 
 " Airline {{{
+let g:airline_theme = 'laederon'
+
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
 endif
@@ -378,6 +384,7 @@ let g:airline_left_sep = '▶'
 let g:airline_right_sep = '«'
 let g:airline_right_sep = '◀'
 let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
 " }}}
 
 " NERDCommenter {{{
@@ -424,7 +431,7 @@ let g:multi_cursor_prev_key='<C-U>'
 let g:multi_cursor_skip_key='<C-X>'
 let g:multi_cursor_quit_key='<Esc>'
 " }}}
+" }}}
 
 " modeline {{{
 " vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:
-" }}}
