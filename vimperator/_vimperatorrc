@@ -15,6 +15,9 @@ noremap <C-L> :tabm! +1<CR>
 noremap d D
 noremap D d
 
+" turn off search highlight
+noremap <F2> :nohlsearch<CR>
+
 " return to last active tab
 noremap ga <C-^>
 
