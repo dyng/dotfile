@@ -29,6 +29,7 @@ Bundle 'xolox/vim-misc'
 Bundle 'xolox/vim-easytags'
 Bundle 'xolox/vim-session'
 Bundle 'godlygeek/tabular'
+Bundle 'dyng/ctrlsf.vim'
 Bundle 'bling/vim-airline'
 Bundle 'tpope/vim-fugitive'
 Bundle 'dyng/YankRing.vim'
@@ -36,7 +37,6 @@ Bundle 'mattn/emmet-vim'
 Bundle 'vim-scripts/sudo.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
-Bundle 'dyng/ctrlsf.vim'
 Bundle 'terryma/vim-multiple-cursors'
 
 " 语言特定插件
@@ -44,6 +44,7 @@ Bundle 'jelera/vim-javascript-syntax'
 Bundle 'me-vlad/python-syntax.vim'
 
 " 颜色方案
+Bundle 'godlygeek/csapprox'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'tomasr/molokai'
 Bundle 'Pychimp/vim-luna'
@@ -75,8 +76,6 @@ set display=lastline "显示最多行，不用@@
 set incsearch
 set ignorecase
 set smartcase
-nnoremap <expr> n v:searchforward ? "n" : "N"
-nnoremap <expr> N v:searchforward ? "N" : "n"
 " }}}
 
 " 显示相关 {{{
@@ -150,6 +149,12 @@ nnoremap <silent> <C-W>v :wincmd v\|wincmd l<CR>
 " 关闭搜索高亮
 nnoremap <silent> <F2>      :nohlsearch<CR>
 inoremap <silent> <F2> <C-O>:nohlsearch<CR>
+" n固定向下，N固定向上
+nnoremap <expr> n v:searchforward ? "n" : "N"
+nnoremap <expr> N v:searchforward ? "N" : "n"
+" 调整缩进
+vnoremap <expr> > v:count ? ">" : ">gv"
+vnoremap <expr> < v:count ? "<" : "<gv"
 " 快速添加替换命令
 cnoremap <Leader>s %s###cg<Left><Left><Left>
 " Win风格复制粘贴
@@ -373,6 +378,7 @@ silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
 
 " Airline {{{
 let g:airline_theme = 'laederon'
+let g:airline_section_b = ''
 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
