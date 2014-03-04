@@ -20,13 +20,11 @@ fi
 # Perlbrew
 if [[ -s "$HOME/perl5/perlbrew/etc/bashrc" ]]; then
     source "$HOME/perl5/perlbrew/etc/bashrc"
-    export PATH="$HOME/perl5/perlbrew/bin:$PATH"
 fi
 
 # RVM
 if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
     source "$HOME/.rvm/scripts/rvm"
-    export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
 fi
 
 # NVM
