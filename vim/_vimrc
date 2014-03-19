@@ -109,6 +109,15 @@ filetype plugin indent on
 set modeline                 "因为debian基于安全原因把modeline禁用了
 set completeopt=longest,menu "自动补全命令时候使用菜单式匹配列表
 set wildmenu
+
+function! TagWin(command)
+    let keyword = expand('<cword>')
+    wincmd |
+    rightbelow vertical split
+    exec a:command . ' ' . keyword
+endfunction
+nnoremap tt :call TagWin('tag')<CR>
+nnoremap ts :call TagWin('tselect')<CR>
 " }}}
 
 " 补全快捷键 {{{
@@ -341,10 +350,10 @@ let g:session_autoload = 'prompt'
 let g:session_autosave = 'yes'
 let g:session_command_aliases = 1
 let g:session_default_to_last = 1
-cab sessionopen SessionOpen
-cab sessionclose SessionClose
-cab sessionsave SessionSave
-cab sessiondelete SessionDelete
+com! -bar -b -n=? -comp=customlist,xolox#session#complete_names So SessionOpen<bang> <args>
+com! -bar -b -n=? -comp=customlist,xolox#session#complete_names Sc SessionClose<bang> <args>
+com! -bar -b -n=? -comp=customlist,xolox#session#complete_names Ss SessionSave<bang> <args>
+com! -bar -b -n=? -comp=customlist,xolox#session#complete_names Sd SessionDelete<bang> <args>
 " }}}
 
 " MRU {{{
