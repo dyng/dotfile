@@ -110,20 +110,29 @@ set modeline                 "因为debian基于安全原因把modeline禁用了
 set completeopt=longest,menu "自动补全命令时候使用菜单式匹配列表
 set wildmenu
 
-function! TagWin(command)
+function! TagWin(mode)
     let keyword = expand('<cword>')
     wincmd |
     rightbelow vertical split
-    exec a:command . ' ' . keyword
+    if a:mode == 't'
+        let command = 'tag'
+    elseif a:mode == 's'
+        let command = 'tselect'
+    endif
+    try
+        exec command . ' ' . keyword
+    catch
+        close
+    endtry
 endfunction
-nnoremap tt :call TagWin('tag')<CR>
-nnoremap ts :call TagWin('tselect')<CR>
+nnoremap tt :call TagWin('t')<CR>
+nnoremap ts :call TagWin('s')<CR>
 " }}}
 
 " 补全快捷键 {{{
 if has("gui_running")
     "补全时空格接受匹配+空格
-    inoremap <Space> <C-R>=pumvisible() ? "\<lt>C-Y>\<lt>Space>" : "\<lt>Space>"<CR>
+     inoremap <Space> <C-R>=pumvisible() ? "\<lt>C-Y>\<lt>Space>" : "\<lt>Space>"<CR>
     "补全时Enter接收匹配
     inoremap <Enter> <C-R>=pumvisible() ? "\<lt>C-Y>" : "\<lt>Enter>"<CR>
     "补全时Esc结束补全
@@ -153,12 +162,12 @@ nnoremap <silent> <C-H> :wincmd h<CR>
 nnoremap <silent> <C-J> :wincmd j<CR>
 nnoremap <silent> <C-K> :wincmd k<CR>
 nnoremap <silent> <C-L> :wincmd l<CR>
-" 分割窗口时跳转到旧窗口
+" 分割窗口时跳转到新窗口
 nnoremap <silent> <C-W>s :wincmd s\|wincmd j<CR>
 nnoremap <silent> <C-W>v :wincmd v\|wincmd l<CR>
 " 关闭搜索高亮
-nnoremap <silent> <F2>      :nohlsearch<CR>
-inoremap <silent> <F2> <C-O>:nohlsearch<CR>
+nnoremap <silent> <F2>      :nohlsearch \| call ClearHighlightLines(1)<CR>
+inoremap <silent> <F2> <C-O>:nohlsearch \| call ClearHighlightLines(1)<CR>
 " n固定向下，N固定向上
 nnoremap <expr> n v:searchforward ? "n" : "N"
 nnoremap <expr> N v:searchforward ? "N" : "n"
@@ -191,6 +200,38 @@ cab Wq wq
 cab Wa wa
 cab X x
 " }}}
+
+" 高亮当前行 {{{
+function! ToggleHighlightCurrentLine()
+    if !exists('b:myhllines')
+        let b:myhllines = {}
+    endif
+
+    let lnum = line('.')
+    if has_key(b:myhllines, lnum)
+        silent! call matchdelete(b:myhllines[lnum])
+        unlet b:myhllines[lnum]
+    else
+        let matchid = matchadd('Search', '\%'.lnum.'l')
+        let b:myhllines[lnum] = matchid
+    endif
+endfunction
+function! ClearHighlightLines(force)
+    if a:force
+        call clearmatches()
+    else
+        if exists('b:myhllines')
+            for value in values(b:myhllines)
+                silent! call matchdelete(value)
+            endfor
+        endif
+    endif
+    let b:myhllines = {}
+endfunction
+nnoremap <silent> <Leader>h :call ToggleHighlightCurrentLine()<CR>
+autocmd InsertEnter * call ClearHighlightLines(0)
+"}}}
+
 " }}}
 
 " 插件配置 {{{
