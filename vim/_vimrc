@@ -109,24 +109,6 @@ filetype plugin indent on
 set modeline                 "因为debian基于安全原因把modeline禁用了
 set completeopt=longest,menu "自动补全命令时候使用菜单式匹配列表
 set wildmenu
-
-function! TagWin(mode)
-    let keyword = expand('<cword>')
-    wincmd |
-    rightbelow vertical split
-    if a:mode == 't'
-        let command = 'tag'
-    elseif a:mode == 's'
-        let command = 'tselect'
-    endif
-    try
-        exec command . ' ' . keyword
-    catch
-        close
-    endtry
-endfunction
-nnoremap tt :call TagWin('t')<CR>
-nnoremap ts :call TagWin('s')<CR>
 " }}}
 
 " 补全快捷键 {{{
@@ -228,10 +210,9 @@ function! ClearHighlightLines(force)
     endif
     let b:myhllines = {}
 endfunction
-nnoremap <silent> <Leader>h :call ToggleHighlightCurrentLine()<CR>
+nnoremap <silent> <F3> :call ToggleHighlightCurrentLine()<CR>
 autocmd InsertEnter * call ClearHighlightLines(0)
 "}}}
-
 " }}}
 
 " 插件配置 {{{
@@ -297,12 +278,16 @@ nnoremap <silent><expr> <CR> &buftype != '' ? "<CR>" : ":<C-U>call <SID>InvokeBE
 " }}}
 
 " ctrlp {{{
+" extensions
+let g:ctrlp_extensions = ['tag', 'buffertag', 'rtscript']
+
 " use ctrlp-cmatcher
 let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 
-nnoremap <silent> gl :CtrlP<CR>
-nnoremap <silent> gL :exec 'CtrlP ' . getcwd()<CR>
-nnoremap <silent> gM :CtrlPMRU<CR>
+nnoremap <silent> <C-P> :CtrlP<CR>
+nnoremap <silent> gl    :exec 'CtrlP ' . getcwd()<CR>
+nnoremap <silent> gr    :CtrlPTag<CR>
+nnoremap <silent> <C-O> :CtrlPBufTag<CR>
 let g:ctrlp_mruf_max = 800
 let g:ctrlp_mruf_case_sensitive = 0
 let g:ctrlp_switch_buffer = 0
@@ -333,6 +318,8 @@ if has('win32')
 else
     let g:yankring_history_dir = $HOME.'/.vim-infos/'
 endif
+" release default mapped keys
+let g:yankring_replace_n_pkey = ''
 nnoremap <silent> gy :YRShow<CR>
 " }}}
 
