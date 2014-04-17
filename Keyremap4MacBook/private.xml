@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<root>
+  <vkchangeinputsourcedef>
+    <name>KeyCode::VK_CHANGE_INPUTSOURCE_HexInput</name>
+    <inputsourceid_equal>com.apple.keylayout.UnicodeHexInput</inputsourceid_equal>
+  </vkchangeinputsourcedef>
+  <vkchangeinputsourcedef>
+    <name>KeyCode::VK_CHANGE_INPUTSOURCE_BaiduIM</name>
+    <inputsourceid_equal>com.baidu.inputmethod.BaiduIM.pinyin</inputsourceid_equal>
+  </vkchangeinputsourcedef>
+  <vkchangeinputsourcedef>
+    <name>KeyCode::VK_CHANGE_INPUTSOURCE_GoogleJapanese</name>
+    <inputsourceid_equal>com.google.inputmethod.Japanese.base</inputsourceid_equal>
+  </vkchangeinputsourcedef>
+  <item>
+    <name>Change to InputMethod with shortcut</name>
+    <identifier>private.change_inputsources</identifier>
+    <autogen>__KeyToKey__ KeyCode::U, ModifierFlag::OPTION_L, KeyCode::VK_CHANGE_INPUTSOURCE_HexInput</autogen>
+    <autogen>__KeyToKey__ KeyCode::N, ModifierFlag::OPTION_L, KeyCode::VK_CHANGE_INPUTSOURCE_BaiduIM</autogen>
+    <autogen>__KeyToKey__ KeyCode::J, ModifierFlag::OPTION_L, KeyCode::VK_CHANGE_INPUTSOURCE_GoogleJapanese</autogen>
+  </item>
+</root>
