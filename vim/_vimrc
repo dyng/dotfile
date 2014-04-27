@@ -148,8 +148,8 @@ nnoremap <silent> <C-L> :wincmd l<CR>
 nnoremap <silent> <C-W>s :wincmd s\|wincmd j<CR>
 nnoremap <silent> <C-W>v :wincmd v\|wincmd l<CR>
 " 关闭搜索高亮
-nnoremap <silent> <F2>      :nohlsearch \| call ClearHighlightLines(1)<CR>
-inoremap <silent> <F2> <C-O>:nohlsearch \| call ClearHighlightLines(1)<CR>
+nnoremap <silent> <F2>      :nohlsearch \| call ClearHighlightLines()<CR>
+inoremap <silent> <F2> <C-O>:nohlsearch \| call ClearHighlightLines()<CR>
 " n固定向下，N固定向上
 nnoremap <expr> n v:searchforward ? "n" : "N"
 nnoremap <expr> N v:searchforward ? "N" : "n"
@@ -163,6 +163,8 @@ xnoremap <C-C> "+y
 nnoremap <C-Q> "+p
 inoremap <C-Q> <C-R>+
 cnoremap <C-Q> <C-R>+
+" 复制文件名
+nnoremap <silent> yf :let @+ = expand('%')<CR>
 " Shell风格的命令行
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
@@ -198,20 +200,16 @@ function! ToggleHighlightCurrentLine()
         let b:myhllines[lnum] = matchid
     endif
 endfunction
-function! ClearHighlightLines(force)
-    if a:force
-        call clearmatches()
-    else
-        if exists('b:myhllines')
-            for value in values(b:myhllines)
-                silent! call matchdelete(value)
-            endfor
-        endif
+function! ClearHighlightLines()
+    if exists('b:myhllines')
+        for value in values(b:myhllines)
+            silent! call matchdelete(value)
+        endfor
     endif
     let b:myhllines = {}
 endfunction
 nnoremap <silent> <F3> :call ToggleHighlightCurrentLine()<CR>
-autocmd InsertEnter * call ClearHighlightLines(0)
+autocmd InsertEnter * call ClearHighlightLines()
 "}}}
 " }}}
 
@@ -286,8 +284,8 @@ let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 
 nnoremap <silent> <C-P> :CtrlP<CR>
 nnoremap <silent> gl    :exec 'CtrlP ' . getcwd()<CR>
-nnoremap <silent> gr    :CtrlPTag<CR>
-nnoremap <silent> <C-O> :CtrlPBufTag<CR>
+nnoremap <silent> ge    :CtrlPTag<CR>
+nnoremap <silent> <C-E> :CtrlPBufTag<CR>
 let g:ctrlp_mruf_max = 800
 let g:ctrlp_mruf_case_sensitive = 0
 let g:ctrlp_switch_buffer = 0
@@ -382,6 +380,14 @@ com! -bar -b -n=? -comp=customlist,xolox#session#complete_names So SessionOpen<b
 com! -bar -b -n=? -comp=customlist,xolox#session#complete_names Sc SessionClose<bang> <args>
 com! -bar -b -n=? -comp=customlist,xolox#session#complete_names Ss SessionSave<bang> <args>
 com! -bar -b -n=? -comp=customlist,xolox#session#complete_names Sd SessionDelete<bang> <args>
+function! s:SessionCd(bang, path)
+    exec 'SessionClose' . a:bang
+    exec 'cd ' . a:path
+    let session_name = fnamemodify(getcwd(), ':t')
+    exec 'SessionSave' . a:bang . ' ' . session_name
+endfunction
+com! -bar -b -n=? -comp=file SessionCd call s:SessionCd(<q-bang>, <q-args>)
+com! -bar -b -n=? -comp=file Scd SessionCd<bang> <args>
 " }}}
 
 " MRU {{{
@@ -405,6 +411,9 @@ let g:quickrun_config['c'] = {
 \ 'tempfile': '%{tempname()}.c',
 \ 'hook/sweep/files': '%S:p:r',
 \ 'cmdopt': '-std=c99 -Wall'
+\ }
+let g:quickrun_config['perl'] = {
+\ 'cmdopt': '-Ilib'
 \ }
 " }}}
 
