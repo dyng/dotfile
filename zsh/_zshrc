@@ -96,11 +96,16 @@ alias -r lR="ls -RAlh"
 alias -r tia="tig --all"
 alias -r diff="diff -u"
 
+# Git Alias
+alias -r gd="git diff"
+alias -r gds="git diff --staged"
+
 # Global Alias
 alias -g /L='| less'
 alias -g /H='| head'
 alias -g /T='| tail'
 alias -g /G='| grep'
+alias -g /A="&& terminal-notifier -message 'done'"
 
 # Fixture Alias
 alias -r ssh="TERM=xterm ssh"
