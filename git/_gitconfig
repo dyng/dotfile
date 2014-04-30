@@ -4,6 +4,7 @@
 [core]
 	excludesfile = /Users/dyng/.gitignore_global
 	editor = /usr/bin/vim
+	precomposeunicode = false
 [alias]
 	st = status
 	ck = checkout
