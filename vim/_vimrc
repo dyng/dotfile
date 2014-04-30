@@ -39,6 +39,7 @@ Bundle 'vim-scripts/sudo.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
 Bundle 'terryma/vim-multiple-cursors'
+Bundle 'vim-scripts/Mark--Karkat'
 
 " 语言特定插件
 Bundle 'jelera/vim-javascript-syntax'
@@ -489,6 +490,15 @@ let g:multi_cursor_next_key='<C-D>'
 let g:multi_cursor_prev_key='<C-U>'
 let g:multi_cursor_skip_key='<C-X>'
 let g:multi_cursor_quit_key='<Esc>'
+" }}}
+
+" {{{ mark
+nmap mm <Plug>MarkSet
+vmap mm <Plug>MarkSet
+nmap mr <Plug>MarkRegex
+vmap mr <Plug>MarkRegex
+nmap mn <Plug>MarkClear
+nmap mN <Plug>MarkAllClear
 " }}}
 " }}}
 
