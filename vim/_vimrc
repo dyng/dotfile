@@ -1,8 +1,8 @@
-" vi不兼容 {{{
+" Vi Nocompatible {{{
 set nocompatible
 " }}}
 
-" 载入插件 {{{
+" Load Plugins {{{
 filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
@@ -41,11 +41,11 @@ Bundle 'SirVer/ultisnips'
 Bundle 'terryma/vim-multiple-cursors'
 Bundle 'vim-scripts/Mark--Karkat'
 
-" 语言特定插件
+" Language Specific Plugins
 Bundle 'jelera/vim-javascript-syntax'
 Bundle 'me-vlad/python-syntax.vim'
 
-" 颜色方案
+" Colorschemes
 Bundle 'godlygeek/csapprox'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'tomasr/molokai'
@@ -55,43 +55,43 @@ Bundle 'w0ng/vim-hybrid'
 Bundle 'sjl/badwolf'
 " }}}
 
-" 基本配置 {{{
-" 编码相关 {{{
+" Basic Config {{{
+" Encoding {{{
 set encoding=utf-8
 language message zh_CN.UTF-8
 set fileencodings=ucs-bom,utf-8,sjis,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 " }}}
 
-" 缩进相关 {{{
+" Indentation {{{
 set magic
-set ruler            "标尺信息
+set ruler
 set autoindent
 set tabstop=8
 set shiftwidth=4
 set softtabstop=4
 set smarttab
 set expandtab
-set display=lastline "显示最多行，不用@@
+set display=lastline
 " }}}
 
-" 搜索相关 {{{
+" Searching {{{
 set incsearch
 set ignorecase
 set smartcase
 " }}}
 
-" 显示相关 {{{
+" View {{{
 set backspace=indent,eol,start
-set guioptions= "无菜单、工具栏
+set guioptions=
 set hlsearch
-set showmatch   "显示匹配的括号
+set showmatch
 set laststatus=2
 
 set list
 set listchars=tab:>\ ,trail:-
 autocmd FileType git*,help setlocal nolist
 
-" 颜色主题
+" Colorscheme
 if has("gui_running")
     set background=dark
     colorscheme molokai
@@ -100,85 +100,94 @@ else
 endif
 " }}}
 
-" 缓冲区相关 {{{
-set hidden "自动隐藏缓冲区
+" Buffer {{{
+set hidden
 " }}}
 
-" 编程环境 {{{
+" IDE Feature {{{
 syntax on
 filetype plugin indent on
-set modeline                 "因为debian基于安全原因把modeline禁用了
-set completeopt=longest,menu "自动补全命令时候使用菜单式匹配列表
+set modeline                 "modeline is by default disabled on Debian
+set completeopt=longest,menu
 set wildmenu
 " }}}
 
-" 补全快捷键 {{{
+" Completion Map {{{
 if has("gui_running")
-    "补全时空格接受匹配+空格
+    " <Space>: accept and insert a space
      inoremap <Space> <C-R>=pumvisible() ? "\<lt>C-Y>\<lt>Space>" : "\<lt>Space>"<CR>
-    "补全时Enter接收匹配
+    " <Enter>: accept
     inoremap <Enter> <C-R>=pumvisible() ? "\<lt>C-Y>" : "\<lt>Enter>"<CR>
-    "补全时Esc结束补全
+    " <Esc>: cancle
     inoremap <Esc> <C-R>=pumvisible() ? "\<lt>C-E>" : "\<lt>Esc>"<CR>
 endif
 " }}}
 
-" 设置Map {{{
+" Maps {{{
 let mapleader = ','
-" 行首行尾移动
+
+" Move line start and end
 noremap H ^
 noremap L $
 inoremap <Home> <C-O>g^
 inoremap <End>  <c-O>g$
-" 快速翻页
+" Quick paging
 nnoremap <Space> <C-D>
 vnoremap <Space> <C-D>
-" 复制至行尾
+" Copy to line end
 nnoremap Y y$
-" 长行移动
+" Cursor move
 nnoremap <Down>      gj
 nnoremap <Up>        gk
 inoremap <Down> <C-R>=pumvisible() ? "\<lt>Down>" : "\<lt>C-O>gj"<CR>
 inoremap <Up>   <C-R>=pumvisible() ? "\<lt>Up>" : "\<lt>C-O>gk"<CR>
-" 窗口间移动
+
+" Window switch
 nnoremap <silent> <C-H> :wincmd h<CR>
 nnoremap <silent> <C-J> :wincmd j<CR>
 nnoremap <silent> <C-K> :wincmd k<CR>
 nnoremap <silent> <C-L> :wincmd l<CR>
-" 分割窗口时跳转到新窗口
+" Focus new splited window
 nnoremap <silent> <C-W>s :wincmd s\|wincmd j<CR>
 nnoremap <silent> <C-W>v :wincmd v\|wincmd l<CR>
-" 关闭搜索高亮
+
+" Nohlsearch
 nnoremap <silent> <F2>      :nohlsearch \| call ClearHighlightLines()<CR>
 inoremap <silent> <F2> <C-O>:nohlsearch \| call ClearHighlightLines()<CR>
-" n固定向下，N固定向上
+" n always look forward && N always look backward
 nnoremap <expr> n v:searchforward ? "n" : "N"
 nnoremap <expr> N v:searchforward ? "N" : "n"
-" 调整缩进
+
+" Shift lines leftwards or rightwards
 vnoremap <expr> > v:count ? ">" : ">gv"
 vnoremap <expr> < v:count ? "<" : "<gv"
-" 快速添加替换命令
+
+" Quick insert :s command
 cnoremap <Leader>s %s###cg<Left><Left><Left>
-" Win风格复制粘贴
+
+" Win-style copy&paste shortcut
 xnoremap <C-C> "+y
 nnoremap <C-Q> "+p
 inoremap <C-Q> <C-R>+
 cnoremap <C-Q> <C-R>+
-" 复制文件名
+" Copy filename
 nnoremap <silent> yf :let @+ = expand('%')<CR>
+" Run current line
 nnoremap <silent> yr :exec getline('.') \| echo 'executed!'<CR>
-" Shell风格的命令行
+" Shell-style shortcut in command mode
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-d> <Del>
 cnoremap <C-h> <BackSpace>
-" Quickfix模式
+
+" For quickfix mode
 nnoremap <leader>n :cnext<CR>
 nnoremap <leader>p :cprevious<CR>
 nnoremap <leader>w :cwindow<CR>
-" 纠正拼写错误
+
+" Correct spell
 cab Q q
 cab Qa qa
 cab W w
@@ -187,7 +196,7 @@ cab Wa wa
 cab X x
 " }}}
 
-" 高亮当前行 {{{
+" Highlight current line {{{
 function! ToggleHighlightCurrentLine()
     if !exists('b:myhllines')
         let b:myhllines = {}
@@ -215,7 +224,7 @@ autocmd InsertEnter * call ClearHighlightLines()
 "}}}
 " }}}
 
-" 插件配置 {{{
+" Plugin Configs {{{
 " neocomplcache {{{
 " let g:neocomplcache_enable_at_startup = 1
 " let g:neocomplcache_enable_ignore_case = 0
@@ -265,8 +274,8 @@ let g:vimim_map="no-gi"
 " }}}
 
 " BufExplorer {{{
-" let g:BufNumLimit = 1  # 是否自动关闭LRU Buffer. 1: 是 2: 否
-" let g:MaxBufNum = 8    # 设定最大Buffer数. 默认: 8
+" let g:BufNumLimit = 1  # If close buffer in LRU order => 1: yes 0: no
+" let g:MaxBufNum = 8    # Maximum number of buffers => default: 8
 function! s:InvokeBE()
     if v:count == 0
         exec "BufExplorer"
