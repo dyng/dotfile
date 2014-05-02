@@ -19,9 +19,7 @@ Bundle 'dyng/CommentReader'
 Bundle 'sjl/gundo.vim'
 Bundle 'tsaleh/vim-matchit'
 Bundle 'vim-scripts/Tagbar'
-" Bundle 'Shougo/neocomplcache'
 Bundle 'Valloric/YouCompleteMe'
-" Bundle 'Shougo/neosnippet'
 Bundle 'scrooloose/syntastic'
 Bundle 'vim-scripts/Rename'
 Bundle 'tpope/vim-surround'
@@ -225,33 +223,6 @@ autocmd InsertEnter * call ClearHighlightLines()
 " }}}
 
 " Plugin Configs {{{
-" neocomplcache {{{
-" let g:neocomplcache_enable_at_startup = 1
-" let g:neocomplcache_enable_ignore_case = 0
-" let g:neocomplcache_enable_smart_case = 0
-" let g:neocomplcache_enable_camel_case_completion = 1
-" let g:neocomplcache_enable_underbar_completion = 1
-" let g:neocomplcache_enable_auto_delimiter = 1
-" if !exists('g:neocomplcache_keyword_patterns')
-    " let g:neocomplcache_keyword_patterns = {}
-" endif
-" let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-" function! s:MiniSuperTab()
-    " if pumvisible()
-        " return "\<C-n>"
-    " else
-        " return "\<Tab>"
-    " endif
-" endfunction
-" inoremap <expr><Tab> <SID>MiniSuperTab()
-" " 补全时空格接受匹配+空格
-" inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() . "<Space>" : "<Space>"
-" " 补全时Enter接收匹配
-" inoremap <expr><Enter> pumvisible() ? neocomplcache#close_popup() : "\<Enter>"
-" " 补全时Esc结束补全
-" inoremap <expr><Esc>   pumvisible() ? neocomplcache#cancel_popup() : "\<Esc>"
-" " }}}
-
 " UltiSnips {{{
 let g:UltiSnipsNoPythonWarning     = 1
 let g:UltiSnipsExpandTrigger       = "<C-O><C-O>"
