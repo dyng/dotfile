@@ -166,6 +166,7 @@ inoremap <C-Q> <C-R>+
 cnoremap <C-Q> <C-R>+
 " 复制文件名
 nnoremap <silent> yf :let @+ = expand('%')<CR>
+nnoremap <silent> yr :exec getline('.') \| echo 'executed!'<CR>
 " Shell风格的命令行
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
@@ -492,6 +493,11 @@ let g:multi_cursor_skip_key='<C-X>'
 let g:multi_cursor_quit_key='<Esc>'
 " }}}
 
+" {{{ syntastic
+nnoremap <F5> :SyntasticToggleMode<CR>
+inoremap <F5> <C-O>:SyntasticToggleMode<CR>
+" }}}
+
 " {{{ mark
 nmap mm <Plug>MarkSet
 vmap mm <Plug>MarkSet
@@ -499,6 +505,8 @@ nmap mr <Plug>MarkRegex
 vmap mr <Plug>MarkRegex
 nmap mn <Plug>MarkClear
 nmap mN <Plug>MarkAllClear
+nmap m* <Plug>MarkSearchAnyNext
+nmap m# <Plug>MarkSearchAnyPrev
 " }}}
 " }}}
 
