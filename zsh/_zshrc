@@ -84,6 +84,9 @@ fi
 # NVM
 [ -s $HOME/.nvm/nvm.sh ] && . $HOME/.nvm/nvm.sh # This loads NVM
 
+# GVM
+[ -s $HOME/.gvm/scripts/gvm ] && . $HOME/.gvm/scripts/gvm
+
 # }}}
 
 ### Alias {{{
