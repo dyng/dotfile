@@ -37,10 +37,19 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
 Bundle 'terryma/vim-multiple-cursors'
 Bundle 'vim-scripts/Mark--Karkat'
+Bundle 'tpope/vim-rsi'
+Bundle 'skwp/greplace.vim'
+Bundle 'sandeepcr529/Buffet.vim'
+Bundle 'dyng/bufmru.vim'
 
 " Language Specific Plugins
-Bundle 'jelera/vim-javascript-syntax'
+" Bundle 'jelera/vim-javascript-syntax'
+Bundle 'pangloss/vim-javascript'
 Bundle 'me-vlad/python-syntax.vim'
+Bundle 'digitaltoad/vim-jade'
+Bundle 'jnwhiteh/vim-golang'
+Bundle 'hail2u/vim-css3-syntax'
+Bundle 'kchmck/vim-coffee-script'
 
 " Colorschemes
 Bundle 'godlygeek/csapprox'
@@ -230,6 +239,33 @@ let g:UltiSnipsJumpForwardTrigger  = "<C-J>"
 let g:UltiSnipsJumpBackwardTrigger = "<C-K>"
 " }}}
 
+" {{{ bufmru
+
+" config
+let g:bufmru_max_buffer_num = 9
+
+" Delete least-recently-used buffer if there is more than 8 buffers
+function! s:AutoDelBuf()
+    if len(g:BufMRUList()) < g:bufmru_max_buffer_num
+        return
+    endif
+
+    let buf_mru = g:BufMRUList()
+    let need_to_delete = len(buf_mru) - g:bufmru_max_buffer_num
+    for bufnr in buf_mru
+        if !getbufvar(bufnr, "&modified")
+            exec "bdelete " . bufnr
+            let need_to_delete -= 1
+            if need_to_delete <= 0
+                break
+            endif
+        endif
+    endfor
+endfunction
+
+au BufAdd * nested call s:AutoDelBuf()
+" }}}
+
 " Nerdtree {{{
 nnoremap <silent> gn :NERDTreeFind<CR>
 nnoremap <silent> gN :NERDTree<CR>
@@ -322,6 +358,33 @@ let g:tagbar_left      = 1
 let g:tagbar_width     = 30
 let g:tagbar_sort      = 0
 let g:tagbar_autoclose = 1
+let g:tagbar_type_go = {
+    \ 'ctagstype' : 'go',
+    \ 'kinds'     : [
+        \ 'p:package',
+        \ 'i:imports:1',
+        \ 'c:constants',
+        \ 'v:variables',
+        \ 't:types',
+        \ 'n:interfaces',
+        \ 'w:fields',
+        \ 'e:embedded',
+        \ 'm:methods',
+        \ 'r:constructor',
+        \ 'f:functions'
+    \ ],
+    \ 'sro' : '.',
+    \ 'kind2scope' : {
+        \ 't' : 'ctype',
+        \ 'n' : 'ntype'
+    \ },
+    \ 'scope2kind' : {
+        \ 'ctype' : 't',
+        \ 'ntype' : 'n'
+    \ },
+    \ 'ctagsbin'  : 'gotags',
+    \ 'ctagsargs' : '-sort -silent'
+\ }
 function! s:InvokeTB()
     if bufname("%") != "__Tagbar__"
         let s:previous_bufname = bufname("%")
@@ -460,8 +523,8 @@ let g:multi_cursor_quit_key='<Esc>'
 " }}}
 
 " {{{ syntastic
-nnoremap <F5> :SyntasticToggleMode<CR>
-inoremap <F5> <C-O>:SyntasticToggleMode<CR>
+nnoremap <F9> :SyntasticToggleMode<CR>
+inoremap <F9> <C-O>:SyntasticToggleMode<CR>
 " }}}
 
 " {{{ mark
@@ -469,10 +532,25 @@ nmap mm <Plug>MarkSet
 vmap mm <Plug>MarkSet
 nmap mr <Plug>MarkRegex
 vmap mr <Plug>MarkRegex
-nmap mn <Plug>MarkClear
-nmap mN <Plug>MarkAllClear
+nmap mc <Plug>MarkClear
+nmap mC <Plug>MarkAllClear
 nmap m* <Plug>MarkSearchAnyNext
 nmap m# <Plug>MarkSearchAnyPrev
+nmap mn <Plug>MarkSearchAnyNext
+nmap mN <Plug>MarkSearchAnyPrev
+" }}}
+
+" {{{ greplace
+set grepprg=ag
+let g:grep_cmd_opts = '--line-numbers --noheading'
+" }}}
+
+" {{{ vim-golang
+autocmd BufWritePre *.go silent Fmt
+" }}}
+
+" {{{ Buffet
+nnoremap <silent> <CR> :Bufferlist<CR>
 " }}}
 " }}}
 
