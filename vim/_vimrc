@@ -8,7 +8,6 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
 Bundle 'dyng/auto_mkdir'
-Bundle 'dyng/bufexplorer.zip'
 Bundle 'kien/ctrlp.vim'
 Bundle 'JazzCore/ctrlp-cmatcher'
 Bundle 'scrooloose/nerdtree'
@@ -242,19 +241,6 @@ let NERDTreeBookmarksFile = $HOME.'/.vim-infos/NERDTreeBookmarks'
 
 " VimIM {{{
 let g:vimim_map="no-gi"
-" }}}
-
-" BufExplorer {{{
-" let g:BufNumLimit = 1  # If close buffer in LRU order => 1: yes 0: no
-" let g:MaxBufNum = 8    # Maximum number of buffers => default: 8
-function! s:InvokeBE()
-    if v:count == 0
-        exec "BufExplorer"
-    else
-        exec "buffer " . v:count
-    endif
-endfunction
-nnoremap <silent><expr> <CR> &buftype != '' ? "<CR>" : ":<C-U>call <SID>InvokeBE()<CR>"
 " }}}
 
 " ctrlp {{{
