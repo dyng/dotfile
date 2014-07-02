@@ -35,21 +35,23 @@ Bundle 'mattn/emmet-vim'
 Bundle 'vim-scripts/sudo.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
+Bundle 'honza/vim-snippets'
 Bundle 'terryma/vim-multiple-cursors'
 Bundle 'vim-scripts/Mark--Karkat'
 Bundle 'tpope/vim-rsi'
 Bundle 'skwp/greplace.vim'
 Bundle 'sandeepcr529/Buffet.vim'
 Bundle 'dyng/bufmru.vim'
+Bundle 'tommcdo/vim-exchange'
 
 " Language Specific Plugins
-" Bundle 'jelera/vim-javascript-syntax'
 Bundle 'pangloss/vim-javascript'
 Bundle 'me-vlad/python-syntax.vim'
 Bundle 'digitaltoad/vim-jade'
 Bundle 'jnwhiteh/vim-golang'
 Bundle 'hail2u/vim-css3-syntax'
 Bundle 'kchmck/vim-coffee-script'
+Bundle 'motemen/xslate-vim'
 
 " Colorschemes
 Bundle 'godlygeek/csapprox'
@@ -148,6 +150,9 @@ nnoremap <Up>        gk
 inoremap <Down> <C-R>=pumvisible() ? "\<lt>Down>" : "\<lt>C-O>gj"<CR>
 inoremap <Up>   <C-R>=pumvisible() ? "\<lt>Up>" : "\<lt>C-O>gk"<CR>
 
+" Tab navigation
+nnoremap <C-Tab> :tabnext<CR>
+
 " Window switch
 nnoremap <silent> <C-H> :wincmd h<CR>
 nnoremap <silent> <C-J> :wincmd j<CR>
@@ -189,9 +194,9 @@ cnoremap <C-d> <Del>
 cnoremap <C-h> <BackSpace>
 
 " For quickfix mode
-nnoremap <leader>n :cnext<CR>
-nnoremap <leader>p :cprevious<CR>
-nnoremap <leader>w :cwindow<CR>
+nnoremap <silent> <leader>n :cnext<CR>
+nnoremap <silent> <leader>p :cprevious<CR>
+nnoremap <silent> <leader>w :cwindow<CR>
 
 " Correct spell
 cab Q q
@@ -331,7 +336,35 @@ nnoremap <silent> <leader>u :GundoToggle<CR>
 " }}}
 
 " EasyMotion {{{
-let g:EasyMotion_leader_key = 'z'
+let g:EasyMotion_do_mapping = 0 " Disable default mappings
+let g:EasyMotion_keys = 'asdghklqwertyuiopzxcvbnmfj'
+
+nmap zf <Plug>(easymotion-s)
+nmap zs <Plug>(easymotion-s2)
+nmap zj <Plug>(easymotion-j)
+nmap zk <Plug>(easymotion-k)
+nmap zw <Plug>(easymotion-w)
+nmap zb <Plug>(easymotion-b)
+nmap zW <Plug>(easymotion-W)
+nmap zB <Plug>(easymotion-B)
+nmap ze <Plug>(easymotion-e)
+nmap zE <Plug>(easymotion-E)
+
+" Bi-directional find motion
+" Jump to anywhere you want with minimal keystrokes, with just one key binding.
+" `s{char}{label}`
+nmap s <Plug>(easymotion-s)
+" or
+" `s{char}{char}{label}`
+" Need one more keystroke, but on average, it may be more comfortable.
+nmap s <Plug>(easymotion-s2)
+
+" Turn on case sensitive feature
+let g:EasyMotion_smartcase = 1
+
+" JK motions: Line motions
+map <Leader>j <Plug>(easymotion-j)
+map <Leader>k <Plug>(easymotion-k)
 " }}}
 
 " Tabular {{{
@@ -504,6 +537,7 @@ let g:ycm_filepath_completion_use_working_dir = 1
 let g:ycm_add_preview_to_completeopt          = 0
 let g:ycm_complete_in_comments                = 1
 let g:ycm_seed_identifiers_with_syntax        = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
 " }}}
 
 " CtrlSF {{{
