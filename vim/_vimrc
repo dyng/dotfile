@@ -340,7 +340,7 @@ let g:EasyMotion_do_mapping = 0 " Disable default mappings
 let g:EasyMotion_keys = 'asdghklqwertyuiopzxcvbnmfj'
 
 nmap zf <Plug>(easymotion-s)
-nmap zs <Plug>(easymotion-s2)
+nmap zz <Plug>(easymotion-s2)
 nmap zj <Plug>(easymotion-j)
 nmap zk <Plug>(easymotion-k)
 nmap zw <Plug>(easymotion-w)
@@ -350,21 +350,8 @@ nmap zB <Plug>(easymotion-B)
 nmap ze <Plug>(easymotion-e)
 nmap zE <Plug>(easymotion-E)
 
-" Bi-directional find motion
-" Jump to anywhere you want with minimal keystrokes, with just one key binding.
-" `s{char}{label}`
-nmap s <Plug>(easymotion-s)
-" or
-" `s{char}{char}{label}`
-" Need one more keystroke, but on average, it may be more comfortable.
-nmap s <Plug>(easymotion-s2)
-
 " Turn on case sensitive feature
 let g:EasyMotion_smartcase = 1
-
-" JK motions: Line motions
-map <Leader>j <Plug>(easymotion-j)
-map <Leader>k <Plug>(easymotion-k)
 " }}}
 
 " Tabular {{{
