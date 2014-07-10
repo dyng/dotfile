@@ -48,13 +48,12 @@ Bundle 'tommcdo/vim-exchange'
 Bundle 'pangloss/vim-javascript'
 Bundle 'me-vlad/python-syntax.vim'
 Bundle 'digitaltoad/vim-jade'
-Bundle 'jnwhiteh/vim-golang'
 Bundle 'hail2u/vim-css3-syntax'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'motemen/xslate-vim'
+Bundle 'fatih/vim-go'
 
 " Colorschemes
-Bundle 'godlygeek/csapprox'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'tomasr/molokai'
 Bundle 'Pychimp/vim-luna'
@@ -123,7 +122,7 @@ set wildmenu
 " Completion Map {{{
 if has("gui_running")
     " <Space>: accept and insert a space
-     inoremap <Space> <C-R>=pumvisible() ? "\<lt>C-Y>\<lt>Space>" : "\<lt>Space>"<CR>
+    inoremap <Space> <C-R>=pumvisible() ? "\<lt>C-Y>\<lt>Space>" : "\<lt>Space>"<CR>
     " <Enter>: accept
     inoremap <Enter> <C-R>=pumvisible() ? "\<lt>C-Y>" : "\<lt>Enter>"<CR>
     " <Esc>: cancle
@@ -546,6 +545,7 @@ let g:multi_cursor_quit_key='<Esc>'
 " {{{ syntastic
 nnoremap <F9> :SyntasticToggleMode<CR>
 inoremap <F9> <C-O>:SyntasticToggleMode<CR>
+nnoremap <leader>e :Errors<CR>
 " }}}
 
 " {{{ mark
@@ -566,12 +566,12 @@ set grepprg=ag
 let g:grep_cmd_opts = '--line-numbers --noheading'
 " }}}
 
-" {{{ vim-golang
-autocmd BufWritePre *.go silent Fmt
+" {{{ Buffet
+nmap <silent><expr> <CR> &buftype ==# "" ? ":Bufferlist\r" : "\r"
 " }}}
 
-" {{{ Buffet
-nnoremap <silent> <CR> :Bufferlist<CR>
+" {{{ vim-go
+let g:go_fmt_fail_silently = 1
 " }}}
 " }}}
 
