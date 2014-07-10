@@ -96,12 +96,15 @@ alias -r ll="ls -lAh"
 alias -r la="ls -aTlFh"
 alias -r lr="ls -Rlh"
 alias -r lR="ls -RAlh"
-alias -r tia="tig --all"
 alias -r diff="diff -u"
 
 # Git Alias
 alias -r gd="git diff"
 alias -r gds="git diff --staged"
+
+# Tig Alias
+alias -r tia="tig --all"
+alias -r tis="tig status"
 
 # Global Alias
 alias -g /L='| less'
