@@ -19,8 +19,6 @@
   <item>
     <name>Change to InputMethod with shortcut</name>
     <identifier>private.change_inputsources</identifier>
-    <autogen>__KeyToKey__ KeyCode::M, ModifierFlag::COMMAND_R, KeyCode::VK_CHANGE_INPUTSOURCE_US</autogen>
-    <autogen>__KeyToKey__ KeyCode::L, ModifierFlag::COMMAND_R, KeyCode::VK_CHANGE_INPUTSOURCE_Squirrel</autogen>
-    <autogen>__KeyToKey__ KeyCode::J, ModifierFlag::COMMAND_R, KeyCode::VK_CHANGE_INPUTSOURCE_GoogleJapanese</autogen>
+    <autogen>__KeyToKey__ KeyCode::SPACE, ModifierFlag::COMMAND_R, KeyCode::VK_CHANGE_INPUTSOURCE_US</autogen>
   </item>
 </root>
