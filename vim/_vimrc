@@ -17,7 +17,7 @@ Bundle 'thinca/vim-quickrun'
 Bundle 'dyng/CommentReader'
 Bundle 'sjl/gundo.vim'
 Bundle 'tsaleh/vim-matchit'
-Bundle 'vim-scripts/Tagbar'
+Bundle 'majutsushi/tagbar'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'scrooloose/syntastic'
 Bundle 'vim-scripts/Rename'
@@ -43,6 +43,7 @@ Bundle 'skwp/greplace.vim'
 Bundle 'sandeepcr529/Buffet.vim'
 Bundle 'dyng/bufmru.vim'
 Bundle 'tommcdo/vim-exchange'
+Bundle 'AndrewRadev/linediff.vim'
 
 " Language Specific Plugins
 Bundle 'pangloss/vim-javascript'
@@ -229,7 +230,7 @@ function! ClearHighlightLines()
     endif
     let b:myhllines = {}
 endfunction
-nnoremap <silent> <F3> :call ToggleHighlightCurrentLine()<CR>
+nnoremap <silent> ml :call ToggleHighlightCurrentLine()<CR>
 autocmd InsertEnter * call ClearHighlightLines()
 "}}}
 " }}}
@@ -290,10 +291,12 @@ let g:ctrlp_extensions = ['tag', 'buffertag', 'rtscript']
 " use ctrlp-cmatcher
 let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
 
-nnoremap <silent> <C-P> :CtrlP<CR>
-nnoremap <silent> gl    :exec 'CtrlP ' . getcwd()<CR>
-nnoremap <silent> ge    :CtrlPTag<CR>
+nnoremap <silent> <C-P> :CtrlPRoot<CR>
+nnoremap <silent> <C-B> :CtrlPBuffer<CR>
 nnoremap <silent> <C-E> :CtrlPBufTag<CR>
+nnoremap <silent> tp    :exec 'CtrlP ' . getcwd()<CR>
+nnoremap <silent> tt    :CtrlPTag<CR>
+let g:ctrlp_working_path_mode = 'rc'
 let g:ctrlp_mruf_max = 800
 let g:ctrlp_mruf_case_sensitive = 0
 let g:ctrlp_switch_buffer = 0
@@ -545,7 +548,12 @@ let g:multi_cursor_quit_key='<Esc>'
 " {{{ syntastic
 nnoremap <F9> :SyntasticToggleMode<CR>
 inoremap <F9> <C-O>:SyntasticToggleMode<CR>
-nnoremap <leader>e :Errors<CR>
+nnoremap <silent><leader>e :Errors<CR>
+let g:syntastic_mode_map = {
+\ 'mode': 'active',
+\ 'active_filetypes':  [],
+\ 'passive_filetypes': ['html']
+\ }
 " }}}
 
 " {{{ mark
@@ -572,6 +580,12 @@ nmap <silent><expr> <CR> &buftype ==# "" ? ":Bufferlist\r" : "\r"
 
 " {{{ vim-go
 let g:go_fmt_fail_silently = 1
+" }}}
+
+" linediff {{{
+let g:linediff_buffer_type = 'scratch'
+vnoremap zd :Linediff<CR>
+com! LR LinediffReset
 " }}}
 " }}}
 
