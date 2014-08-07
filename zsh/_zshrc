@@ -97,6 +97,7 @@ alias -r la="ls -aTlFh"
 alias -r lr="ls -Rlh"
 alias -r lR="ls -RAlh"
 alias -r diff="diff -u"
+alias -r stat="stat -x"
 
 # Git Alias
 alias -r gd="git diff"
@@ -127,9 +128,6 @@ bindkey "^S" history-incremental-pattern-search-forward
 #}}}
 
 ### Utils {{{
-
-# Json Parser
-alias -r pjson="python -mjson.tool"
 
 # Insert Unicode Character
 autoload insert-unicode-char
