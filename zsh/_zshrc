@@ -76,13 +76,13 @@ if [[ -s "$HOME/perl5/perlbrew/etc/bashrc" ]]; then
     source "$HOME/perl5/perlbrew/etc/bashrc"
 fi
 
-# RVM
-if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
-    source "$HOME/.rvm/scripts/rvm"
-fi
-
 # NVM
 [ -s $HOME/.nvm/nvm.sh ] && . $HOME/.nvm/nvm.sh # This loads NVM
+
+# rbenv
+if which rbenv >/dev/null; then
+    eval "$(rbenv init - zsh)"
+fi
 
 # GVM
 [ -s $HOME/.gvm/scripts/gvm ] && . $HOME/.gvm/scripts/gvm
