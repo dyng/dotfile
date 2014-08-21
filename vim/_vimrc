@@ -297,11 +297,12 @@ nnoremap <silent> <C-E> :CtrlPBufTag<CR>
 nnoremap <silent> tp    :exec 'CtrlP ' . getcwd()<CR>
 nnoremap <silent> tt    :CtrlPTag<CR>
 let g:ctrlp_working_path_mode = 'rc'
+let g:ctrlp_max_files = 30000
 let g:ctrlp_mruf_max = 800
 let g:ctrlp_mruf_case_sensitive = 0
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\.neocon$\|\.git$\|\.hg$\|\.svn$',
+  \ 'dir':  '\v(\.neocon|\.git|\.hg|\.svn|node_modules|bower_components|local)',
   \ 'file': '\.exe$\|\.so$\|\.dll$\|\.sw[po]$',
   \ 'link': '',
   \ }
@@ -533,6 +534,7 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 nnoremap <C-F>f :CtrlSF<Space>
 nnoremap <C-F>o :CtrlSFOpen<CR>
 nnoremap <C-F>c :CtrlSFClose<CR>
+let g:ctrlsf_ignore = ['node_modules', 'bower_components']
 " }}}
 
 " vim-multiple-selection {{{
