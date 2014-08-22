@@ -3,6 +3,9 @@
 """""""""""""""""""""""""""""
 " basic config
 """""""""""""""""""""""""""""
+" GUI layout
+set gui=nonavigation,nobookmarks
+
 " basic map
 noremap h gT
 noremap l gt
