@@ -532,7 +532,10 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 " }}}
 
 " CtrlSF {{{
-nnoremap <C-F>f :CtrlSF<Space>
+nmap     <C-F>f <Plug>CtrlSFPrompt
+vmap     <C-F>f <Plug>CtrlSFVwordPath
+nmap     <C-F>n <Plug>CtrlSFCwordPath
+nmap     <C-F>p <Plug>CtrlSFPwordPath
 nnoremap <C-F>o :CtrlSFOpen<CR>
 nnoremap <C-F>c :CtrlSFClose<CR>
 let g:ctrlsf_ignore = ['node_modules', 'bower_components']
