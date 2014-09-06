@@ -80,7 +80,8 @@ fi
 [ -s $HOME/.nvm/nvm.sh ] && . $HOME/.nvm/nvm.sh # This loads NVM
 
 # rbenv
-if which rbenv >/dev/null; then
+if [[ -e "$HOME/.rbenv" ]]; then
+    export PATH="$HOME/.rbenv/bin:$PATH"
     eval "$(rbenv init - zsh)"
 fi
 
@@ -134,6 +135,13 @@ autoload insert-unicode-char
 zle -N insert-unicode-char
 bindkey '^Xi' insert-unicode-char
 
+# Load Utils Scripts
+if [[ -d $HOME/.utils ]]; then
+    for f in $(find -L $HOME/.utils -type f -name '*.sh')
+    do
+        source $f
+    done
+fi
 # }}}
 
 # vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:
