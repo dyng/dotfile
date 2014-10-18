@@ -98,7 +98,7 @@ set showmatch
 set laststatus=2
 
 set list
-set listchars=tab:>\ ,trail:-
+set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 autocmd FileType git*,help setlocal nolist
 
 " Colorscheme
