@@ -1,0 +1,14 @@
+# Install native apps
+# Usage: `brew bundle Caskfile`
+install caskroom/cask/brew-cask
+tap caskroom/versions
+
+# install packages
+cask install alfred 2> /dev/null
+cask install karabiner 2> /dev/null
+cask install evernote 2> /dev/null
+cask install dash 2> /dev/null
+cask install firefox 2> /dev/null
+cask install google-chrome 2> /dev/null
+cask install iterm2 2> /dev/null
+cask install dropbox 2> /dev/null
