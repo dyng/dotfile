@@ -1,0 +1,18 @@
+" Move line start and end
+nnoremap H ^
+nnoremap L $
+inoremap <Home> <C-O>g^
+inoremap <End>  <c-O>g$
+" Quick paging
+nnoremap <Space> <C-D>
+vnoremap <Space> <C-D>
+" Copy to line end
+nnoremap Y y$
+
+" Shell-style shortcut in command mode
+cnoremap <C-b> <Left>
+cnoremap <C-f> <Right>
+cnoremap <C-a> <Home>
+cnoremap <C-e> <End>
+cnoremap <C-d> <Del>
+cnoremap <C-h> <BackSpace>
