@@ -31,6 +31,7 @@ install nginx
 install ctags
 install tig
 install zsh
+install reattach-to-user-namespace # make clipboard work well on tmux
 
 # Remove outdated versions from the cellar
 cleanup

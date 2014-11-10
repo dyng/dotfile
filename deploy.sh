@@ -3,7 +3,7 @@ deploy () {
     # config files start with '_'
     file_list=$(find $1 -depth 1 -regex "$1/_.*")
     for file in $file_list; do
-        target_file=/tmp/$(basename $file|sed -E 's/^_/./')
+        target_file=$HOME/$(basename $file|sed -E 's/^_/./')
         if [[ -e $target_file ]]; then
             # if target exists and is symlink
             if [[ -h $target_file ]]; then
