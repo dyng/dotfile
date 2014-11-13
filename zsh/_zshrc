@@ -64,7 +64,7 @@ setopt share_history
 ### PATH {{{
 
 # add script dir
-export PATH="$PATH:$HOME/script"
+export PATH="$PATH:$HOME/scripts"
 
 # Homebrew
 if which brew 2>&1 1>/dev/null; then
@@ -136,8 +136,8 @@ zle -N insert-unicode-char
 bindkey '^Xi' insert-unicode-char
 
 # Load Utils Scripts
-if [[ -d $HOME/.utils ]]; then
-    for f in $(find -L $HOME/.utils -type f -name '*.sh')
+if [[ -d $HOME/extensions ]]; then
+    for f in $(find -L $HOME/extensions -type f -name '*.sh')
     do
         source $f
     done
