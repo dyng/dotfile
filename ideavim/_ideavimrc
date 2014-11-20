@@ -3,7 +3,9 @@
 """""""""""""""""""""""""""""""
 " Move line start and end
 nnoremap H ^
+vnoremap H ^
 nnoremap L $
+vnoremap L $
 inoremap <Home> <C-O>g^
 inoremap <End>  <c-O>g$
 
