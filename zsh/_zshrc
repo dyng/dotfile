@@ -50,6 +50,11 @@ fi
 
 # }}}
 
+### Environment {{{
+# set root Application as default target
+export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+# }}}
+
 ### History {{{
 
 HISTFILE=~/.zsh_history
