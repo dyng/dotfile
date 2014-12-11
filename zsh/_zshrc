@@ -31,7 +31,7 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(gitfast git-extras vagrant brew ruby z knife brew-cask mvn)
+plugins=(gitfast git-extras vagrant brew ruby z knife brew-cask mvn grunt)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -79,6 +79,12 @@ fi
 # Perlbrew
 if [[ -s "$HOME/perl5/perlbrew/etc/bashrc" ]]; then
     source "$HOME/perl5/perlbrew/etc/bashrc"
+fi
+
+# plenv
+if [[ -e "$HOME/.plenv" ]]; then
+    export PATH="$HOME/.plenv/bin:$PATH"
+    eval "$(plenv init - zsh)"
 fi
 
 # NVM
