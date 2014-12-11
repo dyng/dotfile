@@ -237,6 +237,14 @@ autocmd InsertEnter * call ClearHighlightLines()
 "}}}
 " }}}
 
+" Custom FileType {{{
+augroup customfiletype
+    au!
+    " Freemark template file
+    au BufRead *.ftl set filetype=html
+augroup END
+"}}}
+
 " Plugin Configs {{{
 " UltiSnips {{{
 let g:UltiSnipsNoPythonWarning     = 1
