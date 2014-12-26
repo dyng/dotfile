@@ -312,7 +312,7 @@ let g:ctrlp_mruf_max = 800
 let g:ctrlp_mruf_case_sensitive = 0
 let g:ctrlp_switch_buffer = 0
 let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v(\.neocon|\.git|\.hg|\.svn|node_modules|bower_components|local)',
+  \ 'dir':  '\v(\.neocon|\.git|\.hg|\.svn|node_modules|bower_components|local|target)',
   \ 'file': '\.exe$\|\.so$\|\.dll$\|\.sw[po]$',
   \ 'link': '',
   \ }
