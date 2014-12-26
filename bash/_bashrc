@@ -8,6 +8,9 @@ fi
 # History
 HISTSIZE=20000
 
+# Editor
+export EDITOR="vim"
+
 # Environment
 # set root Application as default target
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
@@ -24,6 +27,19 @@ fi
 # Perlbrew
 if [[ -s "$HOME/perl5/perlbrew/etc/bashrc" ]]; then
     source "$HOME/perl5/perlbrew/etc/bashrc"
+fi
+
+# plenv
+if [[ -e "$HOME/.plenv" ]]; then
+    export PATH="$HOME/.plenv/bin:$PATH"
+    eval "$(plenv init - zsh)"
+fi
+
+# pyenv
+if [[ -e "$HOME/.pyenv" ]]; then
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
 fi
 
 # NVM
