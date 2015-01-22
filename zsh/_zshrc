@@ -128,6 +128,7 @@ alias -r tia="tig --all"
 alias -r tis="tig status"
 
 # Global Alias
+alias -g /J='| json'
 alias -g /L='| less'
 alias -g /H='| head'
 alias -g /T='| tail'

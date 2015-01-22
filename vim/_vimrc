@@ -45,6 +45,7 @@ Bundle 'dyng/bufmru.vim'
 Bundle 'tommcdo/vim-exchange'
 Bundle 'AndrewRadev/linediff.vim'
 Bundle 'vim-scripts/ReloadScript'
+Bundle 'gorkunov/smartpairs.vim'
 
 " Language Specific Plugins
 Bundle 'pangloss/vim-javascript'
@@ -555,7 +556,7 @@ nnoremap <silent><leader>e :Errors<CR>
 let g:syntastic_mode_map = {
 \ 'mode': 'active',
 \ 'active_filetypes':  [],
-\ 'passive_filetypes': ['html']
+\ 'passive_filetypes': ['html', 'java']
 \ }
 " }}}
 
