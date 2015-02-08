@@ -185,6 +185,7 @@ inoremap <C-Q> <C-R>+
 cnoremap <C-Q> <C-R>+
 " Copy filename
 nnoremap <silent> yf :let @+ = expand('%')<CR>
+nnoremap <silent> yF :let @+ = expand('%:p')<CR>
 " Run current line
 nnoremap <silent> yr :exec getline('.') \| echo 'executed!'<CR>
 " Shell-style shortcut in command mode
