@@ -1,0 +1,32 @@
+# Perlbrew
+if [[ -s "$HOME/perl5/perlbrew/etc/bashrc" ]]; then
+    source "$HOME/perl5/perlbrew/etc/bashrc"
+fi
+
+# plenv
+if [[ -e "$HOME/.plenv" ]]; then
+    export PATH="$HOME/.plenv/bin:$PATH"
+    eval "$(plenv init - zsh)"
+fi
+
+# pyenv
+if [[ -e "$HOME/.pyenv" ]]; then
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
+fi
+
+# NVM
+[ -s $HOME/.nvm/nvm.sh ] && . $HOME/.nvm/nvm.sh # This loads NVM
+
+# rbenv
+if which rbenv >/dev/null; then
+    if [[ ! -z "$ZSH_VERSION" ]]; then
+        eval "$(rbenv init - zsh)"
+    else
+        eval "$(rbenv init - bash)"
+    fi
+fi
+
+# GVM
+[ -s $HOME/.gvm/scripts/gvm ] && . $HOME/.gvm/scripts/gvm
