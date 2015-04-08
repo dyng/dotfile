@@ -14,6 +14,7 @@
         cp = cherry-pick
         bn = branch
         df = diff
+        rst = !git reset --hard HEAD && git clean -df
         gog = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 [push]
         default = current
