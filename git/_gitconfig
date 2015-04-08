@@ -1,20 +1,21 @@
 [user]
-	name = tei-you
-	email = tei-you@kayac.com
+        name = tei-you
+        email = tei-you@kayac.com
 [core]
-	excludesfile = /Users/dyng/.gitignore_global
-	editor = /usr/bin/vim
-	precomposeunicode = false
+        excludesfile = /Users/dyng/.gitignore_global
+        editor = /usr/bin/vim
+        precomposeunicode = false
 [alias]
-	st = status
-	ck = checkout
-	cm = commit
-	ad = add
+        st = status
+        ck = checkout
+        cm = commit
+        ad = add
+        rs = reset
         cp = cherry-pick
         bn = branch
         df = diff
-	gog = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
+        gog = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --
 [push]
-	default = current
+        default = current
 [color]
         ui = true
