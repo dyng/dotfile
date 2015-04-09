@@ -520,6 +520,8 @@ let g:easytags_file = '~/.tags/default'
 " }}}
 
 " YouCompleteMe {{{
+let g:ycm_path_to_python_interpreter          = '/usr/bin/python'
+let g:ycm_server_keep_logfiles                = 1
 let g:ycm_key_list_select_completion          = ['<TAB>']
 let g:ycm_key_list_previous_completion        = ['<S-TAB>']
 let g:ycm_filepath_completion_use_working_dir = 1
