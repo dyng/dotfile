@@ -1,6 +1,23 @@
-*.sw[po]
-tags
-*.pyc
-.netrwhist
+# filesystem metafiles
 .DS_Store
+
+# editor metafiles
+*.sw[po]
+.netrwhist
+
+# IDE metafiles
+## IDEA
+.idea/
+*.ipr
+*.iml
+*.iws
+target
+
+# object files
+*.pyc
+
+# vendor files
 bourbon/
+
+# misc
+tags
