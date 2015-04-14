@@ -73,7 +73,7 @@ setopt share_history
 export PATH="$PATH:$HOME/scripts"
 
 # Homebrew
-if which brew 2>&1 1>/dev/null; then
+if hash brew 2>&1 1>/dev/null; then
     export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 fi
 
@@ -137,6 +137,17 @@ if [[ -d $HOME/extensions ]]; then
         source $f
     done
 fi
+# }}}
+
+### App Init {{{
+
+# Docker (for mac only)
+if hash boot2docker 2>&1 1>/dev/null; then
+    if [[ $(boot2docker status) == "running" ]]; then
+        eval "$(boot2docker shellinit 2>/dev/null)"
+    fi
+fi
+
 # }}}
 
 # vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:

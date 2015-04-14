@@ -20,10 +20,18 @@ export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 export PATH="$PATH:$HOME/script"
 
 # Homebrew
-if which brew 2>&1 1>/dev/null; then
+if hash brew 2>&1 1>/dev/null; then
     export PATH="/usr/local/bin:$PATH"
 fi
 
 # CloudSearch
 export JAVA_HOME="$(/usr/libexec/java_home)"
 export CS_HOME=/Users/dyng/Downloads/cloud-search-tools-v2-2.0.0.1-2014.03.14
+
+# Docker (for mac only)
+if hash boot2docker 2>&1 1>/dev/null; then
+    if [[ $(boot2docker status) == "running" ]]; then
+        eval "$(boot2docker shellinit 2>/dev/null)"
+    fi
+fi
+
