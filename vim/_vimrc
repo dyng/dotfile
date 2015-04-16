@@ -45,6 +45,7 @@ Bundle 'dyng/bufmru.vim'
 Bundle 'tommcdo/vim-exchange'
 Bundle 'AndrewRadev/linediff.vim'
 Bundle 'vim-scripts/ReloadScript'
+Bundle 'gabesoft/vim-ags'
 
 " Language Specific Plugins
 Bundle 'pangloss/vim-javascript'
