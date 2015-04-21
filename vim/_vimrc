@@ -308,6 +308,7 @@ nnoremap <silent> <C-B> :CtrlPBuffer<CR>
 nnoremap <silent> <C-E> :CtrlPBufTag<CR>
 nnoremap <silent> tp    :exec 'CtrlP ' . getcwd()<CR>
 nnoremap <silent> tt    :CtrlPTag<CR>
+nnoremap <silent> <leader>p :ClearCtrlPCache<CR>
 let g:ctrlp_working_path_mode = 'rc'
 let g:ctrlp_max_files = 30000
 let g:ctrlp_mruf_max = 800
