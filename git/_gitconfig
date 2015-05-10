@@ -2,7 +2,7 @@
         name = Ye Ding
         email = dygvirus@gmail.com
 [core]
-        excludesfile = /home/dyng/.gitignore_global
+        excludesfile = ~/.gitignore_global
         editor = /usr/bin/vim
         precomposeunicode = false
 [alias]
