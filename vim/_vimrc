@@ -39,7 +39,6 @@ Bundle 'honza/vim-snippets'
 Bundle 'terryma/vim-multiple-cursors'
 Bundle 'vim-scripts/Mark--Karkat'
 Bundle 'tpope/vim-rsi'
-Bundle 'skwp/greplace.vim'
 Bundle 'sandeepcr529/Buffet.vim'
 Bundle 'dyng/bufmru.vim'
 Bundle 'tommcdo/vim-exchange'
@@ -577,11 +576,6 @@ nmap m* <Plug>MarkSearchAnyNext
 nmap m# <Plug>MarkSearchAnyPrev
 nmap mn <Plug>MarkSearchAnyNext
 nmap mN <Plug>MarkSearchAnyPrev
-" }}}
-
-" {{{ greplace
-set grepprg=ag
-let g:grep_cmd_opts = '--line-numbers --noheading'
 " }}}
 
 " {{{ Buffet
