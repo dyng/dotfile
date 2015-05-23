@@ -1,3 +1,3 @@
 " for a better 'gf'
-set iskeyword-=:
+setl iskeyword-=:
 setl path+=lib

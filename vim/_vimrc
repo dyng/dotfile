@@ -45,6 +45,7 @@ Bundle 'tommcdo/vim-exchange'
 Bundle 'AndrewRadev/linediff.vim'
 Bundle 'vim-scripts/ReloadScript'
 Bundle 'gabesoft/vim-ags'
+Bundle 'kshenoy/vim-signature'
 
 " Language Specific Plugins
 Bundle 'pangloss/vim-javascript'
@@ -125,11 +126,11 @@ set wildmenu
 " Completion Map {{{
 if has("gui_running")
     " <Space>: accept and insert a space
-    inoremap <Space> <C-R>=pumvisible() ? "\<lt>C-Y>\<lt>Space>" : "\<lt>Space>"<CR>
+    inoremap <silent> <Space> <C-R>=pumvisible() ? "\<lt>C-Y>\<lt>Space>" : "\<lt>Space>"<CR>
     " <Enter>: accept
-    inoremap <Enter> <C-R>=pumvisible() ? "\<lt>C-Y>" : "\<lt>Enter>"<CR>
+    inoremap <silent> <Enter> <C-R>=pumvisible() ? "\<lt>C-Y>" : "\<lt>Enter>"<CR>
     " <Esc>: cancle
-    inoremap <Esc> <C-R>=pumvisible() ? "\<lt>C-E>" : "\<lt>Esc>"<CR>
+    inoremap <silent> <Esc> <C-R>=pumvisible() ? "\<lt>C-E>" : "\<lt>Esc>"<CR>
 endif
 " }}}
 
@@ -482,7 +483,6 @@ silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
 
 " Airline {{{
 let g:airline_theme = 'laederon'
-let g:airline_section_b = ''
 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}
@@ -540,6 +540,7 @@ nmap     <C-F>p <Plug>CtrlSFPwordPath
 nnoremap <C-F>o :CtrlSFOpen<CR>
 nnoremap <C-F>c :CtrlSFClose<CR>
 let g:ctrlsf_ignore = ['node_modules', 'bower_components']
+let g:ctrlsf_default_root = 'project'
 " }}}
 
 " vim-multiple-selection {{{
