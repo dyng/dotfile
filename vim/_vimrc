@@ -44,7 +44,6 @@ Bundle 'dyng/bufmru.vim'
 Bundle 'tommcdo/vim-exchange'
 Bundle 'AndrewRadev/linediff.vim'
 Bundle 'vim-scripts/ReloadScript'
-Bundle 'gabesoft/vim-ags'
 Bundle 'kshenoy/vim-signature'
 
 " Language Specific Plugins
@@ -211,6 +210,13 @@ cab Wa wa
 cab X x
 " }}}
 
+" Misc {{{
+" disable beep
+set vb t_vb=
+" }}}
+" }}}
+
+" Custom Functions {{{
 " Highlight current line {{{
 function! ToggleHighlightCurrentLine()
     if !exists('b:myhllines')
