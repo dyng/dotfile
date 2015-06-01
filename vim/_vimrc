@@ -211,7 +211,7 @@ cab X x
 " }}}
 
 " Misc {{{
-" disable beep
+" disable beeping
 set vb t_vb=
 " }}}
 " }}}
