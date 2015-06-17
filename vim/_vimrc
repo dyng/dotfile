@@ -45,6 +45,8 @@ Bundle 'tommcdo/vim-exchange'
 Bundle 'AndrewRadev/linediff.vim'
 Bundle 'vim-scripts/ReloadScript'
 Bundle 'kshenoy/vim-signature'
+Bundle 'AndrewRadev/splitjoin.vim'
+Bundle 'vim-scripts/SyntaxRange'
 
 " Language Specific Plugins
 Bundle 'pangloss/vim-javascript'
