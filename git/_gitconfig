@@ -3,7 +3,7 @@
         email = dygvirus@gmail.com
 [core]
         excludesfile = ~/.gitignore_global
-        editor = /usr/bin/vim
+        editor = vim
         precomposeunicode = false
 [alias]
         st = status
