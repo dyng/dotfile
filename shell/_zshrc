@@ -148,6 +148,9 @@ if hash boot2docker 2>&1 1>/dev/null; then
     fi
 fi
 
+# Autojump
+[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+
 # }}}
 
 # vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:

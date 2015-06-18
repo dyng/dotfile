@@ -154,7 +154,7 @@ inoremap <Down> <C-R>=pumvisible() ? "\<lt>Down>" : "\<lt>C-O>gj"<CR>
 inoremap <Up>   <C-R>=pumvisible() ? "\<lt>Up>" : "\<lt>C-O>gk"<CR>
 
 " Tab navigation
-nnoremap <C-Tab> :tabnext<CR>
+nnoremap <silent> <C-Tab> :tabnext<CR>
 
 " Window switch
 nnoremap <silent> <C-H> :wincmd h<CR>
