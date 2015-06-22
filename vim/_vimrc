@@ -55,7 +55,6 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'motemen/xslate-vim'
 Plugin 'fatih/vim-go'
 Plugin 'wting/rust.vim'
-Plugin 'othree/yajs.vim'
 
 " Colorschemes
 Plugin 'altercation/vim-colors-solarized'
@@ -64,15 +63,19 @@ Plugin 'Pychimp/vim-luna'
 Plugin 'sickill/vim-monokai'
 Plugin 'w0ng/vim-hybrid'
 Plugin 'sjl/badwolf'
+
+" Documents
+Plugin 'asins/vimcdoc'
+
 call vundle#end()
 filetype plugin indent on
 " }}}
 
 " Basic Config {{{
-" Encoding {{{
+" Encoding & Language {{{
 set encoding=utf-8
-language message zh_CN.UTF-8
 set fileencodings=ucs-bom,utf-8,sjis,cp936,gb18030,big5,euc-jp,euc-kr,latin1
+language message zh_CN.UTF-8
 " }}}
 
 " Indentation {{{
@@ -613,6 +616,10 @@ let g:go_fmt_fail_silently = 1
 let g:linediff_buffer_type = 'scratch'
 vnoremap zd :Linediff<CR>
 com! LR LinediffReset
+" }}}
+
+" vimcdoe {{{
+set helplang=cn
 " }}}
 " }}}
 
