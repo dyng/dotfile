@@ -7,33 +7,47 @@ fi
 
 # History
 HISTSIZE=20000
+SAVEHIST=20000
 
 # Editor
 export EDITOR="vim"
 
-# Environment
-# set root Application as default target
-export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+# Add script dir
+export PATH="$PATH:$HOME/scripts"
 
-# PATH
-# add script dir
-export PATH="$PATH:$HOME/script"
+# Alias
+alias ll="ls -lAh"
+alias la="ls -aTlFh"
+alias lr="ls -Rlh"
+alias lR="ls -RAlh"
+alias diff="diff -u"
+alias stat="stat -x"
+
+# Git Alias
+alias gd="git diff"
+alias gds="git diff --staged"
+
+# Tig Alias
+alias tia="tig --all"
+alias tis="tig status"
 
 # Homebrew
-if hash brew 2>&1 1>/dev/null; then
+if hash brew &>/dev/null; then
+    # add brew bin path
     export PATH="/usr/local/bin:$PATH"
+
+    # set root Application as default target
+    export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 fi
 
-# CloudSearch
-export JAVA_HOME="$(/usr/libexec/java_home)"
-export CS_HOME=/Users/dyng/Downloads/cloud-search-tools-v2-2.0.0.1-2014.03.14
-
 # Docker (for mac only)
-if hash boot2docker 2>&1 1>/dev/null; then
+if hash boot2docker &>/dev/null; then
     if [[ $(boot2docker status) == "running" ]]; then
         eval "$(boot2docker shellinit 2>/dev/null)"
     fi
 fi
 
-# autojump
-[[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+# Autojump
+if hash brew &>/dev/null; then
+    [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+fi
