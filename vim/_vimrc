@@ -32,7 +32,6 @@ Bundle 'bling/vim-airline'
 Bundle 'tpope/vim-fugitive'
 Bundle 'dyng/YankRing.vim'
 Bundle 'mattn/emmet-vim'
-Bundle 'vim-scripts/sudo.vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'SirVer/ultisnips'
 Bundle 'honza/vim-snippets'
@@ -56,6 +55,7 @@ Bundle 'kchmck/vim-coffee-script'
 Bundle 'motemen/xslate-vim'
 Bundle 'fatih/vim-go'
 Bundle 'wting/rust.vim'
+Bundle 'othree/yajs.vim'
 
 " Colorschemes
 Bundle 'altercation/vim-colors-solarized'
@@ -337,8 +337,13 @@ else
     let g:yankring_history_dir = $HOME.'/.vim-infos/'
 endif
 " release default mapped keys
-let g:yankring_replace_n_pkey = ''
-nnoremap <silent> gy :YRShow<CR>
+function! YRRunAfterMaps()
+    nnoremap <silent> gp :YRShow<CR>
+    inoremap <silent> <C-P> :YRShow<CR>
+
+    " keys conflict with CtrlP
+    nnoremap <silent> <C-P> :CtrlPRoot<CR>
+endfunction
 " }}}
 
 " gundo {{{
@@ -588,6 +593,14 @@ nmap mN <Plug>MarkSearchAnyPrev
 
 " {{{ Buffet
 nmap <silent><expr> <CR> &buftype ==# "" ? ":Bufferlist\r" : "\r"
+" }}}
+
+" {{{ exchange
+let g:exchange_no_mappings = 1
+nmap w     <Plug>(Exchange)
+nmap ww    <Plug>(ExchangeLine)
+xmap w     <Plug>(Exchange)
+nmap <ESC> <Plug>(ExchangeClear)
 " }}}
 
 " {{{ vim-go
