@@ -19,7 +19,6 @@ Plugin 'sjl/gundo.vim'
 Plugin 'vim-scripts/matchit.zip'
 Plugin 'majutsushi/tagbar'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'scrooloose/syntastic'
 Plugin 'vim-scripts/Rename'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
@@ -45,6 +44,7 @@ Plugin 'AndrewRadev/linediff.vim'
 Plugin 'vim-scripts/ReloadScript'
 Plugin 'kshenoy/vim-signature'
 Plugin 'AndrewRadev/splitjoin.vim'
+Plugin 'scrooloose/syntastic'
 
 " Language Specific Plugins
 Plugin 'pangloss/vim-javascript'
@@ -55,6 +55,8 @@ Plugin 'kchmck/vim-coffee-script'
 Plugin 'motemen/xslate-vim'
 Plugin 'fatih/vim-go'
 Plugin 'wting/rust.vim'
+Plugin 'leafgarland/typescript-vim'
+Plugin 'clausreinke/typescript-tools.vim'
 
 " Colorschemes
 Plugin 'altercation/vim-colors-solarized'
@@ -531,7 +533,6 @@ let g:easytags_file = '~/.tags/default'
 " }}}
 
 " YouCompleteMe {{{
-let g:ycm_path_to_python_interpreter          = '/usr/bin/python'
 let g:ycm_server_keep_logfiles                = 1
 let g:ycm_key_list_select_completion          = ['<TAB>']
 let g:ycm_key_list_previous_completion        = ['<S-TAB>']
@@ -540,6 +541,12 @@ let g:ycm_add_preview_to_completeopt          = 0
 let g:ycm_complete_in_comments                = 1
 let g:ycm_seed_identifiers_with_syntax        = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
+
+" define custom triggers
+let g:ycm_semantic_triggers = {
+    \ 'typescript': ['.'],
+    \ }
+
 " }}}
 
 " CtrlSF {{{
@@ -575,12 +582,11 @@ let g:syntastic_mode_map = {
 \ }
 
 let g:syntastic_always_populate_loc_list = 1
+let syntastic_enable_signs = 1
 
 " perl
+let g:syntastic_enable_perl_checker = 1
 let g:syntastic_perl_checkers = ['perl', 'podchecker']
-
-" javascript
-let g:syntastic_javascript_checkers = ['jshint', 'jslint']
 " }}}
 
 " {{{ mark
