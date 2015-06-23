@@ -272,30 +272,8 @@ let g:UltiSnipsJumpBackwardTrigger = "<C-K>"
 " }}}
 
 " {{{ bufmru
-
 " config
-let g:bufmru_max_buffer_num = 9
-
-" Delete least-recently-used buffer if there is more than 8 buffers
-function! s:AutoDelBuf()
-    if len(g:BufMRUList()) < g:bufmru_max_buffer_num
-        return
-    endif
-
-    let buf_mru = g:BufMRUList()
-    let need_to_delete = len(buf_mru) - g:bufmru_max_buffer_num
-    for bufnr in buf_mru
-        if !getbufvar(bufnr, "&modified")
-            exec "bdelete " . bufnr
-            let need_to_delete -= 1
-            if need_to_delete <= 0
-                break
-            endif
-        endif
-    endfor
-endfunction
-
-au BufAdd * nested call s:AutoDelBuf()
+let g:bufmru_max_buffer_num = 8
 " }}}
 
 " Nerdtree {{{
