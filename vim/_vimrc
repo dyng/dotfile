@@ -153,8 +153,8 @@ vnoremap <Space> <C-D>
 " Copy to line end
 nnoremap Y y$
 " Cursor move
-nnoremap <Down>      gj
-nnoremap <Up>        gk
+nnoremap <Down> gj
+nnoremap <Up>   gk
 inoremap <Down> <C-R>=pumvisible() ? "\<lt>Down>" : "\<lt>C-O>gj"<CR>
 inoremap <Up>   <C-R>=pumvisible() ? "\<lt>Up>" : "\<lt>C-O>gk"<CR>
 
@@ -181,10 +181,7 @@ nnoremap <expr> N v:searchforward ? "N" : "n"
 vnoremap <expr> > v:count ? ">" : ">gv"
 vnoremap <expr> < v:count ? "<" : "<gv"
 
-" Quick insert :s command
-cnoremap <Leader>s %s###cg<Left><Left><Left>
-
-" Win-style copy&paste shortcut
+" Win-style copy&paste shortcuts
 xnoremap <C-C> "+y
 nnoremap <C-Q> "+p
 inoremap <C-Q> <C-R>+
@@ -202,7 +199,11 @@ cnoremap <C-e> <End>
 cnoremap <C-d> <Del>
 cnoremap <C-h> <BackSpace>
 
-" For quickfix mode
+" Auto unfolding
+nnoremap n nzv
+nnoremap N Nzv
+
+" Quickfix mode
 nnoremap <silent> <leader>n :cnext<CR>
 nnoremap <silent> <leader>p :cprevious<CR>
 nnoremap <silent> <leader>w :cwindow<CR>
@@ -304,10 +305,6 @@ let NERDTreeQuitOnOpen = 1
 let NERDTreeBookmarksFile = $HOME.'/.vim-infos/NERDTreeBookmarks'
 " }}}
 
-" VimIM {{{
-let g:vimim_map="no-gi"
-" }}}
-
 " ctrlp {{{
 " extensions
 let g:ctrlp_extensions = ['tag', 'buffertag', 'rtscript']
@@ -343,8 +340,8 @@ else
 endif
 " release default mapped keys
 function! YRRunAfterMaps()
-    nnoremap <silent> gp :YRShow<CR>
-    inoremap <silent> <C-P> :YRShow<CR>
+    nnoremap <silent> gp    :YRShow<CR>
+    inoremap <silent> <C-P> <Esc>:YRShow<CR>
 
     " keys conflict with CtrlP
     nnoremap <silent> <C-P> :CtrlPRoot<CR>
@@ -494,10 +491,6 @@ let g:creader_session_file = $HOME.'/.vim-infos/vim_creader_session'
 nnoremap <F8> :CRtoggle<CR>
 " }}}
 
-" vim-repeat {{{
-silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
-" }}}
-
 " Airline {{{
 let g:airline_theme = 'laederon'
 
@@ -571,16 +564,23 @@ let g:multi_cursor_quit_key='<Esc>'
 " }}}
 
 " {{{ syntastic
-nnoremap <F9> :SyntasticToggleMode<CR>
-inoremap <F9> <C-O>:SyntasticToggleMode<CR>
-nnoremap <silent><leader>e :Errors<CR>
+nnoremap <silent> <F9>      :SyntasticToggleMode<CR>
+inoremap <silent> <F9>      <C-O>:SyntasticToggleMode<CR>
+nnoremap <silent> <leader>e :Errors<CR>
+
 let g:syntastic_mode_map = {
 \ 'mode': 'active',
 \ 'active_filetypes':  [],
 \ 'passive_filetypes': ['html', 'java']
 \ }
-let g:syntastic_enable_perl_checker = 1
+
+let g:syntastic_always_populate_loc_list = 1
+
+" perl
 let g:syntastic_perl_checkers = ['perl', 'podchecker']
+
+" javascript
+let g:syntastic_javascript_checkers = ['jshint', 'jslint']
 " }}}
 
 " {{{ mark
