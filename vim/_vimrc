@@ -40,7 +40,7 @@ Plugin 'tpope/vim-rsi'
 Plugin 'sandeepcr529/Buffet.vim'
 Plugin 'dyng/bufmru.vim'
 Plugin 'tommcdo/vim-exchange'
-Plugin 'AndrewRadev/linediff.vim'
+Plugin 'dyng/linediff.vim'
 Plugin 'vim-scripts/ReloadScript'
 Plugin 'kshenoy/vim-signature'
 Plugin 'AndrewRadev/splitjoin.vim'
@@ -206,9 +206,9 @@ nnoremap n nzv
 nnoremap N Nzv
 
 " Quickfix mode
-nnoremap <silent> <leader>n :cnext<CR>
-nnoremap <silent> <leader>p :cprevious<CR>
-nnoremap <silent> <leader>w :cwindow<CR>
+nnoremap <silent> ej        :cnext<CR>
+nnoremap <silent> ek        :cprevious<CR>
+nnoremap <silent> <leader>e :cwindow<CR>
 
 " Correct spell
 cab Q q
@@ -551,6 +551,8 @@ let g:multi_cursor_quit_key='<Esc>'
 " {{{ syntastic
 nnoremap <silent> <F9>      :SyntasticToggleMode<CR>
 inoremap <silent> <F9>      <C-O>:SyntasticToggleMode<CR>
+nnoremap <silent> ej        :lnext<CR>
+nnoremap <silent> ek        :lprevious<CR>
 nnoremap <silent> <leader>e :Errors<CR>
 
 let g:syntastic_mode_map = {
@@ -599,7 +601,6 @@ let g:go_fmt_fail_silently = 1
 " linediff {{{
 let g:linediff_buffer_type = 'scratch'
 vnoremap zd :Linediff<CR>
-com! LR LinediffReset
 " }}}
 
 " vimcdoe {{{
