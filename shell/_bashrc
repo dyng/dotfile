@@ -27,6 +27,9 @@ alias stat="stat -x"
 alias gd="git diff"
 alias gds="git diff --staged"
 
+# Less Alias
+alias less="less -i" # case-insensitive
+
 # Tig Alias
 alias tia="tig --all"
 alias tis="tig status"
