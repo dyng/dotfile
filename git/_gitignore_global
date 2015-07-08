@@ -13,6 +13,10 @@
 *.iws
 target
 
+# history files
+## Clojure
+repl-history
+
 # object files
 *.pyc
 
