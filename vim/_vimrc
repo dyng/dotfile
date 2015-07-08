@@ -45,6 +45,7 @@ Plugin 'vim-scripts/ReloadScript'
 Plugin 'kshenoy/vim-signature'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'scrooloose/syntastic'
+Plugin 'Raimondi/delimitMate'
 
 " Language Specific Plugins
 Plugin 'pangloss/vim-javascript'
@@ -131,14 +132,9 @@ set wildmenu
 " }}}
 
 " Completion Map {{{
-if has("gui_running")
-    " <Space>: accept and insert a space
-    inoremap <silent> <Space> <C-R>=pumvisible() ? "\<lt>C-Y>\<lt>Space>" : "\<lt>Space>"<CR>
-    " <Enter>: accept
-    inoremap <silent> <Enter> <C-R>=pumvisible() ? "\<lt>C-Y>" : "\<lt>Enter>"<CR>
-    " <Esc>: cancle
-    inoremap <silent> <Esc> <C-R>=pumvisible() ? "\<lt>C-E>" : "\<lt>Esc>"<CR>
-endif
+inoremap <silent><expr> <Space> pumvisible() ? "\<C-Y>\<Space>" : "\<Space>"
+inoremap <silent><expr> <CR>    pumvisible() ? "\<C-Y>" : "\<CR>"
+inoremap <silent><expr> <Esc>   pumvisible() ? "\<C-E>" : "\<Esc>"
 " }}}
 
 " Maps {{{
@@ -601,6 +597,14 @@ let g:go_fmt_fail_silently = 1
 " linediff {{{
 let g:linediff_buffer_type = 'scratch'
 vnoremap zd :Linediff<CR>
+" }}}
+
+" delimitMate {{{
+let g:delimitMate_expand_cr = 1
+
+" Maps to overwrite custom maps for completion
+imap <silent><expr> <Space> pumvisible() ? "\<C-Y>\<Space>" : "<Plug>delimitMateSpace"
+imap <silent><expr> <CR>    pumvisible() ? "\<C-Y>" : "<Plug>delimitMateCR"
 " }}}
 
 " vimcdoe {{{
