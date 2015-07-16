@@ -58,6 +58,7 @@ Plugin 'fatih/vim-go'
 Plugin 'wting/rust.vim'
 Plugin 'leafgarland/typescript-vim'
 Plugin 'clausreinke/typescript-tools.vim'
+Plugin 'tpope/vim-fireplace'
 
 " Colorschemes
 Plugin 'altercation/vim-colors-solarized'
@@ -133,8 +134,9 @@ set wildmenu
 
 " Completion Map {{{
 inoremap <silent><expr> <Space> pumvisible() ? "\<C-Y>\<Space>" : "\<Space>"
-inoremap <silent><expr> <CR>    pumvisible() ? "\<C-Y>" : "\<CR>"
-inoremap <silent><expr> <Esc>   pumvisible() ? "\<C-E>" : "\<Esc>"
+inoremap <silent><expr> <CR>    pumvisible() ? "\<C-Y>\<CR>"    : "\<CR>"
+inoremap <silent><expr> <Esc>   pumvisible() ? "\<C-Y>\<Esc>"   : "\<Esc>"
+inoremap <silent><expr> <BS>    pumvisible() ? "\<C-E>\<BS>"    : "\<BS>"
 " }}}
 
 " Maps {{{
@@ -604,7 +606,8 @@ let g:delimitMate_expand_cr = 1
 
 " Maps to overwrite custom maps for completion
 imap <silent><expr> <Space> pumvisible() ? "\<C-Y>\<Space>" : "<Plug>delimitMateSpace"
-imap <silent><expr> <CR>    pumvisible() ? "\<C-Y>" : "<Plug>delimitMateCR"
+imap <silent><expr> <CR>    pumvisible() ? "\<C-Y>\<CR>"    : "<Plug>delimitMateCR"
+imap <silent><expr> <BS>    pumvisible() ? "\<C-E>\<BS>"    : "<Plug>delimitMateBS"
 " }}}
 
 " vimcdoe {{{
