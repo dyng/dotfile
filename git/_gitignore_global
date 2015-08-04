@@ -1,20 +1,24 @@
-# filesystem metafiles
+## System Files
+# osx
 .DS_Store
 
-# editor metafiles
-*.sw[po]
-.netrwhist
-
-# IDE metafiles
-## IDEA
+## Runtime Files
+# IDEA
 .idea/
 *.ipr
 *.iml
 *.iws
 target
 
-# history files
-## Clojure
+# Vim
+*.sw[po]
+.netrwhist
+
+# Lein
+repl-port
+
+## History Files
+# Lein
 repl-history
 
 # object files
@@ -23,5 +27,5 @@ repl-history
 # vendor files
 bourbon/
 
-# misc
+# Misc Files
 tags
