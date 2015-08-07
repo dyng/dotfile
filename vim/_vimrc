@@ -620,6 +620,15 @@ au FileType clojure let b:delimitMate_quotes = '"'
 nnoremap cpe :%Eval<CR>
 " }}}
 
+" vim-clojure-static {{{
+let g:clojure_align_multiline_strings = 0
+let g:clojure_align_subforms = 0
+" }}}
+
+" vim-clojure-highlight {{{
+au BufWritePost *.clj silent ClojureHighlightReferences
+" }}}
+
 " vimcdoe {{{
 set helplang=cn
 " }}}

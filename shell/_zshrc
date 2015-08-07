@@ -152,4 +152,13 @@ fi
 
 # }}}
 
+### Extra Config {{{
+for rc in $HOME/.shrc_d/*
+do
+    if [[ -f $rc ]]; then
+        . $rc
+    fi
+done
+# }}}
+
 # vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:
