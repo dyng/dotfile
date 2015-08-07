@@ -61,6 +61,8 @@ Plugin 'clausreinke/typescript-tools.vim'
 Plugin 'tpope/vim-fireplace'
 Plugin 'guns/vim-clojure-static'
 Plugin 'guns/vim-clojure-highlight'
+Plugin 'guns/vim-sexp'
+Plugin 'luochen1990/rainbow'
 
 " Colorschemes
 Plugin 'altercation/vim-colors-solarized'
@@ -115,6 +117,7 @@ autocmd FileType git*,help setlocal nolist
 
 " Colorscheme
 set background=dark
+colorscheme molokai
 " }}}
 
 " Buffer {{{
@@ -620,6 +623,10 @@ let g:clojure_align_subforms = 0
 
 " vim-clojure-highlight {{{
 au BufWritePost *.clj silent ClojureHighlightReferences
+" }}}
+
+" rainbow {{{
+let g:rainbow_active = 1
 " }}}
 
 " vimcdoe {{{
