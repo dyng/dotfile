@@ -114,12 +114,7 @@ set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 autocmd FileType git*,help setlocal nolist
 
 " Colorscheme
-if has("gui_running")
-    set background=dark
-    colorscheme molokai
-else
-    colorscheme torte
-endif
+set background=dark
 " }}}
 
 " Buffer {{{
@@ -206,9 +201,9 @@ nnoremap n nzv
 nnoremap N Nzv
 
 " Quickfix mode
-nnoremap <silent> ej        :cnext<CR>
-nnoremap <silent> ek        :cprevious<CR>
-nnoremap <silent> <leader>e :cwindow<CR>
+nnoremap <silent><expr> ej        empty(getloclist(0)) ? ":cnext\<CR>" : ":lnext\<CR>"
+nnoremap <silent><expr> ek        empty(getloclist(0)) ? ":cprev\<CR>" : ":lprev\<CR>"
+nnoremap <silent><expr> <leader>e empty(getloclist(0)) ? ":cwind\<CR>" : ":lwind\<CR>"
 
 " Correct spell
 cab Q q
@@ -552,9 +547,7 @@ let g:multi_cursor_quit_key='<Esc>'
 " {{{ syntastic
 nnoremap <silent> <F9>      :SyntasticToggleMode<CR>
 inoremap <silent> <F9>      <C-O>:SyntasticToggleMode<CR>
-nnoremap <silent> ej        :lnext<CR>
-nnoremap <silent> ek        :lprevious<CR>
-nnoremap <silent> <leader>e :Errors<CR>
+nnoremap <silent> <leader>E :Errors<CR>
 
 let g:syntastic_mode_map = {
 \ 'mode': 'active',
