@@ -116,6 +116,7 @@ set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 autocmd FileType git*,help setlocal nolist
 
 " Colorscheme
+set t_Co=256
 set background=dark
 colorscheme molokai
 " }}}
@@ -136,7 +137,7 @@ set wildmenu
 inoremap <silent><expr> <Space> pumvisible() ? "\<C-Y>\<Space>" : "\<Space>"
 inoremap <silent><expr> <CR>    pumvisible() ? "\<C-Y>\<CR>"    : "\<CR>"
 inoremap <silent><expr> <Esc>   pumvisible() ? "\<C-Y>\<Esc>"   : "\<Esc>"
-inoremap <silent><expr> <BS>    pumvisible() ? "\<C-E>\<BS>"    : "\<BS>"
+inoremap <silent><expr> <C-C>   pumvisible() ? "\<C-E>"         : "\<C-C>"
 " }}}
 
 " Maps {{{
@@ -606,7 +607,7 @@ let g:delimitMate_expand_cr = 1
 " Maps to overwrite custom maps for completion
 imap <silent><expr> <Space> pumvisible() ? "\<C-Y>\<Space>" : "<Plug>delimitMateSpace"
 imap <silent><expr> <CR>    pumvisible() ? "\<C-Y>\<CR>"    : "<Plug>delimitMateCR"
-imap <silent><expr> <BS>    pumvisible() ? "\<C-E>\<BS>"    : "<Plug>delimitMateBS"
+imap <silent><expr> <BS>    pumvisible() ? "\<BS>"          : "<Plug>delimitMateBS"
 
 " language specific configuration
 au FileType clojure let b:delimitMate_quotes = '"'
@@ -626,7 +627,8 @@ au BufWritePost *.clj silent ClojureHighlightReferences
 " }}}
 
 " rainbow {{{
-let g:rainbow_active = 1
+let g:rainbow_active = 0
+au BufReadPost *.clj RainbowToggle
 " }}}
 
 " vimcdoe {{{
