@@ -31,7 +31,6 @@ Plugin 'bling/vim-airline'
 Plugin 'tpope/vim-fugitive'
 Plugin 'dyng/YankRing.vim'
 Plugin 'mattn/emmet-vim'
-Plugin 'scrooloose/nerdcommenter'
 Plugin 'SirVer/ultisnips'
 Plugin 'honza/vim-snippets'
 Plugin 'terryma/vim-multiple-cursors'
@@ -46,6 +45,7 @@ Plugin 'kshenoy/vim-signature'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'Raimondi/delimitMate'
+Plugin 'tomtom/tcomment_vim'
 
 " Language Specific Plugins
 Plugin 'pangloss/vim-javascript'
@@ -486,14 +486,6 @@ let g:airline_symbols.linenr = '¶'
 let g:airline_symbols.branch = '⎇'
 " }}}
 
-" NERDCommenter {{{
-let g:NERDSpaceDelims = 1
-nmap gc <Plug>NERDCommenterToggle
-vmap gc <Plug>NERDCommenterToggle
-nmap gC <Plug>NERDCommenterSexy
-vmap gC <Plug>NERDCommenterSexy
-" }}}
-
 " python-syntax {{{
 let python_highlight_builtin_objs  = 1
 let python_highlight_builtin_funcs = 1
@@ -629,6 +621,12 @@ au BufWritePost *.clj silent ClojureHighlightReferences
 " rainbow {{{
 let g:rainbow_active = 0
 au BufReadPost *.clj RainbowToggle
+" }}}
+
+" tComment {{{
+let g:tcommentMaps = 0
+nnoremap <silent> gc :TComment<CR>
+vnoremap <silent> gc :TComment<CR>
 " }}}
 
 " vimcdoe {{{
