@@ -63,6 +63,7 @@ Plugin 'guns/vim-clojure-static'
 Plugin 'guns/vim-clojure-highlight'
 Plugin 'guns/vim-sexp'
 Plugin 'luochen1990/rainbow'
+Plugin 'facebook/vim-flow'
 
 " Colorschemes
 Plugin 'altercation/vim-colors-solarized'
@@ -627,6 +628,11 @@ au BufReadPost *.clj RainbowToggle
 let g:tcommentMaps = 0
 nnoremap <silent> gc :TComment<CR>
 vnoremap <silent> gc :TComment<CR>
+" }}}
+
+" flow {{{
+let g:flow#enable    = 1
+let g:flow#autoclose = 1
 " }}}
 
 " vimcdoe {{{
