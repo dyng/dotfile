@@ -62,7 +62,7 @@ Plugin 'tpope/vim-fireplace'
 Plugin 'guns/vim-clojure-static'
 Plugin 'guns/vim-clojure-highlight'
 Plugin 'guns/vim-sexp'
-Plugin 'luochen1990/rainbow'
+Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'facebook/vim-flow'
 
 " Colorschemes
@@ -615,13 +615,15 @@ let g:clojure_align_multiline_strings = 0
 let g:clojure_align_subforms = 0
 " }}}
 
-" vim-clojure-highlight {{{
-au BufWritePost *.clj silent ClojureHighlightReferences
+" rainbow_parentheses {{{
+autocmd VimEnter *       RainbowParenthesesToggle
+autocmd Syntax   clojure RainbowParenthesesLoadRound
+autocmd Syntax   clojure RainbowParenthesesLoadSquare
+autocmd Syntax   clojure RainbowParenthesesLoadBraces
 " }}}
 
-" rainbow {{{
-let g:rainbow_active = 0
-au BufReadPost *.clj RainbowToggle
+" vim-clojure-highlight {{{
+au BufWritePost *.clj silent ClojureHighlightReferences
 " }}}
 
 " tComment {{{
