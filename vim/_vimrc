@@ -644,6 +644,12 @@ let g:flow#autoclose = 1
 let g:flow#omnifunc  = 0
 " }}}
 
+" jedi {{{
+let g:jedi#goto_command             = "gd"
+let g:jedi#goto_assignments_command = ""
+let g:jedi#rename_command           = ""
+" }}}
+
 " racer {{{
 let g:racer_cmd = '/Users/dyng/Workspace/racer/target/release/racer'
 let $RUST_SRC_PATH="/usr/local/src/rust/src"
