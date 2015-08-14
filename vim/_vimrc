@@ -41,7 +41,6 @@ Plugin 'dyng/bufmru.vim'
 Plugin 'tommcdo/vim-exchange'
 Plugin 'dyng/linediff.vim'
 Plugin 'vim-scripts/ReloadScript'
-Plugin 'kshenoy/vim-signature'
 Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'Raimondi/delimitMate'
@@ -55,7 +54,7 @@ Plugin 'hail2u/vim-css3-syntax'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'motemen/xslate-vim'
 Plugin 'fatih/vim-go'
-Plugin 'wting/rust.vim'
+Plugin 'rust-lang/rust.vim'
 Plugin 'leafgarland/typescript-vim'
 Plugin 'clausreinke/typescript-tools.vim'
 Plugin 'tpope/vim-fireplace'
@@ -64,6 +63,8 @@ Plugin 'guns/vim-clojure-highlight'
 Plugin 'guns/vim-sexp'
 Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'facebook/vim-flow'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'phildawes/racer'
 
 " Colorschemes
 Plugin 'altercation/vim-colors-solarized'
@@ -514,8 +515,10 @@ let g:ycm_collect_identifiers_from_tags_files = 1
 
 " define custom triggers
 let g:ycm_semantic_triggers = {
+    \ 'python':     ['.'],
     \ 'typescript': ['.'],
     \ 'clojure':    ['/', '.'],
+    \ 'rust':       ['::', '.'],
     \ }
 
 " }}}
@@ -554,6 +557,9 @@ let g:syntastic_mode_map = {
 
 let g:syntastic_always_populate_loc_list = 1
 let syntastic_enable_signs = 1
+
+" c
+let g:syntastic_c_checkers = ["clang", "gcc"]
 
 " perl
 let g:syntastic_enable_perl_checker = 1
@@ -635,6 +641,12 @@ vnoremap <silent> gc :TComment<CR>
 " flow {{{
 let g:flow#enable    = 1
 let g:flow#autoclose = 1
+let g:flow#omnifunc  = 0
+" }}}
+
+" racer {{{
+let g:racer_cmd = '/Users/dyng/Workspace/racer/target/release/racer'
+let $RUST_SRC_PATH="/usr/local/src/rust/src"
 " }}}
 
 " vimcdoe {{{
