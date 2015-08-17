@@ -655,6 +655,10 @@ let g:racer_cmd = '/Users/dyng/Workspace/racer/target/release/racer'
 let $RUST_SRC_PATH="/usr/local/src/rust/src"
 " }}}
 
+" vim-snippets {{{
+let g:UltiSnipsSnippetDirectories=["UltiSnips"]
+" }}}
+
 " vimcdoe {{{
 set helplang=cn
 " }}}
