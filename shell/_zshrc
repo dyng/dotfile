@@ -30,7 +30,7 @@ COMPLETION_WAITING_DOTS="true"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(gitfast git-extras vagrant brew ruby z knife brew-cask mvn grunt svn lein)
+plugins=(gitfast git-extras vagrant brew ruby knife brew-cask mvn grunt svn lein)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -145,11 +145,10 @@ if hash boot2docker &>/dev/null; then
     fi
 fi
 
-# Autojump
-if hash brew &>/dev/null; then
-    [[ -s $(brew --prefix)/etc/profile.d/autojump.sh ]] && . $(brew --prefix)/etc/profile.d/autojump.sh
+# fasd
+if hash fasd &>/dev/null; then
+    eval "$(fasd --init auto)"
 fi
-
 # }}}
 
 ### Extra Config {{{
