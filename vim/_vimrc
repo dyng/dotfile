@@ -531,6 +531,7 @@ nmap     <C-F>p <Plug>CtrlSFPwordPath
 nnoremap <C-F>o :CtrlSFOpen<CR>
 nnoremap <C-F>c :CtrlSFClose<CR>
 let g:ctrlsf_ignore = ['node_modules', 'bower_components']
+let g:ctrlsf_populate_qflist = 1
 let g:ctrlsf_default_root = 'project'
 " }}}
 
@@ -598,6 +599,7 @@ let g:go_fmt_fail_silently = 1
 " linediff {{{
 let g:linediff_buffer_type = 'scratch'
 vnoremap zd :Linediff<CR>
+autocmd User LinediffBufferReady nnoremap <buffer> q :LinediffReset<CR>
 " }}}
 
 " delimitMate {{{
