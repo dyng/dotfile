@@ -12,7 +12,7 @@ Plugin 'kien/ctrlp.vim'
 Plugin 'JazzCore/ctrlp-cmatcher'
 Plugin 'scrooloose/nerdtree'
 Plugin 'vim-scripts/mru.vim'
-Plugin 'Lokaltog/vim-easymotion'
+Plugin 'easymotion/vim-easymotion'
 Plugin 'thinca/vim-quickrun'
 Plugin 'dyng/CommentReader'
 Plugin 'sjl/gundo.vim'
@@ -337,17 +337,24 @@ nnoremap <silent> <leader>u :GundoToggle<CR>
 " EasyMotion {{{
 let g:EasyMotion_do_mapping = 0 " Disable default mappings
 let g:EasyMotion_keys = 'asdghklqwertyuiopzxcvbnmfj'
+let g:EasyMotion_smartcase = 1
 
-nmap zf <Plug>(easymotion-s)
-nmap zz <Plug>(easymotion-s2)
-nmap zj <Plug>(easymotion-j)
-nmap zk <Plug>(easymotion-k)
-nmap zw <Plug>(easymotion-w)
-nmap zb <Plug>(easymotion-b)
-nmap zW <Plug>(easymotion-W)
-nmap zB <Plug>(easymotion-B)
-nmap ze <Plug>(easymotion-e)
-nmap zE <Plug>(easymotion-E)
+nmap F <Plug>(easymotion-s2)
+let easymotion_key_map = {
+    \ 'zj': '<Plug>(easymotion-j)',
+    \ 'zk': '<Plug>(easymotion-k)',
+    \ 'zw': '<Plug>(easymotion-w)',
+    \ 'zb': '<Plug>(easymotion-b)',
+    \ 'zW': '<Plug>(easymotion-W)',
+    \ 'zB': '<Plug>(easymotion-B)',
+    \ 'ze': '<Plug>(easymotion-e)',
+    \ 'zE': '<Plug>(easymotion-E)'
+    \ }
+for key in keys(easymotion_key_map)
+    exec "nmap " . key . " " . easymotion_key_map[key]
+    exec "vmap " . key . " " . easymotion_key_map[key]
+    exec "omap " . key . " " . easymotion_key_map[key]
+endfo
 
 " Turn on case sensitive feature
 let g:EasyMotion_smartcase = 1
@@ -641,7 +648,7 @@ vnoremap <silent> gc :TComment<CR>
 " }}}
 
 " flow {{{
-let g:flow#enable    = 1
+let g:flow#enable    = 0
 let g:flow#autoclose = 1
 let g:flow#omnifunc  = 0
 " }}}
