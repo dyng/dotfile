@@ -8,7 +8,7 @@ set rtp+=~/.vim/bundle/Vundle.vim/
 call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'dyng/auto_mkdir'
-Plugin 'kien/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 Plugin 'JazzCore/ctrlp-cmatcher'
 Plugin 'scrooloose/nerdtree'
 Plugin 'vim-scripts/mru.vim'
@@ -299,6 +299,7 @@ nnoremap <silent> <C-E> :CtrlPBufTag<CR>
 nnoremap <silent> tp    :exec 'CtrlP ' . getcwd()<CR>
 nnoremap <silent> tt    :CtrlPTag<CR>
 nnoremap <silent> <leader>p :ClearCtrlPCache<CR>
+let g:ctrlp_root_markers = ['pom.xml']
 let g:ctrlp_working_path_mode = 'rc'
 let g:ctrlp_max_files = 30000
 let g:ctrlp_mruf_max = 800
