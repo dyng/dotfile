@@ -96,6 +96,7 @@ if hash brew &>/dev/null; then
 fi
 
 # Basher
+# add basher bin path no matter if basher is installed
 export PATH="$HOME/.basher/bin:$PATH"
 if hash basher &>/dev/null; then
     # initialize basher

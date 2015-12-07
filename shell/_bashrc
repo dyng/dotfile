@@ -43,6 +43,11 @@ if hash brew &>/dev/null; then
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 fi
 
+# Virtualenv
+if [[ -e $HOME/.virtualenv_profile ]]; then
+    source $HOME/.virtualenv_profile
+fi
+
 # Docker (for mac only)
 if hash boot2docker &>/dev/null; then
     if [[ $(boot2docker status) == "running" ]]; then
