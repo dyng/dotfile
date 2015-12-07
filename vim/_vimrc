@@ -45,6 +45,7 @@ Plugin 'AndrewRadev/splitjoin.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'Raimondi/delimitMate'
 Plugin 'tomtom/tcomment_vim'
+Plugin 'Shougo/vimproc.vim'
 
 " Language Specific Plugins
 Plugin 'pangloss/vim-javascript'
@@ -56,7 +57,6 @@ Plugin 'motemen/xslate-vim'
 Plugin 'fatih/vim-go'
 Plugin 'rust-lang/rust.vim'
 Plugin 'leafgarland/typescript-vim'
-Plugin 'clausreinke/typescript-tools.vim'
 Plugin 'tpope/vim-fireplace'
 Plugin 'guns/vim-clojure-static'
 Plugin 'guns/vim-clojure-highlight'
@@ -65,6 +65,7 @@ Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'facebook/vim-flow'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'phildawes/racer'
+Plugin 'Quramy/tsuquyomi'
 
 " Colorschemes
 Plugin 'altercation/vim-colors-solarized'
@@ -561,7 +562,7 @@ nnoremap <silent> <leader>E :Errors<CR>
 let g:syntastic_mode_map = {
 \ 'mode': 'active',
 \ 'active_filetypes':  [],
-\ 'passive_filetypes': ['html', 'java']
+\ 'passive_filetypes': ['html', 'java', 'typescript']
 \ }
 
 let g:syntastic_always_populate_loc_list = 1
@@ -671,6 +672,16 @@ let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 
 " vimcdoe {{{
 set helplang=cn
+" }}}
+
+" {{{ tsuquyomi
+" go to definition
+nmap gd <C-]>
+vmap gd <C-]>
+
+" show references
+nmap gr <C-^>
+vmap gr <C-^>
 " }}}
 " }}}
 
