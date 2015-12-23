@@ -268,7 +268,7 @@ augroup END
 " UltiSnips {{{
 let g:UltiSnipsNoPythonWarning     = 1
 let g:UltiSnipsExpandTrigger       = "<C-O><C-O>"
-let g:UltiSnipsListSnippets        = "<C-O>"
+let g:UltiSnipsListSnippets        = "<C-O><C-L>"
 let g:UltiSnipsJumpForwardTrigger  = "<C-J>"
 let g:UltiSnipsJumpBackwardTrigger = "<C-K>"
 " }}}
@@ -542,6 +542,7 @@ nnoremap <C-F>c :CtrlSFClose<CR>
 let g:ctrlsf_ignore = ['node_modules', 'bower_components']
 let g:ctrlsf_populate_qflist = 1
 let g:ctrlsf_default_root = 'project'
+let g:ctrlsf_toggle_map_key = '\t'
 " }}}
 
 " vim-multiple-selection {{{
