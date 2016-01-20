@@ -89,6 +89,18 @@ set fileencodings=ucs-bom,utf-8,sjis,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 language message zh_CN.UTF-8
 " }}}
 
+" Spelling check {{{
+function! s:InitSpellingCheck(lang)
+    setl spell
+    exec "setl spelllang=" . a:lang
+endfunction
+
+augroup spelling
+    autocmd!
+    autocmd FileType text,markdown call s:InitSpellingCheck("en_us")
+augroup END
+" }}}
+
 " Indentation {{{
 set magic
 set ruler
@@ -683,6 +695,10 @@ vmap gd <C-]>
 " show references
 nmap gr <C-^>
 vmap gr <C-^>
+" }}}
+
+" {{{ vim-javascript
+let g:javascript_enable_domhtmlcss = 1
 " }}}
 " }}}
 
