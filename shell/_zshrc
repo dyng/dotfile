@@ -168,9 +168,9 @@ fi
 ### App Init {{{
 
 # Docker (for mac only)
-if hash boot2docker &>/dev/null; then
-    if [[ $(boot2docker status) == "running" ]]; then
-        eval "$(boot2docker shellinit 2>/dev/null)"
+if hash docker-machine &>/dev/null; then
+    if [[ $(docker-machine status default) == "Running" ]]; then
+        eval "$(docker-machine env default)"
     fi
 fi
 
@@ -179,9 +179,9 @@ if hash fasd &>/dev/null; then
     eval "$(fasd --init auto)"
 fi
 
-# gulp completion
-if hash gulp &>/dev/null; then
-    eval "$(gulp --completion=zsh)"
+# thefuck
+if hash thefuck &>/dev/null; then
+    eval "$(thefuck --alias)"
 fi
 
 # }}}
