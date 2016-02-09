@@ -156,7 +156,7 @@ inoremap <silent><expr> <C-C>   pumvisible() ? "\<C-E>"         : "\<C-C>"
 " }}}
 
 " Maps {{{
-let mapleader = ','
+let mapleader = "\<C-Space>"
 
 " Move line start and end
 noremap H ^
@@ -603,7 +603,7 @@ nmap mN <Plug>MarkSearchAnyPrev
 " }}}
 
 " {{{ Buffet
-nmap <silent><expr> <CR> &buftype ==# "" ? ":Bufferlist\r" : "\r"
+nmap <silent><expr> <leader>b &buftype ==# "" ? ":Bufferlist\r" : "\r"
 " }}}
 
 " {{{ exchange
