@@ -1,6 +1,6 @@
 [user]
         name = Ye Ding
-        email = dygvirus@gmail.com
+        email = ye.ding@linecorp.com
 [core]
         excludesfile = ~/.gitignore_global
         editor = vim
@@ -8,9 +8,11 @@
 [alias]
         st = status
         ck = checkout
-        cm = commit
+        cm = commit -v
         ad = add
         rs = reset
+        pl = pull --rebase
+        ps = push
         cp = cherry-pick
         bn = branch
         df = diff
