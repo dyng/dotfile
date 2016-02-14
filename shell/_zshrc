@@ -139,6 +139,9 @@ alias -g /A="&& terminal-notifier -message 'done'"
 
 # Fixture Alias
 alias -r ssh="TERM=xterm ssh"
+
+# VSCode
+function code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $*; }
 # }}}
 
 ### Key binding {{{
@@ -184,6 +187,12 @@ if hash thefuck &>/dev/null; then
     eval "$(thefuck --alias)"
 fi
 
+# }}}
+
+### Completion {{{
+if [ -f $(brew --prefix)/share/zsh-completions ]; then
+    fpath=($(brew --prefix)/share/zsh-completions $(brew --prefix)/share/zsh/site-functions $fpath)
+fi
 # }}}
 
 ### Extra Config {{{

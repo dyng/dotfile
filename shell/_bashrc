@@ -34,6 +34,9 @@ alias less="less -i" # case-insensitive
 alias tia="tig --all"
 alias tis="tig status"
 
+# VSCode
+function code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $*; }
+
 # Homebrew
 if hash brew &>/dev/null; then
     # add brew bin path
@@ -59,11 +62,6 @@ fi
 # fasd
 if hash fasd &>/dev/null; then
     eval "$(fasd --init auto)"
-fi
-
-# bash completion
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    . $(brew --prefix)/etc/bash_completion
 fi
 
 # Extra Config
