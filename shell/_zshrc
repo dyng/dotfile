@@ -180,6 +180,9 @@ fi
 # fasd
 if hash fasd &>/dev/null; then
     eval "$(fasd --init auto)"
+    v() {
+        vim $(fasd -sif $1)
+    }
 fi
 
 # thefuck
@@ -187,6 +190,10 @@ if hash thefuck &>/dev/null; then
     eval "$(thefuck --alias)"
 fi
 
+# zaw
+if [[ -f $HOME/Workspace/zaw/zaw.zsh ]]; then
+    . $HOME/Workspace/zaw/zaw.zsh
+fi
 # }}}
 
 ### Completion {{{
