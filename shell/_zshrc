@@ -6,7 +6,7 @@ ZSH=$HOME/.oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-# ZSH_THEME="cloud"
+ZSH_THEME="cloud"
 
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
@@ -31,31 +31,11 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # plugins=(gitfast git-extras vagrant brew ruby knife brew-cask mvn grunt svn lein)
+plugins=(git gitfast git-extras vagrant brew brew-cask mvn grunt svn lein)
 
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
-# }}}
-
-### Antigen {{{
-if [ -s `brew --prefix`/share/antigen.zsh ]; then
-    source `brew --prefix`/share/antigen.zsh
-
-    # theme
-    antigen theme cloud
-
-    # load plugins
-    antigen bundle zsh-users/zsh-syntax-highlighting
-    antigen bundle git
-    antigen bundle gitfast
-    antigen bundle git-extras
-    antigen bundle vagrant
-    antigen bundle brew
-    antigen bundle grunt
-    antigen bundle svn
-    antigen bundle lein
-    antigen bundle pip
-fi
 # }}}
 
 ### Global {{{
@@ -67,6 +47,14 @@ if [[ -z $LANG ]]; then
     export LC_ALL="en_US.UTF-8"
 fi
 
+# }}}
+
+# functions {{{
+run_if_script_exist() {
+    if [[ -e $1 ]]; then
+        source $1
+    fi
+}
 # }}}
 
 ### Environment {{{
@@ -104,9 +92,7 @@ if hash basher &>/dev/null; then
 fi
 
 # Virtualenv Loading
-if [[ -e $HOME/.virtualenv_profile ]]; then
-    source $HOME/.virtualenv_profile
-fi
+run_if_script_exist $HOME/.virtualenv_profile
 # }}}
 
 ### Alias {{{
@@ -191,9 +177,9 @@ if hash thefuck &>/dev/null; then
 fi
 
 # zaw
-if [[ -f $HOME/Workspace/zaw/zaw.zsh ]]; then
-    . $HOME/Workspace/zaw/zaw.zsh
-fi
+run_if_script_exist $HOME/Workspace/zaw/zaw.zsh
+
+run_if_script_exist $HOME/.iterm2_shell_integration.zsh
 # }}}
 
 ### Completion {{{
@@ -203,12 +189,14 @@ fi
 # }}}
 
 ### Extra Config {{{
-for rc in $HOME/.shrc_d/*
-do
-    if [[ -f $rc ]]; then
-        . $rc
-    fi
-done
+if [[ -d $HOME/.shrc_d ]]; then
+    for rc in $HOME/.shrc_d/*
+    do
+        if [[ -f $rc ]]; then
+            . $rc
+        fi
+    done
+fi
 # }}}
 
 # vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:
