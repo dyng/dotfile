@@ -68,12 +68,9 @@ Plugin 'phildawes/racer'
 Plugin 'Quramy/tsuquyomi'
 
 " Colorschemes
-Plugin 'altercation/vim-colors-solarized'
 Plugin 'tomasr/molokai'
-Plugin 'Pychimp/vim-luna'
-Plugin 'sickill/vim-monokai'
 Plugin 'w0ng/vim-hybrid'
-Plugin 'sjl/badwolf'
+Plugin 'nanotech/jellybeans.vim'
 
 " Documents
 Plugin 'asins/vimcdoc'
@@ -133,7 +130,7 @@ autocmd FileType git*,help setlocal nolist
 " Colorscheme
 set t_Co=256
 set background=dark
-colorscheme molokai
+colorscheme hybrid
 " }}}
 
 " Buffer {{{
@@ -533,6 +530,7 @@ let g:ycm_add_preview_to_completeopt          = 0
 let g:ycm_complete_in_comments                = 1
 let g:ycm_seed_identifiers_with_syntax        = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
 
 " define custom triggers
 let g:ycm_semantic_triggers = {
@@ -551,7 +549,6 @@ nmap     <C-F>n <Plug>CtrlSFCwordPath
 nmap     <C-F>p <Plug>CtrlSFPwordPath
 nnoremap <C-F>o :CtrlSFOpen<CR>
 nnoremap <C-F>c :CtrlSFClose<CR>
-let g:ctrlsf_ignore = ['node_modules', 'bower_components']
 let g:ctrlsf_populate_qflist = 1
 let g:ctrlsf_default_root = 'project'
 let g:ctrlsf_toggle_map_key = '\t'

@@ -31,7 +31,7 @@ COMPLETION_WAITING_DOTS="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # plugins=(gitfast git-extras vagrant brew ruby knife brew-cask mvn grunt svn lein)
-plugins=(git gitfast git-extras vagrant brew brew-cask mvn grunt svn lein)
+plugins=(git gitfast git-extras vagrant brew brew-cask mvn grunt svn lein zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
