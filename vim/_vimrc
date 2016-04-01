@@ -549,9 +549,13 @@ nmap     <C-F>n <Plug>CtrlSFCwordPath
 nmap     <C-F>p <Plug>CtrlSFPwordPath
 nnoremap <C-F>o :CtrlSFOpen<CR>
 nnoremap <C-F>c :CtrlSFClose<CR>
+let g:ctrlsf_ackprg = 'pt'
 let g:ctrlsf_populate_qflist = 1
 let g:ctrlsf_default_root = 'project'
 let g:ctrlsf_toggle_map_key = '\t'
+let g:ctrlsf_extra_backend_args = {
+    \ 'pt': '--global-gitignore'
+    \ }
 " }}}
 
 " vim-multiple-selection {{{
