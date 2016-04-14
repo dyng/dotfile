@@ -46,6 +46,7 @@ Plugin 'scrooloose/syntastic'
 Plugin 'Raimondi/delimitMate'
 Plugin 'tomtom/tcomment_vim'
 Plugin 'Shougo/vimproc.vim'
+Plugin 'editorconfig/editorconfig-vim'
 
 " Language Specific Plugins
 Plugin 'pangloss/vim-javascript'
@@ -700,6 +701,10 @@ vmap gr <C-^>
 
 " {{{ vim-javascript
 let g:javascript_enable_domhtmlcss = 1
+" }}}
+
+" {{{ editorconfig-vim
+let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 " }}}
 " }}}
 
