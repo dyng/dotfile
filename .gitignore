@@ -1,5 +1,7 @@
 .netrwhist
 /vim/_vim/bundle
+/vim/_vim/plugged
+/vim/_vim/autoload/plug.vim
 /pentadactyl/_pentadactyl/info
 /vimperator/_vimperator/info
 *.log
