@@ -10,6 +10,7 @@ export ZPLUG_HOME=/usr/local/opt/zplug
 source $ZPLUG_HOME/init.zsh
 
 zplug "robbyrussell/oh-my-zsh", use:oh-my-zsh.sh, nice:-1
+zplug "caiogondim/bullet-train-oh-my-zsh-theme", use:bullet-train.zsh-theme, nice:2
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/gitfast", from:oh-my-zsh
 zplug "plugins/git-extras", from:oh-my-zsh
@@ -21,7 +22,6 @@ zplug "plugins/svn", from:oh-my-zsh
 zplug "plugins/lein", from:oh-my-zsh
 zplug "plugins/virtualenv", from:oh-my-zsh
 zplug "zsh-users/zsh-syntax-highlighting", nice:10
-zplug "caiogondim/bullet-train-oh-my-zsh-theme", use:bullet-train.zsh-theme
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
@@ -45,6 +45,17 @@ if [[ -z $LANG ]]; then
 fi
 
 # }}}
+
+### Plugin Config {{{
+BULLETTRAIN_DIR_EXTENDED=2
+BULLETTRAIN_PROMPT_ORDER=(
+  status
+  context
+  time
+  dir
+  git
+)
+#}}}
 
 # functions {{{
 run_if_script_exist() {
