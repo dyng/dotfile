@@ -25,7 +25,7 @@ Plug 'xolox/vim-misc'
 Plug 'xolox/vim-easytags'
 Plug 'xolox/vim-session'
 Plug 'godlygeek/tabular'
-Plug 'dyng/ctrlsf.vim', { 'branch': '1.7' }
+Plug '~/Dropbox/Projects/CtrlSF'
 Plug 'bling/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'
 Plug 'dyng/YankRing.vim'
