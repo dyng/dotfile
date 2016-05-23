@@ -3,6 +3,13 @@ set nocompatible
 " }}}
 
 " Load Plugins {{{
+if !filereadable(expand('~/.vim/autoload/plug.vim'))
+    echom 'Plugin manager: vim-plug has not been installed. Try to install...'
+    exec '!curl -fLo ~/.vim/autoload/plug.vim --create-dirs'. \
+        'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    echom 'Installing vim-plug complete.'
+endif
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'gmarik/Vundle.vim'
