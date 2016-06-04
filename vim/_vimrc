@@ -4,9 +4,14 @@ set nocompatible
 
 " Load Plugins {{{
 if !filereadable(expand('~/.vim/autoload/plug.vim'))
+    let s:first_init = 1
+endif
+
+" Install vim-plug
+if exists("s:first_init")
     echom 'Plugin manager: vim-plug has not been installed. Try to install...'
-    exec '!curl -fLo ~/.vim/autoload/plug.vim --create-dirs'. \
-        'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    exec 'silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs '.
+            \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
     echom 'Installing vim-plug complete.'
 endif
 
@@ -15,7 +20,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'gmarik/Vundle.vim'
 Plug 'dyng/auto_mkdir'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'JazzCore/ctrlp-cmatcher'
+Plug 'JazzCore/ctrlp-cmatcher', { 'do': './install.sh' }
 Plug 'scrooloose/nerdtree'
 Plug 'vim-scripts/mru.vim'
 Plug 'easymotion/vim-easymotion'
@@ -24,7 +29,7 @@ Plug 'dyng/CommentReader'
 Plug 'sjl/gundo.vim'
 Plug 'vim-scripts/matchit.zip'
 Plug 'majutsushi/tagbar'
-Plug 'Valloric/YouCompleteMe'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'vim-scripts/Rename'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -82,6 +87,11 @@ Plug 'nanotech/jellybeans.vim'
 Plug 'asins/vimcdoc'
 
 call plug#end()
+
+" Install all plugins
+if exists("s:first_init")
+    PlugInstall
+endif
 " }}}
 
 " Basic Config {{{
