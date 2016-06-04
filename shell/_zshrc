@@ -6,7 +6,14 @@ COMPLETION_WAITING_DOTS="true"
 # }}}
 
 ### zplug {{{
-export ZPLUG_HOME=/usr/local/opt/zplug
+export ZPLUG_HOME=$HOME/.zplug
+
+# Install zplug if necessary
+if [[ ! -d $ZPLUG_HOME ]]; then
+    curl -sL https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+fi
+
+# Init
 source $ZPLUG_HOME/init.zsh
 
 zplug "robbyrussell/oh-my-zsh", use:oh-my-zsh.sh, nice:-1
