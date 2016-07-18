@@ -194,11 +194,11 @@ fi
 # zaw
 run_if_script_exist $HOME/Workspace/zaw/zaw.zsh
 
-# run_if_script_exist $HOME/.iterm2_shell_integration.zsh
+run_if_script_exist $HOME/.iterm2_shell_integration.zsh
 # }}}
 
 ### Completion {{{
-if [ -f $(brew --prefix)/share/zsh-completions ]; then
+if hash brew &>/dev/null && [ -f $(brew --prefix)/share/zsh-completions ]; then
     fpath=($(brew --prefix)/share/zsh-completions $(brew --prefix)/share/zsh/site-functions $fpath)
 fi
 # }}}
