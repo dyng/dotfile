@@ -57,6 +57,7 @@ Plug 'Raimondi/delimitMate'
 Plug 'tomtom/tcomment_vim'
 Plug 'Shougo/vimproc.vim'
 Plug 'editorconfig/editorconfig-vim'
+Plug 'bronson/vim-trailing-whitespace'
 
 " Language Specific Plugins
 Plug 'pangloss/vim-javascript'
@@ -77,6 +78,7 @@ Plug 'facebook/vim-flow'
 Plug 'davidhalter/jedi-vim'
 Plug 'phildawes/racer'
 Plug 'Quramy/tsuquyomi'
+Plug 'cespare/vim-toml'
 
 " Colorschemes
 Plug 'tomasr/molokai'
@@ -564,11 +566,13 @@ nmap     <C-F>n <Plug>CtrlSFCwordPath
 nmap     <C-F>p <Plug>CtrlSFPwordPath
 nnoremap <C-F>o :CtrlSFOpen<CR>
 nnoremap <C-F>c :CtrlSFClose<CR>
+let g:extra_whitespace_ignored_filetypes = ['ctrlsf']
 let g:ctrlsf_ackprg = 'ag'
 let g:ctrlsf_populate_qflist = 1
 let g:ctrlsf_default_root = 'project'
 let g:ctrlsf_toggle_map_key = '\t'
 let g:ctrlsf_extra_backend_args = {
+    \ 'ag': '--follow',
     \ 'pt': '--global-gitignore'
     \ }
 " }}}
