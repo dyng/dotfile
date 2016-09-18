@@ -75,9 +75,7 @@ Plug 'guns/vim-clojure-highlight'
 Plug 'guns/vim-sexp'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'facebook/vim-flow'
-Plug 'davidhalter/jedi-vim'
 Plug 'phildawes/racer'
-Plug 'Quramy/tsuquyomi'
 Plug 'cespare/vim-toml'
 
 " Colorschemes
@@ -250,6 +248,9 @@ cab X x
 " Misc {{{
 " disable beeping
 set vb t_vb=
+
+" add keyword '-'
+au FileType help setl iskeyword+=-
 " }}}
 " }}}
 

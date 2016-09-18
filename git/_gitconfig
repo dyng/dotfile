@@ -1,6 +1,6 @@
 [user]
-        name = Ye Ding
-        email = ye.ding@linecorp.com
+        name = dyng
+        email = dygvirus@gmail.com
 [core]
         excludesfile = ~/.gitignore_global
         editor = vim
