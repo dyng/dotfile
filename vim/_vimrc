@@ -102,6 +102,9 @@ language message zh_CN.UTF-8
 " }}}
 
 " Spelling check {{{
+" default setting
+set nospell
+
 function! s:InitSpellingCheck(lang)
     setl spell
     exec "setl spelllang=" . a:lang
