@@ -89,13 +89,19 @@ setopt share_history
 # add script dir
 export PATH="$PATH:$HOME/scripts"
 
+# add basictex path
+export PATH="$PATH:/usr/local/texlive/2016basic/bin/universal-darwin"
+
 # Homebrew
-if hash brew &>/dev/null; then
+if [[ -e /usr/local/bin/brew ]]; then
     # add brew bin path
     export PATH="/usr/local/bin:/usr/local/sbin:$PATH"
 
     # set root Application as default target
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"
+
+    # set ustc as alternative repo
+    export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 fi
 
 # Basher
