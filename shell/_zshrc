@@ -22,7 +22,6 @@ zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/gitfast", from:oh-my-zsh
 zplug "plugins/git-extras", from:oh-my-zsh
 zplug "plugins/brew", from:oh-my-zsh
-zplug "plugins/brew-cask", from:oh-my-zsh
 zplug "plugins/mvn", from:oh-my-zsh
 zplug "plugins/grunt", from:oh-my-zsh
 zplug "plugins/svn", from:oh-my-zsh
