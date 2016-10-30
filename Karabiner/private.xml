@@ -17,7 +17,7 @@
     <inputsourceid_equal>com.apple.keylayout.US</inputsourceid_equal>
   </vkchangeinputsourcedef>
   <item>
-    <name>Change to InputMethod with shortcut</name>
+    <name>Switch Input Source Using Shortcut (ye.ding custom)</name>
     <identifier>private.change_inputsources</identifier>
     <autogen>__KeyToKey__ KeyCode::SPACE, ModifierFlag::COMMAND_R, KeyCode::VK_CHANGE_INPUTSOURCE_US</autogen>
   </item>
