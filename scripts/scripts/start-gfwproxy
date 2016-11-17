@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# open ssh tunnel
+ssh -N -f -D *:7777 aws-ec2-micro-dyng
+
+# generate pac file
+localip=$(ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')
+gfwlist2pac -i /tmp/gfwlist -f /tmp/proxy.pac -p "SOCKS5 $localip:7777;"
+
+# host pac file
+lame-http-server 8000 /tmp

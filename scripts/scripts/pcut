@@ -1,0 +1,61 @@
+#!/usr/bin/perl
+use strict;
+
+my ($fields, $input_delimiter, $output_delimiter);
+
+# argument parser
+unless (@ARGV) {
+    die "used just like cut.\n";
+}
+while (my $arg = shift @ARGV) {
+    # -d imply a input delimiter
+    if ($arg eq '-d') {
+        $input_delimiter = shift @ARGV;
+    }
+    # -o imply a output delimiter
+    elsif ($arg eq '-o') {
+        $output_delimiter = shift @ARGV;
+    }
+    # fields argument
+    elsif ($arg =~ /-?\d+-?\d*(,-?\d+-?\d+)*/) {
+        $fields = $arg;
+    }
+    else {
+        die "undefined argument!\n";
+    }
+}
+
+# set default input/output delimiter
+defined $input_delimiter or $input_delimiter = qr/\s+/;
+defined $output_delimiter or $output_delimiter = " ";
+
+foreach (<STDIN>){
+    chomp;
+    my @line = split $input_delimiter, $_;
+
+    my @fields;
+    foreach (split ',', $fields){
+        my ($start, $span, $end);
+        ($start, $span, $end) = /(\d*)(-?)(\d*)/;
+        if ($span){
+            $start = 0 if $start eq "";
+            $end = @line if $end eq "";
+            if ($start < $end) {
+                push @fields, ($start..$end);
+            }
+            else {
+                push @fields, reverse ($end..$start);
+            }
+        }
+        else {
+            push @fields, $start;
+        }
+    }
+
+    my @output;
+    foreach (@fields) {
+        push @output, $line[$_];
+    }
+
+    print join($output_delimiter, @output), "\n";
+}

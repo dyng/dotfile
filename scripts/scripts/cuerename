@@ -1,0 +1,49 @@
+#!/usr/bin/perl
+
+use Encode;
+
+my (@todolist, @dirlist);
+
+push @dirlist, shift @ARGV;
+$dirlist[0] =~ "^/" or die "$0 : Must use absolute path!\n";
+
+while(@dirlist){
+    my $dir = pop @dirlist;
+    chdir $dir;
+    opendir CWD, $dir;
+
+    my @direntry = readdir CWD;
+    foreach(@direntry){
+        if( -d $_){
+            next if $_ eq "." or $_ eq "..";
+            push @dirlist, "$dir/$_";
+        }
+        elsif(/.+\.(ape|tta|flac)$/i){
+            push @todolist, $_;
+        }
+    }
+    
+    while(@todolist){
+        my $orifilename = shift @todolist;
+        $orifilename =~ s/\.(ape|tta|flac)$//;
+        my $pattern = qr/.*$orifilename.*\.cue$/;
+        foreach(@direntry){
+            if(-f $_ and $_ =~ $pattern){
+                open CUE, $_;
+                my $test = eval{decode('utf8', my $firstline = <CUE>, Encode::FB_CROAK)};
+                close CUE;
+                if($test){
+                    next if -e "$orifilename.cue";
+                    if(rename $_, "$orifilename.cue"){
+                        print "convert $_ to $orifilename.cue in $dir: ok\n";
+                    }
+                    else{
+                        print "convert $_ to $orifilename.cue in $dir: failed\n"
+                    }
+                }
+            }
+        }
+    }
+
+    closedir CWD;
+}

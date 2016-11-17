@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+
+WD=$HOME/.nbcopy
+STASH=$WD/stash
+RING=$WD/ring
+
+ptop=$(tail -n 1 $RING); ptop=${ptop:-0};
+pnext=$(($ptop + 1))
+frame=$STASH/$pnext
+
+mkdir -p $frame
+cp -r $@ $frame
+echo $pnext >> $RING

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ctags -f tags -R --fields=+K+a+l $@

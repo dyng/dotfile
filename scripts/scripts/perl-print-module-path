@@ -1,0 +1,15 @@
+#!/usr/bin/env perl
+use Data::Dump qw/pp/;
+
+my $module = shift;
+
+if ($module) {
+    (my $path = $module) =~ s/::/\//;
+    $path .= '.pm';
+
+    require $path;
+
+    print "$module => " . $INC{$path} . "\n";
+} else {
+    pp \%INC;
+}

@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+WD=$HOME/.nbcopy
+STASH=$WD/stash
+RING=$WD/ring
+
+ptop=$(tail -n 1 $RING); ptop=${ptop:-0};
+frame=$STASH/$ptop
+
+if [[ $ptop > 0 ]]; then
+    cp -r $frame/* .
+    rm -rf $frame
+    sed -i '' -e '$ d' $RING
+fi
