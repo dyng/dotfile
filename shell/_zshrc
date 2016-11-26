@@ -16,7 +16,7 @@ fi
 # Init
 source $ZPLUG_HOME/init.zsh
 
-zplug "robbyrussell/oh-my-zsh", use:oh-my-zsh.sh, nice:-1
+setopt prompt_subst
 zplug "caiogondim/bullet-train-oh-my-zsh-theme", use:bullet-train.zsh-theme, nice:2
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/gitfast", from:oh-my-zsh
@@ -158,6 +158,22 @@ bindkey "^R" history-incremental-pattern-search-backward
 bindkey "^S" history-incremental-pattern-search-forward
 
 #}}}
+
+### Utils {{{
+
+# Insert Unicode Character
+autoload insert-unicode-char
+zle -N insert-unicode-char
+bindkey '^Xi' insert-unicode-char
+
+# Load Utils Scripts
+if [[ -d $HOME/extensions ]]; then
+    for f in $(find -L $HOME/extensions -type f -name '*.sh')
+    do
+        source $f
+    done
+fi
+# }}}
 
 ### Utils {{{
 
