@@ -27,6 +27,7 @@ zplug "plugins/grunt", from:oh-my-zsh
 zplug "plugins/svn", from:oh-my-zsh
 zplug "plugins/lein", from:oh-my-zsh
 zplug "plugins/virtualenv", from:oh-my-zsh
+zplug "supercrabtree/k"
 zplug "zsh-users/zsh-syntax-highlighting", nice:10
 
 # Install plugins if there are plugins that have not been installed
