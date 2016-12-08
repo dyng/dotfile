@@ -58,6 +58,7 @@ Plug 'tomtom/tcomment_vim'
 Plug 'Shougo/vimproc.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'bronson/vim-trailing-whitespace'
+Plug 'dhruvasagar/vim-table-mode'
 
 " Language Specific Plugins
 Plug 'pangloss/vim-javascript'
