@@ -34,7 +34,6 @@ Plug 'vim-scripts/Rename'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'xolox/vim-misc'
-Plug 'xolox/vim-easytags'
 Plug 'xolox/vim-session'
 Plug 'godlygeek/tabular'
 Plug '~/Dropbox/Projects/CtrlSF'
@@ -59,6 +58,7 @@ Plug 'Shougo/vimproc.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'dhruvasagar/vim-table-mode'
+Plug 'ludovicchabant/vim-gutentags'
 
 " Language Specific Plugins
 Plug 'pangloss/vim-javascript'
@@ -130,7 +130,7 @@ set expandtab
 set display=lastline
 " }}}
 
-" Searching {{{
+" Search {{{
 set incsearch
 set ignorecase
 set smartcase
@@ -157,7 +157,7 @@ colorscheme hybrid
 set hidden
 " }}}
 
-" IDE Feature {{{
+" Syntax {{{
 syntax on
 filetype plugin indent on
 set modeline                 "modeline is by default disabled on Debian
@@ -255,7 +255,11 @@ cab X x
 set vb t_vb=
 
 " add keyword '-'
-au FileType help setl iskeyword+=-
+augroup filetyeSpecKeyword
+    au!
+    au FileType help setl iskeyword+=-
+    au FileType vim setl iskeyword+=#
+augroup END
 " }}}
 " }}}
 
@@ -536,14 +540,6 @@ let python_highlight_exceptions    = 1
 let python_print_as_function       = 1
 " }}}
 
-" easytags {{{
-let g:easytags_auto_update = 0
-let g:easytags_auto_highlight = 0
-let g:easytags_dynamic_files = 1
-let g:easytags_by_filetype = '~/.tags/'
-let g:easytags_file = '~/.tags/default'
-" }}}
-
 " YouCompleteMe {{{
 let g:ycm_server_keep_logfiles                = 1
 let g:ycm_key_list_select_completion          = ['<TAB>']
@@ -615,16 +611,14 @@ let g:syntastic_perl_checkers = ['perl', 'podchecker']
 " }}}
 
 " {{{ mark
-nmap mm <Plug>MarkSet
-vmap mm <Plug>MarkSet
-nmap mr <Plug>MarkRegex
-vmap mr <Plug>MarkRegex
-nmap mc <Plug>MarkClear
-nmap mC <Plug>MarkAllClear
-nmap m* <Plug>MarkSearchAnyNext
-nmap m# <Plug>MarkSearchAnyPrev
-nmap mn <Plug>MarkSearchAnyNext
-nmap mN <Plug>MarkSearchAnyPrev
+nmap <silent> mm <Plug>MarkSet
+vmap <silent> mm <Plug>MarkSet
+nmap <silent> mr <Plug>MarkRegex
+vmap <silent> mr <Plug>MarkRegex
+nmap <silent> mc <Plug>MarkClear
+nmap <silent> mC <Plug>MarkAllClear
+nmap <silent> mn <Plug>MarkSearchAnyNext
+nmap <silent> mN <Plug>MarkSearchAnyPrev
 " }}}
 
 " {{{ Buffet
@@ -712,22 +706,16 @@ let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 set helplang=cn
 " }}}
 
-" {{{ tsuquyomi
-" go to definition
-nmap gd <C-]>
-vmap gd <C-]>
-
-" show references
-nmap gr <C-^>
-vmap gr <C-^>
-" }}}
-
 " {{{ vim-javascript
 let g:javascript_enable_domhtmlcss = 1
 " }}}
 
 " {{{ editorconfig-vim
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
+" }}}
+
+" {{{ gutentags
+set statusline+=%{gutentags#statusline()}
 " }}}
 " }}}
 
