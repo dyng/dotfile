@@ -18,7 +18,7 @@ fi
 source $ZPLUG_HOME/init.zsh
 
 setopt prompt_subst
-zplug "caiogondim/bullet-train-oh-my-zsh-theme", use:bullet-train.zsh-theme, nice:2
+zplug "caiogondim/bullet-train-oh-my-zsh-theme", use:bullet-train.zsh-theme, defer:2
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/gitfast", from:oh-my-zsh
 zplug "plugins/git-extras", from:oh-my-zsh
@@ -29,7 +29,7 @@ zplug "plugins/svn", from:oh-my-zsh
 zplug "plugins/lein", from:oh-my-zsh
 zplug "plugins/virtualenv", from:oh-my-zsh
 zplug "supercrabtree/k"
-zplug "zsh-users/zsh-syntax-highlighting", nice:10
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
