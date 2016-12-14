@@ -34,5 +34,10 @@ fi
 # GVM
 [ -s $HOME/.gvm/scripts/gvm ] && . $HOME/.gvm/scripts/gvm
 
-# JAVA
-[ -s /usr/libexec/java_home ] && export JAVA_HOME=$(/usr/libexec/java_home)
+# jenv && java
+export JENV_ROOT=/usr/local/var/jenv
+if which jenv > /dev/null; then
+    eval "$(jenv init -)";
+else
+    [ -s /usr/libexec/java_home ] && export JAVA_HOME=$(/usr/libexec/java_home)
+fi

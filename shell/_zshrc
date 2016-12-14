@@ -55,6 +55,10 @@ fi
 # case insensitive completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 
+# enable bash-compatible completion
+autoload bashcompinit
+bashcompinit
+
 # }}}
 
 ### Plugin Config {{{
@@ -122,8 +126,9 @@ run_if_script_exist $HOME/.virtualenv_profile
 
 ### Alias {{{
 # Regular Alias
-alias -r ll="ls -lAh"
-alias -r la="ls -aTlFh"
+alias -r ls="ls -FG"
+alias -r ll="ls -lAhFG"
+alias -r la="ls -aTlFGh"
 alias -r lr="ls -Rlh"
 alias -r lR="ls -RAlh"
 alias -r diff="diff -u"
@@ -155,6 +160,12 @@ alias -r ssh="TERM=xterm ssh"
 function code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $*; }
 # }}}
 
+### Completion {{{
+if hash brew &>/dev/null && [ -f $(brew --prefix)/share/zsh-completions ]; then
+    fpath=($(brew --prefix)/share/zsh-completions $(brew --prefix)/share/zsh/site-functions $fpath)
+fi
+# }}}
+
 ### Key binding {{{
 
 # use pattern in history search
@@ -162,22 +173,6 @@ bindkey "^R" history-incremental-pattern-search-backward
 bindkey "^S" history-incremental-pattern-search-forward
 
 #}}}
-
-### Utils {{{
-
-# Insert Unicode Character
-autoload insert-unicode-char
-zle -N insert-unicode-char
-bindkey '^Xi' insert-unicode-char
-
-# Load Utils Scripts
-if [[ -d $HOME/extensions ]]; then
-    for f in $(find -L $HOME/extensions -type f -name '*.sh')
-    do
-        source $f
-    done
-fi
-# }}}
 
 ### Utils {{{
 
@@ -221,12 +216,6 @@ fi
 run_if_script_exist $HOME/Workspace/zaw/zaw.zsh
 
 run_if_script_exist $HOME/.iterm2_shell_integration.zsh
-# }}}
-
-### Completion {{{
-if hash brew &>/dev/null && [ -f $(brew --prefix)/share/zsh-completions ]; then
-    fpath=($(brew --prefix)/share/zsh-completions $(brew --prefix)/share/zsh/site-functions $fpath)
-fi
 # }}}
 
 ### Extra Config {{{
