@@ -62,6 +62,9 @@ fi
 # fasd
 if hash fasd &>/dev/null; then
     eval "$(fasd --init auto)"
+    v() {
+        vim $(fasd -sif $1)
+    }
 fi
 
 # Extra Config
