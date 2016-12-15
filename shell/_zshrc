@@ -194,7 +194,7 @@ fi
 
 # Docker (for mac only)
 if hash docker-machine &>/dev/null; then
-    if [[ $(docker-machine status default) == "Running" ]]; then
+    if [[ $(docker-machine status default 2>/dev/null) == "Running" ]]; then
         eval "$(docker-machine env default)"
     fi
 fi
