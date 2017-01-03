@@ -113,7 +113,7 @@ if [[ -e /usr/local/bin/brew ]]; then
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
     # set ustc as alternative repo
-    export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
+    # export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 fi
 
 # Basher
@@ -123,6 +123,9 @@ if hash basher &>/dev/null; then
     # initialize basher
     eval "$(basher init -)"
 fi
+
+# fzf
+run_if_script_exist $HOME/.fzf.zsh
 
 # Virtualenv Loading
 run_if_script_exist $HOME/.virtualenv_profile
