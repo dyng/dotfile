@@ -160,6 +160,15 @@ alias -g /A="&& terminal-notifier -message 'done'"
 # Fixture Alias
 alias -r ssh="TERM=xterm ssh"
 
+# Docker
+drun() {
+    docker run -it $1 /bin/bash
+}
+
+dexec() {
+    docker exec -it $1 /bin/bash
+}
+
 # VSCode
 function code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $*; }
 # }}}

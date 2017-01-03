@@ -79,6 +79,7 @@ Plug 'facebook/vim-flow'
 Plug 'phildawes/racer'
 Plug 'cespare/vim-toml'
 Plug 'RobbieClarken/vim-haproxy'
+Plug '~/Dropbox/Projects/dejava.vim'
 
 " Colorschemes
 Plug 'tomasr/molokai'
