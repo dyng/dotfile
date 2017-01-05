@@ -62,6 +62,14 @@ fi
 
 # }}}
 
+### Key binding {{{
+# use pattern in history search
+bindkey "^R" history-incremental-pattern-search-backward
+bindkey "^S" history-incremental-pattern-search-forward
+bindkey '^K' history-substring-search-up
+bindkey '^J' history-substring-search-down
+#}}}
+
 ### Plugin Config {{{
 
 # bullet-train
@@ -175,15 +183,6 @@ dexec() {
 # VSCode
 function code () { VSCODE_CWD="$PWD" open -n -b "com.microsoft.VSCode" --args $*; }
 # }}}
-
-### Key binding {{{
-
-# use pattern in history search
-bindkey "^R" history-incremental-pattern-search-backward
-bindkey "^S" history-incremental-pattern-search-forward
-bindkey '^K' history-substring-search-up
-bindkey '^J' history-substring-search-down
-#}}}
 
 ### Utils {{{
 
