@@ -19,11 +19,12 @@ fi
 # NVM
 if [[ -s $HOME/.nvm/nvm.sh ]]; then
     export NVM_DIR="$HOME/.nvm"
+    export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node # use mirror site
     . $HOME/.nvm/nvm.sh # This loads NVM
 fi
 
 # rbenv
-if which rbenv >/dev/null; then
+if which rbenv &>/dev/null; then
     if [[ ! -z "$ZSH_VERSION" ]]; then
         eval "$(rbenv init - zsh)"
     else
@@ -36,7 +37,7 @@ fi
 
 # jenv && java
 export JENV_ROOT=/usr/local/var/jenv
-if which jenv > /dev/null; then
+if which jenv &>/dev/null; then
     eval "$(jenv init -)";
 else
     [ -s /usr/libexec/java_home ] && export JAVA_HOME=$(/usr/libexec/java_home)
