@@ -174,7 +174,7 @@ inoremap <silent><expr> <C-C>   pumvisible() ? "\<C-E>"         : "\<C-C>"
 " }}}
 
 " Maps {{{
-let mapleader = "\<Space>"
+let mapleader = ","
 
 " Move line start and end
 noremap H ^
@@ -182,8 +182,8 @@ noremap L $
 inoremap <Home> <C-O>g^
 inoremap <End>  <c-O>g$
 " Quick paging
-" nnoremap <Space> <C-D>
-" vnoremap <Space> <C-D>
+ nnoremap <Space> <C-D>
+ vnoremap <Space> <C-D>
 " Copy to line end
 nnoremap Y y$
 " Cursor move
