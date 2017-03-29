@@ -51,7 +51,7 @@ Plug 'tommcdo/vim-exchange'
 Plug 'dyng/linediff.vim'
 Plug 'vim-scripts/ReloadScript'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'scrooloose/syntastic'
+Plug 'w0rp/ale'
 Plug 'Raimondi/delimitMate'
 Plug 'tomtom/tcomment_vim'
 Plug 'Shougo/vimproc.vim'
@@ -587,28 +587,6 @@ let g:multi_cursor_next_key='<C-N>'
 let g:multi_cursor_prev_key='<C-U>'
 let g:multi_cursor_skip_key='<C-X>'
 let g:multi_cursor_quit_key='<Esc>'
-" }}}
-
-" {{{ syntastic
-nnoremap <silent> <F9>      :SyntasticToggleMode<CR>
-inoremap <silent> <F9>      <C-O>:SyntasticToggleMode<CR>
-nnoremap <silent> <leader>E :Errors<CR>
-
-let g:syntastic_mode_map = {
-\ 'mode': 'active',
-\ 'active_filetypes':  [],
-\ 'passive_filetypes': ['html', 'java', 'typescript']
-\ }
-
-let g:syntastic_always_populate_loc_list = 1
-let syntastic_enable_signs = 1
-
-" c
-let g:syntastic_c_checkers = ["clang", "gcc"]
-
-" perl
-let g:syntastic_enable_perl_checker = 1
-let g:syntastic_perl_checkers = ['perl', 'podchecker']
 " }}}
 
 " {{{ mark
