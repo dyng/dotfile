@@ -59,20 +59,11 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'sheerun/vim-polyglot'
 
 " Language Specific Plugins
-Plug 'pangloss/vim-javascript'
-Plug 'me-vlad/python-syntax.vim'
-Plug 'digitaltoad/vim-jade'
-Plug 'hail2u/vim-css3-syntax'
-Plug 'kchmck/vim-coffee-script'
 Plug 'motemen/xslate-vim'
-Plug 'fatih/vim-go'
-Plug 'rust-lang/rust.vim'
-Plug 'leafgarland/typescript-vim'
 Plug 'tpope/vim-fireplace'
-Plug 'guns/vim-clojure-static'
-Plug 'guns/vim-clojure-highlight'
 Plug 'guns/vim-sexp'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'facebook/vim-flow'
@@ -85,6 +76,7 @@ Plug '~/Dropbox/Projects/dejava.vim'
 Plug 'tomasr/molokai'
 Plug 'w0ng/vim-hybrid'
 Plug 'nanotech/jellybeans.vim'
+Plug 'joshdick/onedark.vim'
 
 " Documents
 Plug 'asins/vimcdoc'
@@ -151,7 +143,11 @@ autocmd FileType git*,help setlocal nolist
 " Colorscheme
 set t_Co=256
 set background=dark
-colorscheme hybrid
+if has('gui')
+    colorscheme hybrid
+else
+    colorscheme onedark
+endif
 " }}}
 
 " Buffer {{{
