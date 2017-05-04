@@ -287,6 +287,12 @@ endfunction
 nnoremap <silent> ml :call ToggleHighlightCurrentLine()<CR>
 autocmd InsertEnter * call ClearHighlightLines()
 "}}}
+
+" Format Json {{{
+function! FormatJson()
+    %!python -m json.tool
+endfunction
+" }}}
 " }}}
 
 " Custom FileType {{{

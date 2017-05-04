@@ -135,6 +135,10 @@ fi
 # fzf
 run_if_script_exist $HOME/.fzf.zsh
 
+# ops(author: mingming.xumm)
+export OPS_HOME=/Users/dingye/ops
+export PATH=/Users/dingye/ops:$PATH
+
 # Virtualenv Loading
 run_if_script_exist $HOME/.virtualenv_profile
 # }}}
@@ -170,6 +174,11 @@ alias -g /A="&& terminal-notifier -message 'done'"
 
 # Fixture Alias
 alias -r ssh="TERM=xterm ssh"
+
+# Misc
+if which gdu &>/dev/null; then
+    alias du="gdu"
+fi
 
 # Docker
 drun() {
