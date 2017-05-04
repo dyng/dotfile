@@ -76,7 +76,6 @@ bindkey '^J' history-substring-search-down
 BULLETTRAIN_DIR_EXTENDED=2
 BULLETTRAIN_PROMPT_ORDER=(
   status
-  context
   time
   dir
   git
