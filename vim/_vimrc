@@ -71,6 +71,8 @@ Plug 'phildawes/racer'
 Plug 'cespare/vim-toml'
 Plug 'RobbieClarken/vim-haproxy'
 Plug '~/Dropbox/Projects/dejava.vim'
+Plug 'scrooloose/vim-slumlord'
+Plug 'aklt/plantuml-syntax'
 
 " Colorschemes
 Plug 'tomasr/molokai'
