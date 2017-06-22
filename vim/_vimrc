@@ -60,6 +60,7 @@ Plug 'bronson/vim-trailing-whitespace'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-jdaddy'
 
 " Language Specific Plugins
 Plug 'motemen/xslate-vim'
@@ -699,6 +700,10 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 
 " {{{ gutentags
 set statusline+=%{gutentags#statusline()}
+" }}}
+
+" {{{ jdaddy
+nmap == gqaj
 " }}}
 " }}}
 
