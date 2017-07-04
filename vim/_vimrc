@@ -80,6 +80,9 @@ Plug 'tomasr/molokai'
 Plug 'w0ng/vim-hybrid'
 Plug 'nanotech/jellybeans.vim'
 Plug 'joshdick/onedark.vim'
+Plug 'ajmwagar/vim-dues'
+Plug 'rakr/vim-one'
+Plug 'colepeters/spacemacs-theme.vim'
 
 " Documents
 Plug 'asins/vimcdoc'
@@ -147,9 +150,9 @@ autocmd FileType git*,help setlocal nolist
 set t_Co=256
 set background=dark
 if has('gui')
-    colorscheme hybrid
+    colorscheme spacemacs-theme
 else
-    colorscheme onedark
+    colorscheme one-dark
 endif
 " }}}
 
