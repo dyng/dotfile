@@ -35,7 +35,7 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
-Plug 'godlygeek/tabular'
+Plug 'junegunn/vim-easy-align'
 Plug '~/Dropbox/Projects/CtrlSF'
 Plug 'bling/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'
@@ -707,6 +707,11 @@ set statusline+=%{gutentags#statusline()}
 
 " {{{ jdaddy
 nmap == gqaj
+" }}}
+
+" {{{ vim-easy-align
+xmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
 " }}}
 " }}}
 
