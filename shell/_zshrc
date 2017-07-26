@@ -38,6 +38,7 @@ zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "caiogondim/bullet-train-oh-my-zsh-theme", use:bullet-train.zsh-theme, defer:2
+zplug "MichaelAquilina/zsh-you-should-use"
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
@@ -120,7 +121,7 @@ if [[ -e /usr/local/bin/brew ]]; then
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
     # set ustc as alternative repo
-    # export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
+    export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 fi
 
 # Basher
