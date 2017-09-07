@@ -38,7 +38,8 @@ zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "caiogondim/bullet-train-oh-my-zsh-theme", use:bullet-train.zsh-theme, defer:2
-zplug "MichaelAquilina/zsh-you-should-use"
+zplug "djui/alias-tips"
+zplug "zsh-users/zsh-autosuggestions"
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
@@ -230,9 +231,6 @@ fi
 if hash thefuck &>/dev/null; then
     eval "$(thefuck --alias)"
 fi
-
-# zaw
-run_if_script_exist $HOME/Workspace/zaw/zaw.zsh
 
 run_if_script_exist $HOME/.iterm2_shell_integration.zsh
 # }}}
