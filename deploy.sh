@@ -18,7 +18,7 @@ deploy () {
     echo "deploying $wd done."
 }
 
-paks=(git zsh vim tmux bash vimperator ideavim)
+paks=(git shell vim tmux vimperator ideavim)
 
 for pak in ${paks[@]}; do
     deploy $pak

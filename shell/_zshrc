@@ -11,7 +11,7 @@ export ZPLUG_HOME=$HOME/.zplug
 
 # Install zplug if necessary
 if [[ ! -d $ZPLUG_HOME ]]; then
-    curl -sL https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+    git clone https://github.com/zplug/zplug $ZPLUG_HOME
 fi
 
 # Init
