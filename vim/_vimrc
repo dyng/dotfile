@@ -577,7 +577,6 @@ nmap     <C-F>c <Plug>CtrlSFCwordExec
 nmap     <C-F>p <Plug>CtrlSFPwordExec
 nnoremap <C-F>o :CtrlSFOpen<CR>
 let g:extra_whitespace_ignored_filetypes = ['ctrlsf']
-let g:ctrlsf_ackprg = 'ag'
 let g:ctrlsf_populate_qflist = 1
 let g:ctrlsf_default_root = 'project'
 let g:ctrlsf_toggle_map_key = '\t'

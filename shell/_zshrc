@@ -6,6 +6,12 @@ DISABLE_AUTO_UPDATE="true"
 COMPLETION_WAITING_DOTS="true"
 # }}}
 
+### Workaround Websense {{{
+if [[ -e /usr/local/bin/git ]]; then
+    alias git=/usr/local/bin/git
+fi
+# }}}
+
 ### zplug {{{
 export ZPLUG_HOME=$HOME/.zplug
 
@@ -166,7 +172,7 @@ alias -r tia="tig --all"
 alias -r tis="tig status"
 
 # Global Alias
-alias -g /J='| json'
+alias -g /J='| jq .'
 alias -g /L='| less'
 alias -g /H='| head'
 alias -g /T='| tail'
@@ -230,6 +236,12 @@ fi
 # thefuck
 if hash thefuck &>/dev/null; then
     eval "$(thefuck --alias)"
+fi
+
+# GPG
+if hash gpg &>/dev/null; then
+    GPG_TTY=$(tty)
+    export GPG_TTY
 fi
 
 run_if_script_exist $HOME/.iterm2_shell_integration.zsh
