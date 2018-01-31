@@ -61,12 +61,23 @@ zplug load
 
 ### Global {{{
 
+# functions {{{
+run_if_script_exist() {
+    if [[ -e $1 ]]; then
+        source $1
+    fi
+}
+# }}}
+
 # set locale in case
 if [[ -z $LANG ]]; then
     echo "Warning: \$LANG is not set in profile."
     export LANG="en_US.UTF-8"
     export LC_ALL="en_US.UTF-8"
 fi
+
+# load iterm2-shell-integration
+run_if_script_exist $HOME/.iterm2_shell_integration.zsh
 
 # }}}
 
@@ -88,16 +99,9 @@ BULLETTRAIN_PROMPT_ORDER=(
   dir
   git
 )
+BULLETTRAIN_PROMPT_CHAR=$(iterm2_prompt_mark)\$
 
 #}}}
-
-# functions {{{
-run_if_script_exist() {
-    if [[ -e $1 ]]; then
-        source $1
-    fi
-}
-# }}}
 
 ### Environment {{{
 export EDITOR="vim"
@@ -244,7 +248,6 @@ if hash gpg &>/dev/null; then
     export GPG_TTY
 fi
 
-run_if_script_exist $HOME/.iterm2_shell_integration.zsh
 # }}}
 
 ### Extra Config {{{
