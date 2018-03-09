@@ -20,7 +20,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'gmarik/Vundle.vim'
 Plug 'dyng/auto_mkdir'
 Plug 'ctrlpvim/ctrlp.vim'
-Plug 'JazzCore/ctrlp-cmatcher', { 'do': './install.sh' }
+Plug 'FelikZ/ctrlp-py-matcher'
 Plug 'scrooloose/nerdtree'
 Plug 'vim-scripts/mru.vim'
 Plug 'easymotion/vim-easymotion'
@@ -336,8 +336,8 @@ let NERDTreeBookmarksFile = $HOME.'/.vim-infos/NERDTreeBookmarks'
 " extensions
 let g:ctrlp_extensions = ['tag', 'buffertag', 'rtscript']
 
-" use ctrlp-cmatcher
-let g:ctrlp_match_func = {'match' : 'matcher#cmatch' }
+" use pymatcher
+let g:ctrlp_match_func = {'match' : 'pymatcher#PyMatch' }
 
 nnoremap <silent> <C-P> :CtrlPRoot<CR>
 nnoremap <silent> <C-B> :CtrlPBuffer<CR>
