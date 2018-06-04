@@ -93,7 +93,6 @@ BULLETTRAIN_PROMPT_ORDER=(
   dir
   git
 )
-BULLETTRAIN_PROMPT_CHAR=$(iterm2_prompt_mark)\$
 
 #}}}
 

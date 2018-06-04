@@ -44,6 +44,7 @@
   },
   "Non-ASCII Anti Aliased" : true,
   "Use Bright Bold" : true,
+  "Show Mark Indicators" : false,
   "Ansi 10 Color" : {
     "Green Component" : 0.7301909923553467,
     "Red Component" : 0.4796158969402313,
