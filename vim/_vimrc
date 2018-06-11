@@ -261,7 +261,7 @@ set vb t_vb=
 augroup filetyeSpecKeyword
     au!
     au FileType help setl iskeyword+=-
-    au FileType vim setl iskeyword+=#
+    au FileType vim setl iskeyword+=# iskeyword+=:
 augroup END
 " }}}
 " }}}
@@ -293,12 +293,6 @@ endfunction
 nnoremap <silent> ml :call ToggleHighlightCurrentLine()<CR>
 autocmd InsertEnter * call ClearHighlightLines()
 "}}}
-
-" Format Json {{{
-function! FormatJson()
-    %!python -m json.tool
-endfunction
-" }}}
 " }}}
 
 " Custom FileType {{{
@@ -405,15 +399,6 @@ endfo
 
 " Turn on case sensitive feature
 let g:EasyMotion_smartcase = 1
-" }}}
-
-" Tabular {{{
-nnoremap <silent> <leader>= :Tabularize /=<CR>
-vnoremap <silent> <leader>= :Tabularize /=<CR>
-nnoremap <silent> <leader>: :Tabularize /:<CR>
-vnoremap <silent> <leader>: :Tabularize /:<CR>
-nnoremap <silent> <leader>> :Tabularize /=><CR>
-vnoremap <silent> <leader>> :Tabularize /=><CR>
 " }}}
 
 " Fugitive {{{
@@ -550,24 +535,22 @@ let python_print_as_function       = 1
 " }}}
 
 " YouCompleteMe {{{
-let g:ycm_server_keep_logfiles                = 1
+let g:ycm_min_num_identifier_candidate_chars  = 2
 let g:ycm_key_list_select_completion          = ['<TAB>']
 let g:ycm_key_list_previous_completion        = ['<S-TAB>']
 let g:ycm_filepath_completion_use_working_dir = 1
 let g:ycm_add_preview_to_completeopt          = 0
 let g:ycm_complete_in_comments                = 1
+let g:ycm_complete_in_strings                 = 1
 let g:ycm_seed_identifiers_with_syntax        = 1
 let g:ycm_collect_identifiers_from_tags_files = 1
 let g:ycm_collect_identifiers_from_comments_and_strings = 1
 
 " define custom triggers
-let g:ycm_semantic_triggers = {
-    \ 'python':     ['.'],
-    \ 'typescript': ['.'],
-    \ 'clojure':    ['/', '.'],
-    \ 'rust':       ['::', '.'],
-    \ }
-
+let g:ycm_semantic_triggers =  {
+            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+            \ 'cs,lua,javascript,typescript,clojure,rust': ['re!\w{2}'],
+            \ }
 " }}}
 
 " CtrlSF {{{
@@ -577,6 +560,8 @@ nmap     <C-F>c <Plug>CtrlSFCwordExec
 nmap     <C-F>p <Plug>CtrlSFPwordExec
 nnoremap <C-F>o :CtrlSFOpen<CR>
 let g:extra_whitespace_ignored_filetypes = ['ctrlsf']
+let g:ctrlsf_ackprg = 'ag'
+let g:ctrlsf_search_mode = 'async'
 let g:ctrlsf_populate_qflist = 1
 let g:ctrlsf_default_root = 'project'
 let g:ctrlsf_toggle_map_key = '\t'
@@ -671,12 +656,6 @@ vnoremap <silent> gc :TComment<CR>
 let g:flow#enable    = 0
 let g:flow#autoclose = 1
 let g:flow#omnifunc  = 0
-" }}}
-
-" jedi {{{
-let g:jedi#goto_command             = "gd"
-let g:jedi#goto_assignments_command = ""
-let g:jedi#rename_command           = ""
 " }}}
 
 " racer {{{

@@ -160,6 +160,7 @@ alias -r stat="stat -x"
 # Git Alias
 alias -r gd="git diff"
 alias -r gds="git diff --staged"
+alias -r gstu="git stash save -u"
 
 # Less Alias
 alias -r less="less -i" # case-insensitive
