@@ -5,3 +5,7 @@
 /pentadactyl/_pentadactyl/info
 /vimperator/_vimperator/info
 *.log
+.gitsecret/keys/random_seed
+
+# secret files
+/scripts/extensions/osscmd.sh
