@@ -19,10 +19,8 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'gmarik/Vundle.vim'
 Plug 'dyng/auto_mkdir'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'FelikZ/ctrlp-py-matcher'
+Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'scrooloose/nerdtree'
-Plug 'vim-scripts/mru.vim'
 Plug 'easymotion/vim-easymotion'
 Plug 'thinca/vim-quickrun'
 Plug 'dyng/CommentReader'
@@ -263,6 +261,16 @@ augroup filetyeSpecKeyword
     au FileType help setl iskeyword+=-
     au FileType vim setl iskeyword+=# iskeyword+=:
 augroup END
+
+" persistent undo
+if has("persistent_undo")
+    if has('win32')
+        exec "set undodir='" . $HOME . "\_vim-infos\undodir'"
+    else
+        exec "set undodir='" . $HOME . "/.vim-infos/undodir'"
+    endif
+    set undofile
+endif
 " }}}
 " }}}
 
@@ -326,30 +334,22 @@ let NERDTreeQuitOnOpen = 1
 let NERDTreeBookmarksFile = $HOME.'/.vim-infos/NERDTreeBookmarks'
 " }}}
 
-" ctrlp {{{
-" extensions
-let g:ctrlp_extensions = ['tag', 'buffertag', 'rtscript']
+" LeaderF {{{
+let g:Lf_ShortcutF = '<C-P>'
+let g:Lf_ShortcutB = '<C-B>'
+nnoremap <silent>gm :LeaderfMru<CR>
+nnoremap <silent>gr :LeaderfTag<CR>
 
-" use pymatcher
-let g:ctrlp_match_func = {'match' : 'pymatcher#PyMatch' }
-
-nnoremap <silent> <C-P> :CtrlPRoot<CR>
-nnoremap <silent> <C-B> :CtrlPBuffer<CR>
-nnoremap <silent> <C-E> :CtrlPBufTag<CR>
-nnoremap <silent> tp    :exec 'CtrlP ' . getcwd()<CR>
-nnoremap <silent> tt    :CtrlPTag<CR>
-nnoremap <silent> <leader>p :ClearCtrlPCache<CR>
-let g:ctrlp_root_markers = ['pom.xml']
-let g:ctrlp_working_path_mode = 'rc'
-let g:ctrlp_max_files = 30000
-let g:ctrlp_mruf_max = 800
-let g:ctrlp_mruf_case_sensitive = 0
-let g:ctrlp_switch_buffer = 0
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v(\.neocon|\.git|\.hg|\.svn|node_modules|bower_components|local|target)',
-  \ 'file': '\.exe$\|\.so$\|\.dll$\|\.sw[po]$',
-  \ 'link': '',
-  \ }
+if has("win32")
+    let g:Lf_CacheDirectory = $HOME.'\_vim-infos\'
+else
+    let g:Lf_CacheDirectory = $HOME.'/.vim-infos/'
+endif
+let g:Lf_WorkingDirectoryMode = 'Ac'
+let g:Lf_WildIgnore = {
+        \ 'dir': ['.svn','.git','.hg', '.neocon', 'node_modules', 'bower_components', 'target'],
+        \ 'file': ['*.sw?','~$*','*.bak','*.exe','*.o','*.so','*.py[co]']
+        \ }
 " }}}
 
 " yankring {{{
@@ -370,9 +370,9 @@ function! YRRunAfterMaps()
 endfunction
 " }}}
 
-" gundo {{{
-let g:gundo_close_on_revert = 1
-nnoremap <silent> <leader>u :GundoToggle<CR>
+" undotree {{{
+let g:undotree_SetFocusWhenToggle = 1
+nnoremap <silent> <leader>u :UndotreeToggle<CR>
 " }}}
 
 " EasyMotion {{{
@@ -479,16 +479,6 @@ com! -bar -b -n=? -comp=file SessionCd call s:SessionCd(<q-bang>, <q-args>)
 com! -bar -b -n=? -comp=file Scd SessionCd<bang> <args>
 " }}}
 
-" MRU {{{
-if has('win32')
-    let MRU_File = $HOME.'\_vim-infos\vim_mru_files'
-else
-    let MRU_File = $HOME.'/.vim-infos/vim_mru_files'
-endif
-let MRU_Add_Menu = 0
-nnoremap <silent>gm :MRU<CR>
-" }}}
-
 " Quickrun {{{
 if !exists('g:quickrun_config')
     let g:quickrun_config = {}
@@ -554,11 +544,12 @@ let g:ycm_semantic_triggers =  {
 " }}}
 
 " CtrlSF {{{
-nmap     <C-F>f <Plug>CtrlSFPrompt
-vmap     <C-F>f <Plug>CtrlSFVwordPath
-nmap     <C-F>c <Plug>CtrlSFCwordExec
-nmap     <C-F>p <Plug>CtrlSFPwordExec
-nnoremap <C-F>o :CtrlSFOpen<CR>
+nmap     <silent> <C-F>f <Plug>CtrlSFPrompt
+vmap     <silent> <C-F>f <Plug>CtrlSFVwordPath
+nmap     <silent> <C-F>c <Plug>CtrlSFCwordExec
+nmap     <silent> <C-F>p <Plug>CtrlSFPwordExec
+nnoremap <silent> <C-F>o :CtrlSFOpen<CR>
+nnoremap <silent> <C-F>c :CtrlSFFocus<CR>
 let g:extra_whitespace_ignored_filetypes = ['ctrlsf']
 let g:ctrlsf_ackprg = 'ag'
 let g:ctrlsf_search_mode = 'async'
