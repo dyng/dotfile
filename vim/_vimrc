@@ -544,12 +544,10 @@ let g:ycm_semantic_triggers =  {
 " }}}
 
 " CtrlSF {{{
-nmap     <silent> <C-F>f <Plug>CtrlSFPrompt
-vmap     <silent> <C-F>f <Plug>CtrlSFVwordPath
-nmap     <silent> <C-F>c <Plug>CtrlSFCwordExec
-nmap     <silent> <C-F>p <Plug>CtrlSFPwordExec
+nmap     <C-F>f <Plug>CtrlSFPrompt
+vmap     <C-F>f <Plug>CtrlSFVwordPath
 nnoremap <silent> <C-F>o :CtrlSFOpen<CR>
-nnoremap <silent> <C-F>c :CtrlSFFocus<CR>
+nnoremap <silent> <C-F>j :CtrlSFFocus<CR>
 let g:extra_whitespace_ignored_filetypes = ['ctrlsf']
 let g:ctrlsf_ackprg = 'ag'
 let g:ctrlsf_search_mode = 'async'
