@@ -37,7 +37,6 @@ Plug 'junegunn/vim-easy-align'
 Plug '~/Dropbox/Projects/CtrlSF'
 Plug 'bling/vim-airline' | Plug 'vim-airline/vim-airline-themes'
 Plug 'tpope/vim-fugitive'
-" Plug 'dyng/YankRing.vim'
 Plug 'mattn/emmet-vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
 Plug 'terryma/vim-multiple-cursors'
@@ -549,7 +548,8 @@ vmap     <C-F>f <Plug>CtrlSFVwordPath
 nnoremap <silent> <C-F>o :CtrlSFOpen<CR>
 nnoremap <silent> <C-F>j :CtrlSFFocus<CR>
 let g:extra_whitespace_ignored_filetypes = ['ctrlsf']
-let g:ctrlsf_ackprg = 'ag'
+let g:ctrlsf_ackprg = 'rg'
+let g:ctrlsf_default_view_mode = 'normal'
 let g:ctrlsf_search_mode = 'async'
 let g:ctrlsf_populate_qflist = 1
 let g:ctrlsf_default_root = 'project'
@@ -636,7 +636,7 @@ au BufWritePost *.clj silent ClojureHighlightReferences
 " }}}
 
 " tComment {{{
-let g:tcommentMaps = 0
+let g:tcomment_maps = 0
 nnoremap <silent> gc :TComment<CR>
 vnoremap <silent> gc :TComment<CR>
 " }}}
