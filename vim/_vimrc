@@ -337,7 +337,7 @@ let NERDTreeBookmarksFile = $HOME.'/.vim-infos/NERDTreeBookmarks'
 let g:Lf_ShortcutF = '<C-P>'
 let g:Lf_ShortcutB = '<C-B>'
 nnoremap <silent>gm :LeaderfMru<CR>
-nnoremap <silent>gr :LeaderfTag<CR>
+nnoremap <silent>gr :LeaderfFunction<CR>
 
 if has("win32")
     let g:Lf_CacheDirectory = $HOME.'\_vim-infos\'
@@ -379,6 +379,7 @@ let g:EasyMotion_do_mapping = 0 " Disable default mappings
 let g:EasyMotion_keys = 'asdghklqwertyuiopzxcvbnmfj'
 let g:EasyMotion_smartcase = 1
 
+nmap W <Plug>(easymotion-w)
 nmap F <Plug>(easymotion-s2)
 let easymotion_key_map = {
     \ 'zj': '<Plug>(easymotion-j)',
@@ -395,9 +396,6 @@ for key in keys(easymotion_key_map)
     exec "vmap " . key . " " . easymotion_key_map[key]
     exec "omap " . key . " " . easymotion_key_map[key]
 endfo
-
-" Turn on case sensitive feature
-let g:EasyMotion_smartcase = 1
 " }}}
 
 " Fugitive {{{
