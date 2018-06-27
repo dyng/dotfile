@@ -17,7 +17,6 @@ endif
 
 call plug#begin('~/.vim/plugged')
 
-Plug 'gmarik/Vundle.vim'
 Plug 'dyng/auto_mkdir'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'scrooloose/nerdtree'
@@ -404,10 +403,6 @@ nnoremap <silent> gss :Gstatus<CR>
 nnoremap <silent> gsb :Gblame<CR>
 " }}}
 
-" Vundle {{{
-nnoremap <leader>v :PluginList<CR>
-" }}}
-
 " Tagbar {{{
 let g:tagbar_left      = 1
 let g:tagbar_width     = 30
@@ -545,7 +540,6 @@ nmap     <C-F>f <Plug>CtrlSFPrompt
 vmap     <C-F>f <Plug>CtrlSFVwordPath
 nnoremap <silent> <C-F>o :CtrlSFOpen<CR>
 nnoremap <silent> <C-F>j :CtrlSFFocus<CR>
-let g:extra_whitespace_ignored_filetypes = ['ctrlsf']
 let g:ctrlsf_ackprg = 'rg'
 let g:ctrlsf_default_view_mode = 'normal'
 let g:ctrlsf_search_mode = 'async'
@@ -556,6 +550,9 @@ let g:ctrlsf_extra_backend_args = {
     \ 'ag': '--follow',
     \ 'pt': '--global-gitignore'
     \ }
+
+" ignore trailing space
+let g:extra_whitespace_ignored_filetypes = ['ctrlsf']
 " }}}
 
 " vim-multiple-selection {{{
@@ -675,8 +672,8 @@ nmap == gqaj
 " }}}
 
 " {{{ vim-easy-align
-xmap ga <Plug>(EasyAlign)
-nmap ga <Plug>(EasyAlign)
+xmap ga <Plug>(EasyAlign)*
+nmap ga <Plug>(EasyAlign)*
 " }}}
 " }}}
 
