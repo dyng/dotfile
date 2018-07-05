@@ -318,7 +318,7 @@ let g:UltiSnipsJumpForwardTrigger  = "<C-J>"
 let g:UltiSnipsJumpBackwardTrigger = "<C-K>"
 " }}}
 
-" {{{ bufmru
+" bufmru {{{
 " config
 let g:bufmru_max_buffer_num = 8
 " }}}
@@ -565,7 +565,7 @@ let g:multi_cursor_skip_key='<C-X>'
 let g:multi_cursor_quit_key='<Esc>'
 " }}}
 
-" {{{ mark
+" mark {{{
 nmap <silent> mm <Plug>MarkSet
 vmap <silent> mm <Plug>MarkSet
 nmap <silent> mr <Plug>MarkRegex
@@ -576,11 +576,11 @@ nmap <silent> mn <Plug>MarkSearchAnyNext
 nmap <silent> mN <Plug>MarkSearchAnyPrev
 " }}}
 
-" {{{ Buffet
+" Buffet {{{
 nmap <silent><expr> <leader>b &buftype ==# "" ? ":Bufferlist\r" : "\r"
 " }}}
 
-" {{{ exchange
+" exchange {{{
 let g:exchange_no_mappings = 1
 nmap w     <Plug>(Exchange)
 nmap ww    <Plug>(ExchangeLine)
@@ -588,7 +588,7 @@ xmap w     <Plug>(Exchange)
 nmap <ESC> <Plug>(ExchangeClear)
 " }}}
 
-" {{{ vim-go
+" vim-go {{{
 let g:go_fmt_fail_silently = 1
 " }}}
 
@@ -663,11 +663,11 @@ let g:javascript_enable_domhtmlcss = 1
 let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 " }}}
 
-" {{{ gutentags
+" gutentags {{{
 set statusline+=%{gutentags#statusline()}
 " }}}
 
-" {{{ jdaddy
+" jaddy {{{
 nmap == gqaj
 " }}}
 
