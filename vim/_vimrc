@@ -550,6 +550,9 @@ let g:ctrlsf_extra_backend_args = {
     \ 'ag': '--follow',
     \ 'pt': '--global-gitignore'
     \ }
+let g:ctrlsf_auto_focus = {
+    \ 'at': 'done'
+    \ }
 
 " ignore trailing space
 let g:extra_whitespace_ignored_filetypes = ['ctrlsf']
