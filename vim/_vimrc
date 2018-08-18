@@ -98,7 +98,7 @@ set fileencodings=ucs-bom,utf-8,sjis,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 language message zh_CN.UTF-8
 " }}}
 
-" Spelling check {{{
+" Spelling Check {{{
 " default setting
 set nospell
 
@@ -253,6 +253,18 @@ cab X x
 " disable beeping
 set vb t_vb=
 
+" fix broken arrow keys inside console
+if !has('gui')
+    nnoremap <silent> <ESC>OA <UP>
+    nnoremap <silent> <ESC>OB <DOWN>
+    nnoremap <silent> <ESC>OC <RIGHT>
+    nnoremap <silent> <ESC>OD <LEFT>
+    inoremap <silent> <ESC>OA <UP>
+    inoremap <silent> <ESC>OB <DOWN>
+    inoremap <silent> <ESC>OC <RIGHT>
+    inoremap <silent> <ESC>OD <LEFT>
+endif
+
 " ignore python3 warning
 silent! py3 pass
 
@@ -272,6 +284,9 @@ if has("persistent_undo")
     endif
     set undofile
 endif
+
+" paste mode
+set pastetoggle=<F8>
 " }}}
 " }}}
 
@@ -494,7 +509,6 @@ let g:quickrun_config['perl'] = {
 
 " CommentReader {{{
 let g:creader_session_file = $HOME.'/.vim-infos/vim_creader_session'
-nnoremap <F8> :CRtoggle<CR>
 " }}}
 
 " Airline {{{
