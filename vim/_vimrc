@@ -180,8 +180,8 @@ noremap L $
 inoremap <Home> <C-O>g^
 inoremap <End>  <c-O>g$
 " Quick paging
- nnoremap <Space> <C-D>
- vnoremap <Space> <C-D>
+nnoremap <Space> <C-D>
+vnoremap <Space> <C-D>
 " Copy to line end
 nnoremap Y y$
 " Cursor move
@@ -252,6 +252,9 @@ cab X x
 " Misc {{{
 " disable beeping
 set vb t_vb=
+
+" ignore python3 warning
+silent! py3 pass
 
 " add keyword '-'
 augroup filetyeSpecKeyword
@@ -337,6 +340,7 @@ let g:Lf_ShortcutF = '<C-P>'
 let g:Lf_ShortcutB = '<C-B>'
 nnoremap <silent>gm :LeaderfMru<CR>
 nnoremap <silent>gr :LeaderfFunction<CR>
+nnoremap <silent>gR :LeaderfTag<CR>
 
 if has("win32")
     let g:Lf_CacheDirectory = $HOME.'\_vim-infos\'
@@ -551,8 +555,9 @@ let g:ctrlsf_extra_backend_args = {
     \ 'pt': '--global-gitignore'
     \ }
 let g:ctrlsf_auto_focus = {
-    \ 'at': 'done'
+    \ 'at': 'start'
     \ }
+let g:ctrlsf_extra_root_markers = ['.root']
 
 " ignore trailing space
 let g:extra_whitespace_ignored_filetypes = ['ctrlsf']
