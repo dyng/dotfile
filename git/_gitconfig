@@ -5,6 +5,7 @@
         excludesfile = ~/.gitignore_global
         editor = vim
         precomposeunicode = false
+        quotepath = false
 [alias]
         st = status
         ck = checkout
