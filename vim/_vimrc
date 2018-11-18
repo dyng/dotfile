@@ -565,7 +565,6 @@ let g:ctrlsf_populate_qflist = 1
 let g:ctrlsf_default_root = 'project'
 let g:ctrlsf_toggle_map_key = '\t'
 let g:ctrlsf_extra_backend_args = {
-    \ 'ag': '--follow',
     \ 'pt': '--global-gitignore'
     \ }
 let g:ctrlsf_auto_focus = {
