@@ -46,3 +46,4 @@ brew "tree"
 brew "vim", args: ["with-override-system-vi"]
 brew "zsh"
 brew "universal-ctags/universal-ctags/universal-ctags", args: ["HEAD"]
+brew "fd"
