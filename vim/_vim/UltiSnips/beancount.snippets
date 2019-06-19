@@ -1,0 +1,23 @@
+snippet new
+${7:`!v strftime("%Y")`}-${6:`!v strftime("%m")`}-${5:`!v strftime("%d")`} * "${1}"
+    ${2:Liabilities:CreditCard:HeCard} -${3} CNY
+    ${4:Expenses:Food}
+endsnippet
+
+snippet food
+${6:`!v strftime("%Y")`}-${5:`!v strftime("%m")`}-${4:`!v strftime("%d")`} * "${1}"
+    ${2:Liabilities:CreditCard:HeCard} -${3} CNY
+    Expenses:Food
+endsnippet
+
+snippet trans
+${6:`!v strftime("%Y")`}-${5:`!v strftime("%m")`}-${4:`!v strftime("%d")`} * "${1:火车票}"
+    ${2:Liabilities:CreditCard:HeCard} -${3} CNY
+    Expenses:Transportation
+endsnippet
+
+snippet misc
+${6:`!v strftime("%Y")`}-${5:`!v strftime("%m")`}-${4:`!v strftime("%d")`} * "${1}"
+    ${2:Liabilities:CreditCard:HeCard} -${3} CNY
+    Expenses:Misc
+endsnippet

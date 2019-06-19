@@ -71,6 +71,7 @@ Plug 'RobbieClarken/vim-haproxy'
 Plug '~/Dropbox/Projects/dejava.vim'
 Plug 'scrooloose/vim-slumlord'
 Plug 'aklt/plantuml-syntax'
+Plug 'nathangrigg/vim-beancount'
 
 " Colorschemes
 Plug 'tomasr/molokai'
@@ -147,7 +148,7 @@ autocmd FileType git*,help setlocal nolist
 set t_Co=256
 set background=dark
 if has('gui')
-    colorscheme spacemacs-theme
+    colorscheme molokai
 else
     colorscheme one-dark
 endif
