@@ -5,19 +5,3 @@
 /pentadactyl/_pentadactyl/info
 /vimperator/_vimperator/info
 *.log
-.gitsecret/keys/random_seed
-
-# secret files
-scripts/extensions/osscmd.sh
-ssh/config
-ssh/id_rsa.aliyun
-ssh/id_rsa.aliyun.pub
-ssh/id_rsa.dygvirus
-ssh/id_rsa.dygvirus.pub
-ssh/id_rsa.vultr
-ssh/id_rsa.vultr.pub
-ssh/id_rsa@alibaba
-ssh/id_rsa@alibaba.pub
-ssh/id_rsa@gitlab.com
-ssh/id_rsa@gitlab.com.pub
-ssh/id_rsa_vultr
