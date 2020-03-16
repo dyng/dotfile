@@ -517,7 +517,7 @@ let g:creader_session_file = $HOME.'/.vim-infos/vim_creader_session'
 " }}}
 
 " Airline {{{
-let g:airline_theme = 'laederon'
+let g:airline_theme = 'deus'
 
 if !exists('g:airline_symbols')
     let g:airline_symbols = {}

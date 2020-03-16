@@ -225,6 +225,20 @@ if [[ -d $HOME/extensions ]]; then
         source $f
     done
 fi
+
+# Set&Unset Proxy
+set_proxy() {
+    export HTTP_PROXY=http://127.0.0.1:1081
+    export HTTPS_PROXY=http://127.0.0.1:1081
+    echo 'Set proxy successfully!'
+}
+
+unset_proxy() {
+    unset HTTP_PROXY
+    unset HTTPS_PROXY
+    echo 'Unset proxy successfully!'
+}
+
 # }}}
 
 ### App Init {{{
