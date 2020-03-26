@@ -358,9 +358,12 @@ let NERDTreeBookmarksFile = $HOME.'/.vim-infos/NERDTreeBookmarks'
 " LeaderF {{{
 let g:Lf_ShortcutF = '<C-P>'
 let g:Lf_ShortcutB = '<C-B>'
+let g:Lf_WindowPosition = 'popup'
 nnoremap <silent>gm :LeaderfMru<CR>
 nnoremap <silent>gr :LeaderfFunction<CR>
 nnoremap <silent>gR :LeaderfTag<CR>
+
+let g:Lf_CommandMap = {'<C-K>': ['<Up>'], '<C-J>': ['<Down>']}
 
 if has("win32")
     let g:Lf_CacheDirectory = $HOME.'\_vim-infos\'
