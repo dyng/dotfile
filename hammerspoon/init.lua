@@ -9,5 +9,4 @@ hs.hotkey.bind(hyper, '`', function()
     local center = hs.geometry.rectMidPoint(rect)
 
     hs.mouse.setAbsolutePosition(center)
-    hs.eventtap.leftClick(center)
 end)
