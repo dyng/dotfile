@@ -174,7 +174,6 @@ alias -r stat="stat -x"
 alias -r gd="git diff"
 alias -r gds="git diff --staged"
 alias -r gstu="git stash save -u"
-alias -r gclp="git -c http.proxy=socks5h://localhost:1080 clone"
 
 # Less Alias
 alias -r less="less -i" # case-insensitive

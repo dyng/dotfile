@@ -26,6 +26,7 @@ Plug 'dyng/CommentReader'
 Plug 'mbbill/undotree'
 Plug 'vim-scripts/matchit.zip'
 Plug 'majutsushi/tagbar'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'vim-scripts/Rename'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
@@ -57,8 +58,6 @@ Plug 'dhruvasagar/vim-table-mode'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-jdaddy'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'puremourning/vimspector' ", {'do': './install_gadget.py --all'}
 
 " Language Specific Plugins
 Plug 'motemen/xslate-vim'
@@ -172,8 +171,6 @@ inoremap <silent><expr> <Space> pumvisible() ? "\<C-Y>\<Space>" : "\<Space>"
 inoremap <silent><expr> <CR>    pumvisible() ? "\<C-Y>\<CR>"    : "\<CR>"
 inoremap <silent><expr> <Esc>   pumvisible() ? "\<C-Y>\<Esc>"   : "\<Esc>"
 inoremap <silent><expr> <C-C>   pumvisible() ? "\<C-E>"         : "\<C-C>"
-inoremap <silent><expr> <Tab>   pumvisible() ? "\<C-n>"         : "\<Tab>"
-inoremap <silent><expr> <S-Tab> pumvisible() ? "\<C-p>"         : "\<S-Tab>"
 " }}}
 
 " Maps {{{
@@ -540,6 +537,25 @@ let python_highlight_builtin_objs  = 1
 let python_highlight_builtin_funcs = 1
 let python_highlight_exceptions    = 1
 let python_print_as_function       = 1
+" }}}
+
+" YouCompleteMe {{{
+let g:ycm_min_num_identifier_candidate_chars  = 2
+let g:ycm_key_list_select_completion          = ['<TAB>']
+let g:ycm_key_list_previous_completion        = ['<S-TAB>']
+let g:ycm_filepath_completion_use_working_dir = 1
+let g:ycm_add_preview_to_completeopt          = 0
+let g:ycm_complete_in_comments                = 1
+let g:ycm_complete_in_strings                 = 1
+let g:ycm_seed_identifiers_with_syntax        = 1
+let g:ycm_collect_identifiers_from_tags_files = 1
+let g:ycm_collect_identifiers_from_comments_and_strings = 1
+
+" define custom triggers
+let g:ycm_semantic_triggers =  {
+            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+            \ 'cs,lua,javascript,typescript,clojure,rust': ['re!\w{2}'],
+            \ }
 " }}}
 
 " CtrlSF {{{
