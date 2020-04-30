@@ -22,7 +22,6 @@ Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'scrooloose/nerdtree'
 Plug 'easymotion/vim-easymotion'
 Plug 'thinca/vim-quickrun'
-Plug 'dyng/CommentReader'
 Plug 'mbbill/undotree'
 Plug 'vim-scripts/matchit.zip'
 Plug 'majutsushi/tagbar'
@@ -147,10 +146,10 @@ autocmd FileType git*,help setlocal nolist
 " Colorscheme
 set t_Co=256
 set background=dark
-if has('gui')
+if has('gui_running')
     colorscheme molokai
 else
-    colorscheme one-dark
+    colorscheme one
 endif
 " }}}
 
@@ -256,15 +255,23 @@ cab X x
 set vb t_vb=
 
 " fix broken arrow keys inside console
-if !has('gui')
-    nnoremap <silent> <ESC>OA <UP>
-    nnoremap <silent> <ESC>OB <DOWN>
-    nnoremap <silent> <ESC>OC <RIGHT>
-    nnoremap <silent> <ESC>OD <LEFT>
-    inoremap <silent> <ESC>OA <UP>
-    inoremap <silent> <ESC>OB <DOWN>
-    inoremap <silent> <ESC>OC <RIGHT>
-    inoremap <silent> <ESC>OD <LEFT>
+if !has('gui_running')
+    map <silent> <ESC>OA <UP>
+    map <silent> <ESC>OB <DOWN>
+    map <silent> <ESC>OC <RIGHT>
+    map <silent> <ESC>OD <LEFT>
+    map <silent> <Esc>OP <F1>
+    map <silent> <Esc>OQ <F2>
+    map <silent> <Esc>OR <F3>
+    map <silent> <Esc>OS <F4>
+    map <silent> <Esc>[16~ <F5>
+    map <silent> <Esc>[17~ <F6>
+    map <silent> <Esc>[18~ <F7>
+    map <silent> <Esc>[19~ <F8>
+    map <silent> <Esc>[20~ <F9>
+    map <silent> <Esc>[21~ <F10>
+    map <silent> <Esc>[23~ <F11>
+    map <silent> <Esc>[24~ <F12>
 endif
 
 " ignore python3 warning

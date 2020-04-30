@@ -32,7 +32,6 @@ zplug "plugins/mvn", from:oh-my-zsh
 zplug "plugins/grunt", from:oh-my-zsh
 zplug "plugins/svn", from:oh-my-zsh
 zplug "plugins/lein", from:oh-my-zsh
-zplug "plugins/virtualenv", from:oh-my-zsh
 zplug "plugins/fasd", from:oh-my-zsh
 zplug "plugins/docker", from:oh-my-zsh
 zplug "supercrabtree/k"
