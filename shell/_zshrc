@@ -41,6 +41,7 @@ zplug "zsh-users/zsh-syntax-highlighting"
 zplug "caiogondim/bullet-train-oh-my-zsh-theme", use:bullet-train.zsh-theme, defer:2
 zplug "djui/alias-tips"
 zplug "zsh-users/zsh-autosuggestions"
+zplug "reegnz/jq-zsh-plugin"
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
