@@ -363,6 +363,7 @@ let NERDTreeBookmarksFile = $HOME.'/.vim-infos/NERDTreeBookmarks'
 let g:Lf_ShortcutF = '<C-P>'
 let g:Lf_ShortcutB = '<C-B>'
 let g:Lf_WindowPosition = 'popup'
+let g:Lf_DefaultMode = 'NameOnly'
 nnoremap <silent>gm :LeaderfMru<CR>
 nnoremap <silent>gr :LeaderfFunction<CR>
 nnoremap <silent>gR :LeaderfTag<CR>
@@ -570,7 +571,6 @@ nmap     <C-F>f <Plug>CtrlSFPrompt
 vmap     <C-F>f <Plug>CtrlSFVwordPath
 nnoremap <silent> <C-F>o :CtrlSFOpen<CR>
 nnoremap <silent> <C-F>j :CtrlSFFocus<CR>
-let g:ctrlsf_ackprg = 'rg'
 let g:ctrlsf_default_view_mode = 'normal'
 let g:ctrlsf_search_mode = 'async'
 let g:ctrlsf_populate_qflist = 1

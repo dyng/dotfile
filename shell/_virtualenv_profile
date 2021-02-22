@@ -46,6 +46,7 @@ fi
 export JENV_ROOT=/usr/local/var/jenv
 if which jenv &>/dev/null; then
     eval "$(jenv init -)";
+    jenv enable-plugin export &>/dev/null
 else
     [ -s /usr/libexec/java_home ] && export JAVA_HOME=$(/usr/libexec/java_home)
 fi
