@@ -23,12 +23,11 @@ Plug 'scrooloose/nerdtree'
 Plug 'easymotion/vim-easymotion'
 Plug 'thinca/vim-quickrun'
 Plug 'mbbill/undotree'
-Plug 'vim-scripts/matchit.zip'
-Plug 'majutsushi/tagbar'
+Plug 'andymass/vim-matchup'
+Plug 'preservim/tagbar'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'vim-scripts/Rename'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-repeat'
+Plug 'machakann/vim-sandwich'
 Plug 'xolox/vim-misc'
 Plug 'xolox/vim-session'
 Plug 'junegunn/vim-easy-align'
@@ -56,14 +55,12 @@ Plug 'bronson/vim-trailing-whitespace'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-jdaddy'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 'markdown' }
 
 " Language Specific Plugins
 Plug 'motemen/xslate-vim'
-Plug 'tpope/vim-fireplace'
 Plug 'guns/vim-sexp'
 Plug 'kien/rainbow_parentheses.vim'
-Plug 'facebook/vim-flow'
 Plug 'phildawes/racer'
 Plug 'cespare/vim-toml'
 Plug 'RobbieClarken/vim-haproxy'
@@ -71,6 +68,7 @@ Plug '~/Dropbox/Projects/dejava.vim'
 Plug 'scrooloose/vim-slumlord'
 Plug 'aklt/plantuml-syntax'
 Plug 'nathangrigg/vim-beancount'
+Plug 'rust-lang/rust.vim'
 
 " Colorschemes
 Plug 'tomasr/molokai'
@@ -621,10 +619,6 @@ xmap w     <Plug>(Exchange)
 nmap <ESC> <Plug>(ExchangeClear)
 " }}}
 
-" vim-go {{{
-let g:go_fmt_fail_silently = 1
-" }}}
-
 " linediff {{{
 let g:linediff_buffer_type = 'scratch'
 vnoremap zd :Linediff<CR>
@@ -641,10 +635,6 @@ imap <silent><expr> <BS>    pumvisible() ? "\<BS>"          : "<Plug>delimitMate
 
 " language specific configuration
 au FileType clojure let b:delimitMate_quotes = '"'
-" }}}
-
-" fireplace {{{
-nnoremap cpe :%Eval<CR>
 " }}}
 
 " vim-clojure-static {{{
@@ -667,12 +657,6 @@ au BufWritePost *.clj silent ClojureHighlightReferences
 let g:tcomment_maps = 0
 nnoremap <silent> gc :TComment<CR>
 vnoremap <silent> gc :TComment<CR>
-" }}}
-
-" flow {{{
-let g:flow#enable    = 0
-let g:flow#autoclose = 1
-let g:flow#omnifunc  = 0
 " }}}
 
 " racer {{{
@@ -700,13 +684,14 @@ let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 set statusline+=%{gutentags#statusline()}
 " }}}
 
-" jaddy {{{
-nmap == gqaj
-" }}}
-
 " {{{ vim-easy-align
 xmap ga <Plug>(EasyAlign)*
 nmap ga <Plug>(EasyAlign)*
+" }}}
+
+" {{{ vim-sandwich
+" use vim-surround's style mapping
+runtime macros/sandwich/keymap/surround.vim
 " }}}
 " }}}
 
