@@ -56,11 +56,11 @@ Plug 'dhruvasagar/vim-table-mode'
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'sheerun/vim-polyglot'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 'markdown' }
+Plug 'ryanoasis/vim-devicons'
 
 " Language Specific Plugins
 Plug 'motemen/xslate-vim'
 Plug 'guns/vim-sexp'
-Plug 'kien/rainbow_parentheses.vim'
 Plug 'phildawes/racer'
 Plug 'cespare/vim-toml'
 Plug 'RobbieClarken/vim-haproxy'
@@ -130,7 +130,7 @@ set ignorecase
 set smartcase
 " }}}
 
-" View {{{
+" UI {{{
 set backspace=indent,eol,start
 set guioptions=
 set hlsearch
@@ -149,6 +149,16 @@ if has('gui_running')
 else
     colorscheme one
 endif
+
+" Font
+if has('gui_macvim')
+    set guifont=Inconsolata\ Nerd\ Font\ Mono:h18,Menlo-Regular:h15,Monaco:h14
+elseif has('win32')
+    set guifont=Consolas:h12
+else
+    set guifont=Monospace\ 12
+endif
+
 " }}}
 
 " Buffer {{{
@@ -611,12 +621,12 @@ nmap <silent> mN <Plug>MarkSearchAnyPrev
 nmap <silent><expr> <leader>b &buftype ==# "" ? ":Bufferlist\r" : "\r"
 " }}}
 
-" exchange {{{
+" vim-exchange {{{
 let g:exchange_no_mappings = 1
-nmap w     <Plug>(Exchange)
-nmap ww    <Plug>(ExchangeLine)
-xmap w     <Plug>(Exchange)
-nmap <ESC> <Plug>(ExchangeClear)
+nmap cx     <Plug>(Exchange)
+nmap cxx    <Plug>(ExchangeLine)
+xmap X      <Plug>(Exchange)
+nmap <expr> <ESC> exists('b:exchange') ? "<Plug>(ExchangeClear)"  : "\<ESC>"
 " }}}
 
 " linediff {{{
@@ -640,13 +650,6 @@ au FileType clojure let b:delimitMate_quotes = '"'
 " vim-clojure-static {{{
 let g:clojure_align_multiline_strings = 0
 let g:clojure_align_subforms = 0
-" }}}
-
-" rainbow_parentheses {{{
-autocmd VimEnter *       RainbowParenthesesToggle
-autocmd Syntax   clojure RainbowParenthesesLoadRound
-autocmd Syntax   clojure RainbowParenthesesLoadSquare
-autocmd Syntax   clojure RainbowParenthesesLoadBraces
 " }}}
 
 " vim-clojure-highlight {{{
