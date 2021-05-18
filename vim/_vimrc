@@ -80,7 +80,7 @@ Plug 'rakr/vim-one'
 Plug 'colepeters/spacemacs-theme.vim'
 
 " Documents
-Plug 'asins/vimcdoc'
+Plug 'yianwillis/vimcdoc'
 
 call plug#end()
 
@@ -158,7 +158,10 @@ elseif has('win32')
 else
     set guifont=Monospace\ 12
 endif
+" }}}
 
+" Terminal {{{
+tnoremap <F1> <C-W>N
 " }}}
 
 " Buffer {{{
@@ -418,8 +421,7 @@ let g:EasyMotion_do_mapping = 0 " Disable default mappings
 let g:EasyMotion_keys = 'asdghklqwertyuiopzxcvbnmfj'
 let g:EasyMotion_smartcase = 1
 
-nmap W <Plug>(easymotion-w)
-nmap F <Plug>(easymotion-s2)
+nmap f <Plug>(easymotion-s2)
 let easymotion_key_map = {
     \ 'zj': '<Plug>(easymotion-j)',
     \ 'zk': '<Plug>(easymotion-k)',

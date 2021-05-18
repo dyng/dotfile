@@ -23,16 +23,13 @@ setopt prompt_subst
 autoload bashcompinit
 bashcompinit
 
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 zplug "lib/completion", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/gitfast", from:oh-my-zsh
 zplug "plugins/git-extras", from:oh-my-zsh
 zplug "plugins/brew", from:oh-my-zsh
 zplug "plugins/mvn", from:oh-my-zsh
-zplug "plugins/grunt", from:oh-my-zsh
-zplug "plugins/svn", from:oh-my-zsh
-zplug "plugins/lein", from:oh-my-zsh
-zplug "plugins/fasd", from:oh-my-zsh
 zplug "plugins/docker", from:oh-my-zsh
 zplug "plugins/virtualenv", from:oh-my-zsh
 zplug "supercrabtree/k"
@@ -41,6 +38,7 @@ zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "caiogondim/bullet-train-oh-my-zsh-theme", use:bullet-train.zsh-theme, defer:2
 zplug "djui/alias-tips"
+zplug "rupa/z", use:z.sh
 zplug "zsh-users/zsh-autosuggestions"
 zplug "reegnz/jq-zsh-plugin"
 
@@ -244,19 +242,14 @@ unset_proxy() {
 
 ### App Init {{{
 
+# z
+
+
 # Docker (for mac only)
 if hash docker-machine &>/dev/null; then
     if [[ $(docker-machine status default 2>/dev/null) == "Running" ]]; then
         eval "$(docker-machine env default)"
     fi
-fi
-
-# fasd
-if hash fasd &>/dev/null; then
-    eval "$(fasd --init auto)"
-    v() {
-        vim $(fasd -sif $1)
-    }
 fi
 
 # thefuck
