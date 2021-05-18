@@ -1,3 +1,10 @@
+# profiling flag, set 1 if needed
+PROFILING=
+
+if [[ $PROFILING ]]; then
+    zmodload zsh/zprof
+fi
+
 ### oh-my-zsh {{{
 ### DEPRECATED ###
 ZSH=$HOME/.oh-my-zsh
@@ -57,7 +64,7 @@ zplug load
 ### Global {{{
 
 # functions {{{
-run_if_script_exist() {
+run_if_script_exists() {
     if [[ -e $1 ]]; then
         source $1
     fi
@@ -72,7 +79,7 @@ if [[ -z $LANG ]]; then
 fi
 
 # load iterm2-shell-integration
-run_if_script_exist $HOME/.iterm2_shell_integration.zsh
+run_if_script_exists $HOME/.iterm2_shell_integration.zsh
 
 # }}}
 
@@ -156,7 +163,7 @@ if which fzf &>/dev/null; then
 fi
 
 # Virtualenv Loading
-run_if_script_exist $HOME/.virtualenv_profile
+source $HOME/.virtualenv_profile
 # }}}
 
 ### Alias {{{
@@ -242,9 +249,6 @@ unset_proxy() {
 
 ### App Init {{{
 
-# z
-
-
 # Docker (for mac only)
 if hash docker-machine &>/dev/null; then
     if [[ $(docker-machine status default 2>/dev/null) == "Running" ]]; then
@@ -276,4 +280,7 @@ if [[ -d $HOME/.shrc_d ]]; then
 fi
 # }}}
 
+if [[ $PROFILING ]]; then
+    zprof
+fi
 # vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:
