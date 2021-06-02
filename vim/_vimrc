@@ -41,7 +41,6 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-scripts/Mark--Karkat'
 Plug 'tpope/vim-rsi'
 Plug 'sandeepcr529/Buffet.vim'
-Plug 'dyng/bufmru.vim'
 Plug 'tommcdo/vim-exchange'
 Plug 'dyng/linediff.vim'
 Plug 'vim-scripts/ReloadScript'
@@ -54,21 +53,17 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'ludovicchabant/vim-gutentags'
-Plug 'sheerun/vim-polyglot'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 'markdown' }
 Plug 'ryanoasis/vim-devicons'
+Plug 'sheerun/vim-polyglot'
+Plug 'puremourning/vimspector'
+Plug 'skywind3000/vim-terminal-help'
 
 " Language Specific Plugins
-Plug 'motemen/xslate-vim'
 Plug 'guns/vim-sexp'
 Plug 'phildawes/racer'
-Plug 'cespare/vim-toml'
-Plug 'RobbieClarken/vim-haproxy'
 Plug '~/Dropbox/Projects/dejava.vim'
-Plug 'scrooloose/vim-slumlord'
-Plug 'aklt/plantuml-syntax'
 Plug 'nathangrigg/vim-beancount'
-Plug 'rust-lang/rust.vim'
 
 " Colorschemes
 Plug 'tomasr/molokai'
@@ -144,11 +139,7 @@ autocmd FileType git*,help setlocal nolist
 " Colorscheme
 set t_Co=256
 set background=dark
-if has('gui_running')
-    colorscheme molokai
-else
-    colorscheme one
-endif
+colorscheme onedark
 
 " Font
 if has('gui_macvim')
@@ -161,7 +152,7 @@ endif
 " }}}
 
 " Terminal {{{
-tnoremap <F1> <C-W>N
+tnoremap <F1> <C-\><C-N>
 " }}}
 
 " Buffer {{{
@@ -356,11 +347,6 @@ let g:UltiSnipsJumpForwardTrigger  = "<C-J>"
 let g:UltiSnipsJumpBackwardTrigger = "<C-K>"
 " }}}
 
-" bufmru {{{
-" config
-let g:bufmru_max_buffer_num = 8
-" }}}
-
 " Nerdtree {{{
 nnoremap <silent> gn :NERDTreeFind<CR>
 nnoremap <silent> gN :NERDTree<CR>
@@ -440,9 +426,10 @@ endfo
 " }}}
 
 " Fugitive {{{
-nnoremap <silent> gs  :Gstatus<CR>
-nnoremap <silent> gss :Gstatus<CR>
-nnoremap <silent> gsb :Gblame<CR>
+nnoremap <silent> gs  :Git status<CR>
+nnoremap <silent> gss :Git status<CR>
+nnoremap <silent> gsb :Git blame<CR>
+autocmd FileType fugitiveblame nmap <buffer> q gq
 " }}}
 
 " Tagbar {{{
@@ -596,6 +583,8 @@ let g:ctrlsf_extra_root_markers = ['.root']
 
 " ignore trailing space
 let g:extra_whitespace_ignored_filetypes = ['ctrlsf']
+
+hi ctrlsfFilename guifg=#ffffff guibg=NONE guisp=NONE gui=bold ctermfg=30 ctermbg=NONE cterm=bold
 " }}}
 
 " vim-multiple-selection {{{
@@ -669,6 +658,10 @@ let g:racer_cmd = '/Users/dyng/Workspace/racer/target/release/racer'
 let $RUST_SRC_PATH="/usr/local/src/rust/src"
 " }}}
 
+" csv.vim {{{
+let g:no_csv_maps = 1
+" }}}
+
 " vim-snippets {{{
 let g:UltiSnipsSnippetDirectories=["UltiSnips"]
 " }}}
@@ -697,6 +690,18 @@ nmap ga <Plug>(EasyAlign)*
 " {{{ vim-sandwich
 " use vim-surround's style mapping
 runtime macros/sandwich/keymap/surround.vim
+" }}}
+
+" {{{ ale
+let g:ale_linters = {
+\   'beancount': [],
+\}
+" }}}
+
+" {{{ vim-terminal-helper
+let g:terminal_key = 'M'
+let g:terminal_kill = 1
+let g:terminal_close = 1
 " }}}
 " }}}
 

@@ -163,7 +163,7 @@ if which fzf &>/dev/null; then
 fi
 
 # Virtualenv Loading
-source $HOME/.virtualenv_profile
+run_if_script_exists $HOME/.virtualenv_profile
 # }}}
 
 ### Alias {{{

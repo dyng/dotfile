@@ -1,8 +1,3 @@
-# Perlbrew
-if [[ -s "$HOME/perl5/perlbrew/etc/bashrc" ]]; then
-    source "$HOME/perl5/perlbrew/etc/bashrc"
-fi
-
 # plenv
 if [[ -e "$HOME/.plenv" ]]; then
     export PATH="$HOME/.plenv/bin:$PATH"
