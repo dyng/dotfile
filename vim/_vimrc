@@ -19,36 +19,33 @@ call plug#begin('~/.vim/plugged')
 
 Plug 'dyng/auto_mkdir'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+Plug 'junegunn/fzf'
 Plug 'scrooloose/nerdtree'
 Plug 'easymotion/vim-easymotion'
 Plug 'thinca/vim-quickrun'
 Plug 'mbbill/undotree'
 Plug 'andymass/vim-matchup'
+Plug 'machakann/vim-sandwich'
 Plug 'preservim/tagbar'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 Plug 'vim-scripts/Rename'
-Plug 'machakann/vim-sandwich'
-Plug 'xolox/vim-misc'
-Plug 'xolox/vim-session'
+Plug 'xolox/vim-session' | Plug 'xolox/vim-misc'
 Plug 'junegunn/vim-easy-align'
 Plug '~/Dropbox/Projects/CtrlSF'
 Plug '~/Dropbox/Projects/formatiu.vim'
-Plug 'bling/vim-airline' | Plug 'vim-airline/vim-airline-themes'
+Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-fugitive'
-Plug 'mattn/emmet-vim'
 Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'vim-scripts/Mark--Karkat'
+Plug 'mg979/vim-visual-multi'
+Plug 'inkarkat/vim-mark' | Plug 'inkarkat/vim-ingo-library'
 Plug 'tpope/vim-rsi'
-Plug 'sandeepcr529/Buffet.vim'
 Plug 'tommcdo/vim-exchange'
-Plug 'dyng/linediff.vim'
+Plug 'AndrewRadev/linediff.vim'
 Plug 'vim-scripts/ReloadScript'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'w0rp/ale'
 Plug 'Raimondi/delimitMate'
 Plug 'tomtom/tcomment_vim'
-Plug 'Shougo/vimproc.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'dhruvasagar/vim-table-mode'
@@ -56,7 +53,7 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 'markdown' }
 Plug 'ryanoasis/vim-devicons'
 Plug 'sheerun/vim-polyglot'
-Plug 'puremourning/vimspector'
+Plug 'puremourning/vimspector', { 'do': './install_gadget.py --enable-python' }
 Plug 'skywind3000/vim-terminal-help'
 
 " Language Specific Plugins
@@ -72,7 +69,7 @@ Plug 'nanotech/jellybeans.vim'
 Plug 'joshdick/onedark.vim'
 Plug 'ajmwagar/vim-dues'
 Plug 'rakr/vim-one'
-Plug 'colepeters/spacemacs-theme.vim'
+Plug 'chriskempson/base16-vim'
 
 " Documents
 Plug 'yianwillis/vimcdoc'
@@ -143,16 +140,12 @@ colorscheme onedark
 
 " Font
 if has('gui_macvim')
-    set guifont=Inconsolata\ Nerd\ Font\ Mono:h18,Menlo-Regular:h15,Monaco:h14
+    set guifont=Blex\ Mono\ Light\ Nerd\ Font\ Complete\ Mono:h15,Inconsolata\ Nerd\ Font\ Mono:h18,Menlo-Regular:h15,Monaco:h14
 elseif has('win32')
     set guifont=Consolas:h12
 else
     set guifont=Monospace\ 12
 endif
-" }}}
-
-" Terminal {{{
-tnoremap <F1> <C-\><C-N>
 " }}}
 
 " Buffer {{{
@@ -252,7 +245,14 @@ cab Wa wa
 cab X x
 " }}}
 
+" Terminal {{{
+" }}}
+
 " Misc {{{
+" use option key as meta key in MacVim
+if has('gui_macvim')
+    set macmeta
+endif
 " disable beeping
 set vb t_vb=
 
@@ -379,24 +379,6 @@ let g:Lf_WildIgnore = {
         \ }
 " }}}
 
-" yankring {{{
-let g:yankring_map_dot = 0
-let g:yankring_min_element_length = 2
-if has('win32')
-    let g:yankring_history_dir = $HOME.'\_vim-infos\'
-else
-    let g:yankring_history_dir = $HOME.'/.vim-infos/'
-endif
-" release default mapped keys
-function! YRRunAfterMaps()
-    nnoremap <silent> gp    :YRShow<CR>
-    inoremap <silent> <C-P> <Esc>:YRShow<CR>
-
-    " keys conflict with CtrlP
-    nnoremap <silent> <C-P> :CtrlPRoot<CR>
-endfunction
-" }}}
-
 " undotree {{{
 let g:undotree_SetFocusWhenToggle = 1
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
@@ -521,29 +503,6 @@ let g:quickrun_config['perl'] = {
 let g:creader_session_file = $HOME.'/.vim-infos/vim_creader_session'
 " }}}
 
-" Airline {{{
-let g:airline_theme = 'deus'
-
-if !exists('g:airline_symbols')
-    let g:airline_symbols = {}
-endif
-
-" unicode symbols
-let g:airline_left_sep = '»'
-let g:airline_left_sep = '▶'
-let g:airline_right_sep = '«'
-let g:airline_right_sep = '◀'
-let g:airline_symbols.linenr = '¶'
-let g:airline_symbols.branch = '⎇'
-" }}}
-
-" python-syntax {{{
-let python_highlight_builtin_objs  = 1
-let python_highlight_builtin_funcs = 1
-let python_highlight_exceptions    = 1
-let python_print_as_function       = 1
-" }}}
-
 " YouCompleteMe {{{
 let g:ycm_min_num_identifier_candidate_chars  = 2
 let g:ycm_key_list_select_completion          = ['<TAB>']
@@ -569,6 +528,8 @@ vmap     <C-F>f <Plug>CtrlSFVwordPath
 nnoremap <silent> <C-F>o :CtrlSFOpen<CR>
 nnoremap <silent> <C-F>j :CtrlSFFocus<CR>
 let g:ctrlsf_default_view_mode = 'normal'
+let g:ctrlsf_compact_position = 'bottom_outside'
+let g:ctrlsf_fold_result = 0
 let g:ctrlsf_search_mode = 'async'
 let g:ctrlsf_populate_qflist = 1
 let g:ctrlsf_default_root = 'project'
@@ -597,13 +558,21 @@ let g:multi_cursor_skip_key='<C-X>'
 let g:multi_cursor_quit_key='<Esc>'
 " }}}
 
+" vim-visual-multi {{{
+let g:multi_cursor_use_default_mapping = 0
+
+" Default mapping
+let g:multi_cursor_next_key='<C-N>'
+let g:multi_cursor_prev_key='<C-U>'
+let g:multi_cursor_skip_key='<C-X>'
+let g:multi_cursor_quit_key='<Esc>'
+" }}}
+
 " mark {{{
+let g:mw_no_mappings = 1
 nmap <silent> mm <Plug>MarkSet
 vmap <silent> mm <Plug>MarkSet
-nmap <silent> mr <Plug>MarkRegex
-vmap <silent> mr <Plug>MarkRegex
 nmap <silent> mc <Plug>MarkClear
-nmap <silent> mC <Plug>MarkAllClear
 nmap <silent> mn <Plug>MarkSearchAnyNext
 nmap <silent> mN <Plug>MarkSearchAnyPrev
 " }}}
@@ -688,7 +657,6 @@ nmap ga <Plug>(EasyAlign)*
 " }}}
 
 " {{{ vim-sandwich
-" use vim-surround's style mapping
 runtime macros/sandwich/keymap/surround.vim
 " }}}
 
@@ -699,9 +667,15 @@ let g:ale_linters = {
 " }}}
 
 " {{{ vim-terminal-helper
-let g:terminal_key = 'M'
+let g:terminal_key = "<M-/>"
 let g:terminal_kill = 1
 let g:terminal_close = 1
+let g:terminal_pos = "botright"
+let g:terminal_height = 20
+" }}}
+
+" {{{ vimspector
+let g:vimspector_enable_mappings = 'HUMAN'
 " }}}
 " }}}
 
