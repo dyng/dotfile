@@ -55,6 +55,7 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'sheerun/vim-polyglot'
 Plug 'puremourning/vimspector', { 'do': './install_gadget.py --enable-python' }
 Plug 'skywind3000/vim-terminal-help'
+Plug 'Chiel92/vim-autoformat'
 
 " Language Specific Plugins
 Plug 'guns/vim-sexp'

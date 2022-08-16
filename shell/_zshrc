@@ -209,6 +209,11 @@ if which gdu &>/dev/null; then
     alias du="gdu"
 fi
 
+# Fd
+fdo() {
+    fd $1 -X vim {}
+}
+
 # Docker
 drun() {
     docker run -it $1 /bin/bash
