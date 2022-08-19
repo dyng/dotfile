@@ -89,6 +89,8 @@ run_if_script_exists $HOME/.iterm2_shell_integration.zsh
 # }}}
 
 ### Key binding {{{
+bindkey -e # use emacs keybinding
+
 # use pattern in history search
 bindkey "^R" history-incremental-pattern-search-backward
 bindkey "^S" history-incremental-pattern-search-forward

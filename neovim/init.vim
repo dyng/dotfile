@@ -1,7 +1,6 @@
 " Provider {{{
-" Python {{{
+" python
 let g:python3_host_prog = 'python3'
-" }}}
 " }}}
 
 " Load Plugins {{{
@@ -21,27 +20,30 @@ endif
 
 call plug#begin(stdpath('data') . '/plugged')
 
+Plug 'williamboman/mason.nvim'
+Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp' | Plug 'hrsh7th/cmp-buffer' | Plug 'hrsh7th/cmp-path' | Plug 'hrsh7th/nvim-cmp' | Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
-Plug 'hrsh7th/cmp-vsnip' | Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip' | Plug 'hrsh7th/cmp-vsnip' | Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' } | Plug 'nvim-lua/plenary.nvim' | Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+Plug 'rafamadriz/friendly-snippets'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'kyazdani42/nvim-tree.lua'
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'kyazdani42/nvim-web-devicons'
+
 Plug 'dyng/auto_mkdir'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
-Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 Plug 'junegunn/fzf'
-Plug 'scrooloose/nerdtree'
 Plug 'easymotion/vim-easymotion'
 Plug 'thinca/vim-quickrun'
 Plug 'mbbill/undotree'
 Plug 'andymass/vim-matchup'
 Plug 'machakann/vim-sandwich'
-Plug 'preservim/tagbar'
 Plug 'vim-scripts/Rename'
 Plug 'xolox/vim-session' | Plug 'xolox/vim-misc'
 Plug 'junegunn/vim-easy-align'
 Plug '~/Dropbox/Projects/CtrlSF'
 Plug '~/Dropbox/Projects/formatiu.vim'
-Plug 'itchyny/lightline.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'mg979/vim-visual-multi'
 Plug 'inkarkat/vim-mark' | Plug 'inkarkat/vim-ingo-library'
@@ -50,7 +52,6 @@ Plug 'tommcdo/vim-exchange'
 Plug 'AndrewRadev/linediff.vim'
 Plug 'vim-scripts/ReloadScript'
 Plug 'AndrewRadev/splitjoin.vim'
-Plug 'w0rp/ale'
 Plug 'Raimondi/delimitMate'
 Plug 'tomtom/tcomment_vim'
 Plug 'editorconfig/editorconfig-vim'
@@ -62,7 +63,6 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'sheerun/vim-polyglot'
 Plug 'skywind3000/vim-terminal-help'
 Plug 'Chiel92/vim-autoformat'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Language Specific Plugins
 Plug 'guns/vim-sexp'
@@ -149,7 +149,7 @@ colorscheme onedark
 
 " Font
 if has('gui_macvim') || exists('g:neovide')
-    set guifont=Fira\ Code\ Light:h15
+    set guifont=Inconsolata\ Nerd\ Font\ Mono:h17
 endif
 
 " macvim {{{
@@ -204,6 +204,19 @@ nnoremap <silent> <C-H> :wincmd h<CR>
 nnoremap <silent> <C-J> :wincmd j<CR>
 nnoremap <silent> <C-K> :wincmd k<CR>
 nnoremap <silent> <C-L> :wincmd l<CR>
+" Switching in terminal
+tnoremap <silent> <A-h> <C-\><C-N><C-w>h
+tnoremap <silent> <A-j> <C-\><C-N><C-w>j
+tnoremap <silent> <A-k> <C-\><C-N><C-w>k
+tnoremap <silent> <A-l> <C-\><C-N><C-w>l
+inoremap <silent> <A-h> <C-\><C-N><C-w>h
+inoremap <silent> <A-j> <C-\><C-N><C-w>j
+inoremap <silent> <A-k> <C-\><C-N><C-w>k
+inoremap <silent> <A-l> <C-\><C-N><C-w>l
+nnoremap <silent> <A-h> <C-w>h
+nnoremap <silent> <A-j> <C-w>j
+nnoremap <silent> <A-k> <C-w>k
+nnoremap <silent> <A-l> <C-w>l
 " Focus new splited window
 nnoremap <silent> <C-W>s :wincmd s\|wincmd j<CR>
 nnoremap <silent> <C-W>v :wincmd v\|wincmd l<CR>
@@ -225,6 +238,7 @@ vnoremap <D-c> "+y
 nnoremap <D-v> "+p
 inoremap <D-v> <C-R>+
 cnoremap <D-v> <C-R>+
+tnoremap <D-v> <C-\><C-N>"+pI
 " windows
 vnoremap <C-C> "+y
 nnoremap <C-Q> "+p
@@ -315,21 +329,35 @@ augroup END
 "}}}
 
 " Plugin Configs {{{
-" UltiSnips {{{
-let g:UltiSnipsNoPythonWarning     = 1
-let g:UltiSnipsExpandTrigger       = "<C-O><C-O>"
-let g:UltiSnipsListSnippets        = "<C-O><C-L>"
-let g:UltiSnipsJumpForwardTrigger  = "<C-J>"
-let g:UltiSnipsJumpBackwardTrigger = "<C-K>"
+" vim-vsnip {{{
+imap <expr> <C-o> vsnip#expandable() ? '<Plug>(vsnip-expand)'    : '<C-o>'
+smap <expr> <C-o> vsnip#expandable() ? '<Plug>(vsnip-expand)'    : '<C-o>'
+imap <expr> <C-j> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-j>'
+smap <expr> <C-j> vsnip#jumpable(1)  ? '<Plug>(vsnip-jump-next)' : '<C-j>'
+imap <expr> <C-k> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-k>'
+smap <expr> <C-k> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-k>'
 " }}}
 
-" Nerdtree {{{
-nnoremap <silent> gn :NERDTreeFind<CR>
-nnoremap <silent> gN :NERDTree<CR>
-let NERDTreeShowBookmarks = 1
-let NERDTreeIgnore = ['\.pyc', '\~$', '\.swo$', '\.swp$']
-let NERDTreeQuitOnOpen = 1
-let NERDTreeBookmarksFile = stdpath('data') . '/NERDTreeBookmarks'
+" nvim-tree {{{
+nnoremap <silent> gn :NvimTreeFindFile<cr>
+nnoremap <silent> gN :NvimTreeOpen .<cr>
+lua <<EOF
+require("nvim-tree").setup{
+    view = {
+        adaptive_size = true,
+        mappings = {
+            list = {
+                { key = "<cr>", action = "edit_no_picker" },
+            },
+        },
+    },
+    actions = {
+        open_file = {
+            quit_on_open = true,
+        },
+    },
+}
+EOF
 " }}}
 
 " Telescope {{{
@@ -353,8 +381,11 @@ require('telescope').setup{
 }
 require('telescope').load_extension('fzf')
 EOF
-nnoremap <silent><C-P> <cmd>Telescope find_files<cr>
-nnoremap <silent>gm <cmd>Telescope oldfiles<cr>
+nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files()<cr>
+nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
+nnoremap <silent>gl <cmd>lua require("telescope.builtin").live_grep()<cr>
+nnoremap <silent>gb <cmd>lua require("telescope.builtin").current_buffer_tags()<cr>
+nnoremap <silent>gB <cmd>lua require("telescope.builtin").tags()<cr>
 " }}}
 
 " undotree {{{
@@ -390,50 +421,6 @@ nnoremap <silent> gs  :Git status<CR>
 nnoremap <silent> gss :Git status<CR>
 nnoremap <silent> gsb :Git blame<CR>
 autocmd FileType fugitiveblame nmap <buffer> q gq
-" }}}
-
-" Tagbar {{{
-let g:tagbar_left      = 1
-let g:tagbar_width     = 30
-let g:tagbar_sort      = 0
-let g:tagbar_autoclose = 1
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
-    \ },
-    \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
-    \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
-\ }
-function! s:InvokeTB()
-    if bufname("%") != "__Tagbar__"
-        let s:previous_bufname = bufname("%")
-        exec "TagbarOpen fj"
-    else
-        silent let s:previous_window = bufwinnr(s:previous_bufname)
-        exec s:previous_window . "wincmd w"
-    endif
-endfunction
-nnoremap <silent> gb :call <SID>InvokeTB()<CR>
 " }}}
 
 " Session {{{
@@ -601,10 +588,6 @@ let $RUST_SRC_PATH="/usr/local/src/rust/src"
 let g:no_csv_maps = 1
 " }}}
 
-" vim-snippets {{{
-let g:UltiSnipsSnippetDirectories=["UltiSnips"]
-" }}}
-
 " vimcdoe {{{
 set helplang=cn
 " }}}
@@ -630,21 +613,15 @@ nmap ga <Plug>(EasyAlign)*
 runtime macros/sandwich/keymap/surround.vim
 " }}}
 
-" {{{ ale
-let g:ale_linters = {
-\   'beancount': [],
-\}
-" }}}
-
 " {{{ vim-terminal-helper
-let g:terminal_key = "<M-/>"
+let g:terminal_key = "<A-/>"
 let g:terminal_kill = 1
 let g:terminal_close = 1
 let g:terminal_pos = "botright"
 let g:terminal_height = 20
 " }}}
 
-" {{{ lsp-config
+" {{{ lsp-config & mason
 lua <<EOF
 -- Use an on_attach function to only map the following keys
 -- after the language server attaches to the current buffer
@@ -669,11 +646,21 @@ end
 
 local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
--- python
-require('lspconfig').pyright.setup{
-    on_attach = on_attach,
-    capabilities = capabilities,
-}
+require("mason").setup()
+require("mason-lspconfig").setup()
+require("mason-lspconfig").setup_handlers({
+    function (server_name)
+        require("lspconfig")[server_name].setup {
+            on_attach = on_attach,
+            capabilities = capabilities,
+        }
+    end
+})
+EOF
+" }}}
+
+" mason {{{
+lua <<EOF
 EOF
 " }}}
 
@@ -693,6 +680,9 @@ cmp.setup({
       -- completion = cmp.config.window.bordered(),
       -- documentation = cmp.config.window.bordered(),
     },
+    matching = {
+        disallow_fuzzy_matching = false,
+    },
     mapping = {
       ['<TAB>'] = cmp.mapping.select_next_item(),
       ['<Down>'] = cmp.mapping.select_next_item(),
@@ -700,8 +690,8 @@ cmp.setup({
       ['<Up>'] = cmp.mapping.select_prev_item(),
       ['<CR>'] = cmp.mapping.confirm({ select = false }),
       ['<C-c>'] = cmp.mapping.abort(),
-      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-u>'] = cmp.mapping.scroll_docs(4),
     },
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
@@ -712,6 +702,10 @@ cmp.setup({
     })
 })
 EOF
+" }}}
+
+" lualine {{{
+lua require('lualine').setup()
 " }}}
 " }}}
 
