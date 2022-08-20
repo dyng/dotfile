@@ -31,6 +31,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
+Plug 'dbakker/vim-projectroot'
 
 Plug 'dyng/auto_mkdir'
 Plug 'junegunn/fzf'
@@ -66,7 +67,6 @@ Plug 'Chiel92/vim-autoformat'
 
 " Language Specific Plugins
 Plug 'guns/vim-sexp'
-Plug 'phildawes/racer'
 Plug '~/Dropbox/Projects/dejava.vim'
 Plug 'nathangrigg/vim-beancount'
 
@@ -148,8 +148,12 @@ set background=dark
 colorscheme onedark
 
 " Font
-if has('gui_macvim') || exists('g:neovide')
+if has('gui_macvim')
     set guifont=Inconsolata\ Nerd\ Font\ Mono:h17
+elseif exists('g:neovide')
+    set guifont=BlexMono\ Nerd\ Font\ Mono:h15
+else
+    set guifont=Hack:h14
 endif
 
 " macvim {{{
@@ -340,7 +344,11 @@ smap <expr> <C-k> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-k>'
 
 " nvim-tree {{{
 nnoremap <silent> gn :NvimTreeFindFile<cr>
-nnoremap <silent> gN :NvimTreeOpen .<cr>
+if loaded_projectroot ""
+    nnoremap <silent> gN :exec 'NvimTreeOpen '.projectroot#guess()<cr>
+else
+    nnoremap <silent> gN :NvimTreeOpen .<cr>
+endif
 lua <<EOF
 require("nvim-tree").setup{
     view = {
@@ -460,25 +468,6 @@ let g:quickrun_config['perl'] = {
 \ }
 " }}}
 
-" YouCompleteMe {{{
-let g:ycm_min_num_identifier_candidate_chars  = 2
-let g:ycm_key_list_select_completion          = ['<TAB>']
-let g:ycm_key_list_previous_completion        = ['<S-TAB>']
-let g:ycm_filepath_completion_use_working_dir = 1
-let g:ycm_add_preview_to_completeopt          = 0
-let g:ycm_complete_in_comments                = 1
-let g:ycm_complete_in_strings                 = 1
-let g:ycm_seed_identifiers_with_syntax        = 1
-let g:ycm_collect_identifiers_from_tags_files = 1
-let g:ycm_collect_identifiers_from_comments_and_strings = 1
-
-" define custom triggers
-let g:ycm_semantic_triggers =  {
-            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
-            \ 'cs,lua,javascript,typescript,clojure,rust': ['re!\w{2}'],
-            \ }
-" }}}
-
 " CtrlSF {{{
 nmap     <C-F>f <Plug>CtrlSFPrompt
 vmap     <C-F>f <Plug>CtrlSFVwordPath
@@ -503,16 +492,6 @@ let g:ctrlsf_extra_root_markers = ['.root']
 let g:extra_whitespace_ignored_filetypes = ['ctrlsf']
 
 hi ctrlsfFilename guifg=#ffffff guibg=NONE guisp=NONE gui=bold ctermfg=30 ctermbg=NONE cterm=bold
-" }}}
-
-" vim-multiple-selection {{{
-let g:multi_cursor_use_default_mapping = 0
-
-" Default mapping
-let g:multi_cursor_next_key='<C-N>'
-let g:multi_cursor_prev_key='<C-U>'
-let g:multi_cursor_skip_key='<C-X>'
-let g:multi_cursor_quit_key='<Esc>'
 " }}}
 
 " vim-visual-multi {{{
@@ -564,24 +543,10 @@ imap <silent><expr> <BS>    pumvisible() ? "\<BS>"          : "<Plug>delimitMate
 au FileType clojure let b:delimitMate_quotes = '"'
 " }}}
 
-" vim-clojure-static {{{
-let g:clojure_align_multiline_strings = 0
-let g:clojure_align_subforms = 0
-" }}}
-
-" vim-clojure-highlight {{{
-au BufWritePost *.clj silent ClojureHighlightReferences
-" }}}
-
 " tComment {{{
 let g:tcomment_maps = 0
 nnoremap <silent> gc :TComment<CR>
 vnoremap <silent> gc :TComment<CR>
-" }}}
-
-" racer {{{
-let g:racer_cmd = '/Users/dyng/Workspace/racer/target/release/racer'
-let $RUST_SRC_PATH="/usr/local/src/rust/src"
 " }}}
 
 " csv.vim {{{
@@ -590,10 +555,6 @@ let g:no_csv_maps = 1
 
 " vimcdoe {{{
 set helplang=cn
-" }}}
-
-" {{{ vim-javascript
-let g:javascript_enable_domhtmlcss = 1
 " }}}
 
 " {{{ editorconfig-vim
