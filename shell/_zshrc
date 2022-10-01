@@ -112,11 +112,7 @@ BULLETTRAIN_PROMPT_ORDER=(
 #}}}
 
 ### Environment {{{
-if which nvim &>/dev/null; then
-    export EDITOR="nvim"
-else
-    export EDITOR="vim"
-fi
+export EDITOR="vim"
 # }}}
 
 ### History {{{
@@ -284,6 +280,12 @@ fi
 if hash gpg &>/dev/null; then
     GPG_TTY=$(tty)
     export GPG_TTY
+fi
+
+# neovim
+if which nvim &>/dev/null; then
+    export EDITOR="nvim"
+    alias vim="nvim"
 fi
 
 # }}}

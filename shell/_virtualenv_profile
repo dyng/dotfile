@@ -51,4 +51,7 @@ if [[ -e "/usr/local/opt/groovy/libexec" ]]; then
     export GROOVY_HOME=/usr/local/opt/groovy/libexec
 fi
 
+# phpbrew
+[[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
+
 # vim: ft=sh

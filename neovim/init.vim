@@ -31,17 +31,17 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'dbakker/vim-projectroot'
+Plug 'ahmedkhalf/project.nvim'
+Plug 'kevinhwang91/nvim-bqf'
+Plug 'rmagatti/auto-session' | Plug 'rmagatti/session-lens'
 
 Plug 'dyng/auto_mkdir'
 Plug 'junegunn/fzf'
 Plug 'easymotion/vim-easymotion'
 Plug 'thinca/vim-quickrun'
 Plug 'mbbill/undotree'
-Plug 'andymass/vim-matchup'
 Plug 'machakann/vim-sandwich'
 Plug 'vim-scripts/Rename'
-Plug 'xolox/vim-session' | Plug 'xolox/vim-misc'
 Plug 'junegunn/vim-easy-align'
 Plug '~/Dropbox/Projects/CtrlSF'
 Plug '~/Dropbox/Projects/formatiu.vim'
@@ -55,7 +55,6 @@ Plug 'vim-scripts/ReloadScript'
 Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'tomtom/tcomment_vim'
-Plug 'editorconfig/editorconfig-vim'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'ludovicchabant/vim-gutentags'
@@ -150,7 +149,7 @@ colorscheme onedark
 " Font
 if has('gui_macvim')
     set guifont=Inconsolata\ Nerd\ Font\ Mono:h17
-elseif exists('g:neovide')
+elseif has("gui_vimr") || exists('g:neovide')
     set guifont=BlexMono\ Nerd\ Font\ Mono:h15
 else
     set guifont=Hack:h14
@@ -190,7 +189,7 @@ let mapleader = ","
 noremap H ^
 noremap L $
 inoremap <Home> <C-O>g^
-inoremap <End>  <c-O>g$
+inoremap <End>  <C-O>g$
 " Quick paging
 nnoremap <Space> <C-D>
 vnoremap <Space> <C-D>
@@ -199,6 +198,11 @@ nnoremap Y y$
 " Cursor move
 nnoremap <Down> gj
 nnoremap <Up>   gk
+inoremap <Down> <C-O>gj
+inoremap <Up>   <C-O>gk
+
+" quickfix
+autocmd FileType qf nmap <buffer><silent> q :cclose<cr>
 
 " Tab navigation
 nnoremap <silent> <C-Tab> :tabnext<CR>
@@ -292,6 +296,9 @@ augroup END
 if has("persistent_undo")
     exec "set undodir='" . stdpath('data') . "\undodir'"
 endif
+
+" language of help doc
+set helplang=cn
 " }}}
 " }}}
 
@@ -344,11 +351,7 @@ smap <expr> <C-k> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-k>'
 
 " nvim-tree {{{
 nnoremap <silent> gn :NvimTreeFindFile<cr>
-if loaded_projectroot ""
-    nnoremap <silent> gN :exec 'NvimTreeOpen '.projectroot#guess()<cr>
-else
-    nnoremap <silent> gN :NvimTreeOpen .<cr>
-endif
+nnoremap <silent> gN :NvimTreeOpen .<cr>
 lua <<EOF
 require("nvim-tree").setup{
     view = {
@@ -356,15 +359,34 @@ require("nvim-tree").setup{
         mappings = {
             list = {
                 { key = "<cr>", action = "edit_no_picker" },
+                { key = "U", action = "dir_up" },
             },
         },
+    },
+    update_focused_file = {
+        enable = true,
+        update_root = true,
+        ignore_list = {},
     },
     actions = {
         open_file = {
             quit_on_open = true,
         },
     },
+    git = {
+        enable = false
+    },
 }
+EOF
+" }}}
+
+" nvim-project {{{
+lua << EOF
+  require("project_nvim").setup {
+    -- your configuration comes here
+    -- or leave it empty to use the default settings
+    -- refer to the configuration section below
+  }
 EOF
 " }}}
 
@@ -391,6 +413,7 @@ require('telescope').load_extension('fzf')
 EOF
 nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files()<cr>
 nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
+nnoremap <silent>gM <cmd>lua require('session-lens').search_session()<cr>
 nnoremap <silent>gl <cmd>lua require("telescope.builtin").live_grep()<cr>
 nnoremap <silent>gb <cmd>lua require("telescope.builtin").current_buffer_tags()<cr>
 nnoremap <silent>gB <cmd>lua require("telescope.builtin").tags()<cr>
@@ -429,26 +452,6 @@ nnoremap <silent> gs  :Git status<CR>
 nnoremap <silent> gss :Git status<CR>
 nnoremap <silent> gsb :Git blame<CR>
 autocmd FileType fugitiveblame nmap <buffer> q gq
-" }}}
-
-" Session {{{
-let g:session_directory = stdpath('data') . '/vim-session'
-let g:session_autoload = 'prompt'
-let g:session_autosave = 'yes'
-let g:session_command_aliases = 1
-let g:session_default_to_last = 1
-com! -bar -b -n=? -comp=customlist,xolox#session#complete_names So SessionOpen<bang> <args>
-com! -bar -b -n=? -comp=customlist,xolox#session#complete_names Sc SessionClose<bang> <args>
-com! -bar -b -n=? -comp=customlist,xolox#session#complete_names Ss SessionSave<bang> <args>
-com! -bar -b -n=? -comp=customlist,xolox#session#complete_names Sd SessionDelete<bang> <args>
-function! s:SessionCd(bang, path)
-    exec 'SessionClose' . a:bang
-    exec 'cd ' . a:path
-    let session_name = fnamemodify(getcwd(), ':t')
-    exec 'SessionSave' . a:bang . ' ' . session_name
-endfunction
-com! -bar -b -n=? -comp=file SessionCd call s:SessionCd(<q-bang>, <q-args>)
-com! -bar -b -n=? -comp=file Scd SessionCd<bang> <args>
 " }}}
 
 " Quickrun {{{
@@ -513,10 +516,6 @@ nmap <silent> mn <Plug>MarkSearchAnyNext
 nmap <silent> mN <Plug>MarkSearchAnyPrev
 " }}}
 
-" Buffet {{{
-nmap <silent><expr> <leader>b &buftype ==# "" ? ":Bufferlist\r" : "\r"
-" }}}
-
 " vim-exchange {{{
 let g:exchange_no_mappings = 1
 nmap cx     <Plug>(Exchange)
@@ -551,14 +550,6 @@ vnoremap <silent> gc :TComment<CR>
 
 " csv.vim {{{
 let g:no_csv_maps = 1
-" }}}
-
-" vimcdoe {{{
-set helplang=cn
-" }}}
-
-" {{{ editorconfig-vim
-let g:EditorConfig_exclude_patterns = ['fugitive://.*', 'scp://.*']
 " }}}
 
 " gutentags {{{
@@ -668,6 +659,39 @@ EOF
 " lualine {{{
 lua require('lualine').setup()
 " }}}
+
+" nvim-bqf {{{
+lua << EOF
+require('bqf').setup({
+    auto_enable = true,
+    auto_resize_height = true,
+    func_map = {
+        openc = '<cr>',
+    },
+})
+EOF
+" }}}
+
+" nvim-treesitter {{{
+lua << EOF
+require('nvim-treesitter.configs').setup({
+})
+EOF
+" }}}
+
+" auto-session {{{
+lua << EOF
+require('auto-session').setup {
+    auto_session_enable_last_session = true,
+}
+EOF
+" }}}
+
+" session-lens {{{
+lua << EOF
+require('session-lens').setup {
+}
+EOF
 " }}}
 
 " modeline {{{
