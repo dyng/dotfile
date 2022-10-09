@@ -415,8 +415,8 @@ nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files()<cr>
 nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
 nnoremap <silent>gM <cmd>lua require('session-lens').search_session()<cr>
 nnoremap <silent>gl <cmd>lua require("telescope.builtin").live_grep()<cr>
-nnoremap <silent>gb <cmd>lua require("telescope.builtin").current_buffer_tags()<cr>
-nnoremap <silent>gB <cmd>lua require("telescope.builtin").tags()<cr>
+nnoremap <silent>gb <cmd>lua require("telescope.builtin").lsp_document_symbols()<cr>
+nnoremap <silent>gB <cmd>lua require("telescope.builtin").lsp_workspace_symbols()<cr>
 " }}}
 
 " undotree {{{
@@ -585,10 +585,11 @@ local on_attach = function(client, bufnr)
   -- Mappings.
   -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+  vim.keymap.set('n', 'gD', vim.lsp.buf.type_definition, bufopts)
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
   vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+  vim.keymap.set('n', 'S', vim.lsp.buf.document_symbol, bufopts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', 'ea', vim.lsp.buf.code_action, bufopts)
@@ -666,6 +667,7 @@ require('bqf').setup({
     auto_enable = true,
     auto_resize_height = true,
     func_map = {
+        open = 'o',
         openc = '<cr>',
     },
 })
@@ -682,7 +684,8 @@ EOF
 " auto-session {{{
 lua << EOF
 require('auto-session').setup {
-    auto_session_enable_last_session = true,
+    auto_session_enabled = true,
+    auto_session_create_enabled = false,
 }
 EOF
 " }}}
