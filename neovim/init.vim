@@ -149,7 +149,7 @@ colorscheme onedark
 " Font
 if has('gui_macvim')
     set guifont=Inconsolata\ Nerd\ Font\ Mono:h17
-elseif has("gui_vimr") || exists('g:neovide')
+elseif has("gui_vimr") || exists('g:neovide') || exists('g:gonvim_running')
     set guifont=BlexMono\ Nerd\ Font\ Mono:h15
 else
     set guifont=Hack:h14
@@ -166,6 +166,12 @@ endif
 if exists("g:neovide")
     let g:neovide_input_macos_alt_is_meta = v:true
     let g:neovide_cursor_animation_length = 0
+endif
+" }}}
+
+" goneovim {{{
+if exists('g:gonvim_running')
+    GuiMacmeta 1
 endif
 " }}}
 " }}}
