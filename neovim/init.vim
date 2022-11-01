@@ -10,7 +10,7 @@ if !filereadable(s:vimplug_path)
 endif
 
 " Install vim-plug
-if exists("s:first_init")
+if exists('s:first_init')
     echom 'Plugin manager: vim-plug has not been installed. Try to install...'
     exec '!curl -fL --create-dirs -o ' . s:vimplug_path .
             \ ' https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -34,6 +34,8 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'ahmedkhalf/project.nvim'
 Plug 'kevinhwang91/nvim-bqf'
 Plug 'rmagatti/auto-session' | Plug 'rmagatti/session-lens'
+Plug 'mfussenegger/nvim-dap' | Plug 'rcarriga/nvim-dap-ui' | Plug 'mxsdev/nvim-dap-vscode-js'
+Plug 'RRethy/vim-illuminate'
 
 Plug 'dyng/auto_mkdir'
 Plug 'junegunn/fzf'
@@ -49,10 +51,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'mg979/vim-visual-multi'
 Plug 'inkarkat/vim-mark' | Plug 'inkarkat/vim-ingo-library'
 Plug 'tpope/vim-rsi'
-Plug 'tommcdo/vim-exchange'
 Plug 'AndrewRadev/linediff.vim'
 Plug 'vim-scripts/ReloadScript'
-Plug 'AndrewRadev/splitjoin.vim'
 Plug 'Raimondi/delimitMate'
 Plug 'tomtom/tcomment_vim'
 Plug 'bronson/vim-trailing-whitespace'
@@ -62,7 +62,6 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 
 Plug 'ryanoasis/vim-devicons'
 Plug 'sheerun/vim-polyglot'
 Plug 'skywind3000/vim-terminal-help'
-Plug 'Chiel92/vim-autoformat'
 
 " Language Specific Plugins
 Plug 'guns/vim-sexp'
@@ -90,7 +89,6 @@ endif
 " }}}
 
 " Basic Config {{{
-
 " Encoding & Language {{{
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,sjis,cp936,gb18030,big5,euc-jp,euc-kr,latin1
@@ -300,7 +298,7 @@ augroup END
 
 " persistent undo
 if has("persistent_undo")
-    exec "set undodir='" . stdpath('data') . "\undodir'"
+    exec "set undodir='" . stdpath('data') . "/undodir'"
 endif
 
 " language of help doc
@@ -522,14 +520,6 @@ nmap <silent> mn <Plug>MarkSearchAnyNext
 nmap <silent> mN <Plug>MarkSearchAnyPrev
 " }}}
 
-" vim-exchange {{{
-let g:exchange_no_mappings = 1
-nmap cx     <Plug>(Exchange)
-nmap cxx    <Plug>(ExchangeLine)
-xmap X      <Plug>(Exchange)
-nmap <expr> <ESC> exists('b:exchange') ? "<Plug>(ExchangeClear)"  : "\<ESC>"
-" }}}
-
 " linediff {{{
 let g:linediff_buffer_type = 'scratch'
 vnoremap zd :Linediff<CR>
@@ -618,11 +608,6 @@ require("mason-lspconfig").setup_handlers({
 EOF
 " }}}
 
-" mason {{{
-lua <<EOF
-EOF
-" }}}
-
 " nvim-cmp {{{
 lua << EOF
 -- Setup nvim-cmp.
@@ -701,6 +686,87 @@ lua << EOF
 require('session-lens').setup {
 }
 EOF
+" }}}
+
+" nvim-dap & relates {{{
+" nvim-dap {{{{
+nnoremap <silent> gb <Cmd>lua require'dap'.toggle_breakpoint()<CR>
+nnoremap <silent> gC <Cmd>lua require'dap'.continue()<CR>
+nnoremap <silent> gJ <Cmd>lua require'dap'.step_into()<CR>
+nnoremap <silent> gj <Cmd>lua require'dap'.step_over()<CR>
+nnoremap <silent> gT <Cmd>lua require'dap'.terminate()<CR>
+lua << EOF
+EOF
+" }}}}
+
+" nvim-dap-ui {{{{
+lua << EOF
+local dap, dapui = require("dap"), require("dapui")
+dapui.setup({
+  layouts = {
+    {
+      position = "left",
+      size = 40,
+      elements = {
+        { id = "stacks", size = 0.4 },
+        { id = "scopes", size = 0.4 },
+        { id = "watches", size = 0.2 },
+      },
+    },
+    {
+      position = "bottom",
+      size = 0.25,
+      elements = {
+        "console",
+      },
+    },
+  }
+})
+dap.listeners.after.event_initialized["dapui_config"] = function()
+  dapui.open()
+end
+dap.listeners.before.event_terminated["dapui_config"] = function()
+  dapui.close()
+end
+EOF
+" }}}}
+
+" dap-vscode-js {{{{
+lua << EOF
+require("dap-vscode-js").setup({
+  debugger_cmd = { "js-debug-adapter" },
+  adapters = { 'pwa-node' },
+})
+
+for _, language in ipairs({ "typescript", "javascript" }) do
+  require("dap").configurations[language] = {
+      {
+        type = "pwa-node",
+        request = "launch",
+        name = "Launch file",
+        program = "${file}",
+        cwd = "${workspaceFolder}",
+      },
+      {
+        type = "pwa-node",
+        request = "attach",
+        name = "Attach",
+        processId = require'dap.utils'.pick_process,
+        cwd = "${workspaceFolder}",
+      }
+    }
+  end
+EOF
+" }}}}
+" }}}
+
+" vim-illuminate {{{
+augroup illuminate_augroup
+    autocmd!
+    autocmd VimEnter * hi! link IlluminatedWordText CursorLine
+    autocmd VimEnter * hi! link IlluminatedWordRead CursorLine
+    autocmd VimEnter * hi! link IlluminatedWordWrite CursorLine
+augroup END
 " }}}
 
 " modeline {{{
