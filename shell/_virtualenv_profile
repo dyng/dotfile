@@ -25,6 +25,13 @@ if [[ -s /usr/local/opt/nvm/nvm.sh ]]; then
     . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 fi
 
+if [[ -s /opt/homebrew/opt/nvm/nvm.sh ]]; then
+    export NVM_DIR="$HOME/.nvm"
+    export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node # use mirror site
+    . "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+    . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+fi
+
 # rbenv
 if which rbenv &>/dev/null; then
     if [[ ! -z "$ZSH_VERSION" ]]; then

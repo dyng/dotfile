@@ -55,9 +55,7 @@ Plug 'AndrewRadev/linediff.vim'
 Plug 'vim-scripts/ReloadScript'
 Plug 'Raimondi/delimitMate'
 Plug 'tomtom/tcomment_vim'
-Plug 'bronson/vim-trailing-whitespace'
 Plug 'dhruvasagar/vim-table-mode'
-Plug 'ludovicchabant/vim-gutentags'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 'markdown' }
 Plug 'ryanoasis/vim-devicons'
 Plug 'sheerun/vim-polyglot'
@@ -146,9 +144,9 @@ colorscheme onedark
 
 " Font
 if has('gui_macvim')
-    set guifont=Inconsolata\ Nerd\ Font\ Mono:h17
+    set guifont=Inconsolata\ Nerd\ Font\ Mono:h16
 elseif has("gui_vimr") || exists('g:neovide') || exists('g:gonvim_running')
-    set guifont=BlexMono\ Nerd\ Font\ Mono:h15
+    set guifont=BlexMono\ Nerd\ Font\ Mono:h14
 else
     set guifont=Hack:h14
 endif
@@ -548,10 +546,6 @@ vnoremap <silent> gc :TComment<CR>
 let g:no_csv_maps = 1
 " }}}
 
-" gutentags {{{
-set statusline+=%{gutentags#statusline()}
-" }}}
-
 " {{{ vim-easy-align
 xmap ga <Plug>(EasyAlign)*
 nmap ga <Plug>(EasyAlign)*
@@ -593,7 +587,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'ern', vim.lsp.buf.rename, bufopts)
 end
 
-local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 require("mason").setup()
 require("mason-lspconfig").setup()

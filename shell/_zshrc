@@ -76,14 +76,18 @@ run_if_script_exists() {
 }
 # }}}
 
-# set locale in case
-if [[ -z $LANG ]]; then
-    echo "Warning: \$LANG is not set in profile."
-    export LANG="en_US.UTF-8"
-    export LC_ALL="en_US.UTF-8"
-fi
+# set locale
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 
 # load iterm2-shell-integration
+if [[ ! -e $HOME/.iterm2_shell_integration.zsh ]]; then
+    printf "Install iterm2 shell integration? [y/N]: "
+    if read -q; then
+        echo
+        curl -L https://iterm2.com/shell_integration/install_shell_integration.sh | bash
+    fi
+fi
 run_if_script_exists $HOME/.iterm2_shell_integration.zsh
 
 # }}}
@@ -142,6 +146,15 @@ if [[ -e /usr/local/bin/brew ]]; then
     # set ustc as alternative repo
     export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 fi
+
+if [[ -e /opt/homebrew/bin/brew ]]; then
+    eval $(/opt/homebrew/bin/brew shellenv)
+
+    # set ustc as alternative repo
+    export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
+fi
+
+export HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile
 
 # Basher
 # add basher bin path no matter if basher is installed
