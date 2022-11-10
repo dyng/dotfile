@@ -38,7 +38,6 @@ zplug "plugins/git-extras", from:oh-my-zsh
 zplug "plugins/brew", from:oh-my-zsh
 zplug "plugins/mvn", from:oh-my-zsh
 zplug "plugins/docker", from:oh-my-zsh
-zplug "plugins/virtualenv", from:oh-my-zsh
 zplug "supercrabtree/k"
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
@@ -132,9 +131,6 @@ setopt share_history
 # add script dir
 export PATH="$PATH:$HOME/scripts"
 
-# add basictex path
-export PATH="$PATH:/usr/local/texlive/2016basic/bin/universal-darwin"
-
 # Homebrew
 if [[ -e /usr/local/bin/brew ]]; then
     # add brew bin path
@@ -156,14 +152,6 @@ fi
 
 export HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile
 
-# Basher
-# add basher bin path no matter if basher is installed
-export PATH="$HOME/.basher/bin:$PATH"
-if hash basher &>/dev/null; then
-    # initialize basher
-    eval "$(basher init -)"
-fi
-
 # fzf
 if which fzf &>/dev/null; then
     source $HOME/.fzf.zsh
@@ -182,8 +170,6 @@ if which fzf &>/dev/null; then
     fi
 fi
 
-# Virtualenv Loading
-run_if_script_exists $HOME/.virtualenv_profile
 # }}}
 
 ### Alias {{{

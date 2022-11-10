@@ -36,6 +36,7 @@ Plug 'kevinhwang91/nvim-bqf'
 Plug 'rmagatti/auto-session' | Plug 'rmagatti/session-lens'
 Plug 'mfussenegger/nvim-dap' | Plug 'rcarriga/nvim-dap-ui' | Plug 'mxsdev/nvim-dap-vscode-js'
 Plug 'RRethy/vim-illuminate'
+Plug 'andymass/vim-matchup'
 
 Plug 'dyng/auto_mkdir'
 Plug 'junegunn/fzf'
@@ -413,12 +414,19 @@ require('telescope').setup{
 }
 require('telescope').load_extension('fzf')
 EOF
+
+lua <<EOF
+function query_workspace_symbols()
+    local q = vim.fn.input("Query: ", "")
+    require("telescope.builtin").lsp_workspace_symbols({ query = q })
+end
+EOF
 nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files()<cr>
 nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
 nnoremap <silent>gM <cmd>lua require('session-lens').search_session()<cr>
 nnoremap <silent>gl <cmd>lua require("telescope.builtin").live_grep()<cr>
 nnoremap <silent>gb <cmd>lua require("telescope.builtin").lsp_document_symbols()<cr>
-nnoremap <silent>gB <cmd>lua require("telescope.builtin").lsp_workspace_symbols()<cr>
+nnoremap <silent>gB <cmd>lua query_workspace_symbols()<cr>
 " }}}
 
 " undotree {{{
@@ -451,7 +459,6 @@ endfo
 
 " Fugitive {{{
 nnoremap <silent> gs  :Git status<CR>
-nnoremap <silent> gss :Git status<CR>
 nnoremap <silent> gsb :Git blame<CR>
 autocmd FileType fugitiveblame nmap <buffer> q gq
 " }}}
@@ -671,6 +678,9 @@ lua << EOF
 require('auto-session').setup {
     auto_session_enabled = true,
     auto_session_create_enabled = false,
+    auto_save_enabled = true,
+    auto_restore_enabled = true,
+    auto_session_enable_last_session = false,
 }
 EOF
 " }}}
@@ -684,7 +694,7 @@ EOF
 
 " nvim-dap & relates {{{
 " nvim-dap {{{{
-nnoremap <silent> gb <Cmd>lua require'dap'.toggle_breakpoint()<CR>
+nnoremap <silent> B <Cmd>lua require'dap'.toggle_breakpoint()<CR>
 nnoremap <silent> gC <Cmd>lua require'dap'.continue()<CR>
 nnoremap <silent> gJ <Cmd>lua require'dap'.step_into()<CR>
 nnoremap <silent> gj <Cmd>lua require'dap'.step_over()<CR>
@@ -761,6 +771,10 @@ augroup illuminate_augroup
     autocmd VimEnter * hi! link IlluminatedWordRead CursorLine
     autocmd VimEnter * hi! link IlluminatedWordWrite CursorLine
 augroup END
+" }}}
+
+" vim-matchup {{{
+let g:matchup_matchparen_offscreen = { 'method': 'popup' }
 " }}}
 
 " modeline {{{
