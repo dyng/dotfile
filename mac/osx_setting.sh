@@ -10,3 +10,6 @@ defaults write -g InitialKeyRepeat -int 10 # 150ms
 
 # normal minimum is 2 (30 ms)
 defaults write -g KeyRepeat -int 1 # 15ms
+
+# disable accent popup
+defaults write -g ApplePressAndHoldEnabled -bool false
