@@ -21,11 +21,19 @@ endif
 call plug#begin(stdpath('data') . '/plugged')
 
 Plug 'williamboman/mason.nvim'
-Plug 'williamboman/mason-lspconfig.nvim'
+    \| Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/cmp-nvim-lsp' | Plug 'hrsh7th/cmp-buffer' | Plug 'hrsh7th/cmp-path' | Plug 'hrsh7th/nvim-cmp' | Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
-Plug 'hrsh7th/vim-vsnip' | Plug 'hrsh7th/cmp-vsnip' | Plug 'hrsh7th/vim-vsnip-integ'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' } | Plug 'nvim-lua/plenary.nvim' | Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+Plug 'hrsh7th/cmp-nvim-lsp'
+    \| Plug 'hrsh7th/cmp-buffer'
+    \| Plug 'hrsh7th/cmp-path'
+    \| Plug 'hrsh7th/nvim-cmp'
+    \| Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
+Plug 'hrsh7th/vim-vsnip'
+    \| Plug 'hrsh7th/cmp-vsnip'
+    \| Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+    \| Plug 'nvim-lua/plenary.nvim'
+    \| Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 Plug 'rafamadriz/friendly-snippets'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'kyazdani42/nvim-tree.lua'
@@ -33,10 +41,14 @@ Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'ahmedkhalf/project.nvim'
 Plug 'kevinhwang91/nvim-bqf'
-Plug 'rmagatti/auto-session' | Plug 'rmagatti/session-lens'
-Plug 'mfussenegger/nvim-dap' | Plug 'rcarriga/nvim-dap-ui' | Plug 'mxsdev/nvim-dap-vscode-js'
+Plug 'rmagatti/auto-session'
+    \| Plug 'rmagatti/session-lens'
+Plug 'mfussenegger/nvim-dap'
+    \| Plug 'rcarriga/nvim-dap-ui'
+    \| Plug 'mxsdev/nvim-dap-vscode-js'
 Plug 'RRethy/vim-illuminate'
 Plug 'andymass/vim-matchup'
+Plug 'dylnmc/synstack.vim'
 
 Plug 'dyng/auto_mkdir'
 Plug 'junegunn/fzf'
@@ -355,7 +367,7 @@ smap <expr> <C-k> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-k>'
 " nvim-tree {{{
 nnoremap <silent> gn :NvimTreeFindFile<cr>
 nnoremap <silent> gN :NvimTreeOpen .<cr>
-lua <<EOF
+lua << EOF
 require("nvim-tree").setup{
     view = {
         adaptive_size = true,
@@ -385,11 +397,11 @@ EOF
 
 " nvim-project {{{
 lua << EOF
-  require("project_nvim").setup {
-    -- your configuration comes here
-    -- or leave it empty to use the default settings
-    -- refer to the configuration section below
-  }
+require("project_nvim").setup {
+-- your configuration comes here
+-- or leave it empty to use the default settings
+-- refer to the configuration section below
+}
 EOF
 " }}}
 
@@ -590,7 +602,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
   vim.keymap.set('n', 'ea', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', 'ef', vim.lsp.buf.formatting, bufopts)
+  vim.keymap.set('n', 'ef', function() vim.lsp.buf.format { async = true } end, bufopts)
   vim.keymap.set('n', 'ern', vim.lsp.buf.rename, bufopts)
 end
 
@@ -699,14 +711,32 @@ nnoremap <silent> gC <Cmd>lua require'dap'.continue()<CR>
 nnoremap <silent> gJ <Cmd>lua require'dap'.step_into()<CR>
 nnoremap <silent> gj <Cmd>lua require'dap'.step_over()<CR>
 nnoremap <silent> gT <Cmd>lua require'dap'.terminate()<CR>
-lua << EOF
-EOF
+
+" sign & highlighting
+hi! NvimDapBreakpoint ctermfg=204 guifg=#e06c75
+hi! NvimDapBreakpointRejected ctermfg=59 guifg=#5c6370
+hi! NvimDapStopped ctermfg=118 guifg=#7ac836
+call sign_define('DapBreakpoint', {'text': '●', 'texthl': 'NvimDapBreakpoint'})
+call sign_define('DapBreakpointRejected', {'text': '●', 'texthl': 'NvimDapBreakpointRejected'})
+call sign_define('DapBreakpointCondition', {'text': '◐', 'texthl': 'NvimDapBreakpoint'})
+call sign_define('DapStopped', {'text': '⮕', 'texthl': 'NvimDapStopped'})
 " }}}}
 
 " nvim-dap-ui {{{{
+nnoremap <M-r> <Cmd>lua require("dapui").float_element("repl")<CR>
+nnoremap <M-k> <Cmd>lua require("dapui").eval()<CR>
+vnoremap <M-k> <Cmd>lua require("dapui").eval()<CR>
 lua << EOF
 local dap, dapui = require("dap"), require("dapui")
 dapui.setup({
+  mappings = {
+    expand = "<CR>",
+    open = "o",
+    remove = "d",
+    edit = "e",
+    repl = "r",
+    toggle = "t",
+  },
   layouts = {
     {
       position = "left",
@@ -721,10 +751,30 @@ dapui.setup({
       position = "bottom",
       size = 0.25,
       elements = {
-        "console",
+        { id = "breakpoints", size = 0.4 },
+        { id = "repl", size = 0.6 },
       },
     },
-  }
+  },
+  floating = {
+    mappings = {
+      close = { "q", "<Esc>" }
+    }
+  },
+  controls = {
+    enabled = true,
+    element = "repl",
+    icons = {
+      pause = "",
+      play = "",
+      step_into = "",
+      step_over = "",
+      step_out = "",
+      step_back = "",
+      run_last = "",
+      terminate = "",
+    },
+  },
 })
 dap.listeners.after.event_initialized["dapui_config"] = function()
   dapui.open()
@@ -762,14 +812,52 @@ for _, language in ipairs({ "typescript", "javascript" }) do
   end
 EOF
 " }}}}
+
+" dap(golang) {{{{
+lua << EOF
+local dap = require("dap")
+dap.adapters.delve = {
+  type = 'server',
+  port = '${port}',
+  executable = {
+    command = 'dlv',
+    args = {'dap', '-l', '127.0.0.1:${port}'},
+  }
+}
+
+dap.configurations.go = {
+  {
+    type = "delve",
+    name = "Debug",
+    request = "launch",
+    program = "${file}"
+  },
+  {
+    type = "delve",
+    name = "Debug test", -- configuration for debugging test files
+    request = "launch",
+    mode = "test",
+    program = "${file}"
+  },
+  -- works with go.mod packages and sub packages 
+  {
+    type = "delve",
+    name = "Debug test (go.mod)",
+    request = "launch",
+    mode = "test",
+    program = "./${relativeFileDirname}"
+  } 
+}
+EOF
+" }}}}
 " }}}
 
 " vim-illuminate {{{
 augroup illuminate_augroup
     autocmd!
-    autocmd VimEnter * hi! link IlluminatedWordText CursorLine
-    autocmd VimEnter * hi! link IlluminatedWordRead CursorLine
-    autocmd VimEnter * hi! link IlluminatedWordWrite CursorLine
+    autocmd VimEnter * hi! link IlluminatedWordText Underlined
+    autocmd VimEnter * hi! link IlluminatedWordRead Underlined
+    autocmd VimEnter * hi! link IlluminatedWordWrite Underlined
 augroup END
 " }}}
 

@@ -1,8 +1,8 @@
-# plenv
-if [[ -e "$HOME/.plenv" ]]; then
-    export PATH="$HOME/.plenv/bin:$PATH"
-    eval "$(plenv init - zsh)"
-fi
+source_if_exists() {
+    if [[ -e $1 ]]; then
+        source $1
+    fi
+}
 
 # pyenv
 if which pyenv &>/dev/null; then
@@ -12,25 +12,14 @@ if which pyenv &>/dev/null; then
 fi
 
 # nvm
-if [[ -s $HOME/.nvm/nvm.sh ]]; then
-    export NVM_DIR="$HOME/.nvm"
-    export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node # use mirror site
-    . $HOME/.nvm/nvm.sh # This loads NVM
-fi
-
-if [[ -s /usr/local/opt/nvm/nvm.sh ]]; then
-    export NVM_DIR="$HOME/.nvm"
-    export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node # use mirror site
-    . "/usr/local/opt/nvm/nvm.sh"  # This loads nvm
-    . "/usr/local/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-fi
-
-if [[ -s /opt/homebrew/opt/nvm/nvm.sh ]]; then
-    export NVM_DIR="$HOME/.nvm"
-    export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node # use mirror site
-    . "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-    . "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-fi
+for nvm_root in "$HOME/.nvm" "/usr/local/opt/nvm" "/opt/homebrew/opt/nvm"
+do
+    if [[ -s "$nvm_root/nvm.sh" ]]; then
+        export NVM_DIR="$HOME/.nvm"
+        source "$nvm_root/nvm.sh"  # This loads nvm
+        source_if_exists "$nvm_root/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+    fi
+done
 
 # rbenv
 if which rbenv &>/dev/null; then
@@ -42,9 +31,12 @@ if which rbenv &>/dev/null; then
 fi
 
 # golang
-if which go &>/dev/null; then
+if which goenv &>/dev/null; then
+    eval "$(goenv init -)"
+elif which go &>/dev/null; then
     export GOPATH=$HOME/go
-    export PATH="$GOPATH/bin:$PATH"
+    export PATH="$GOROOT/bin:$PATH"
+    export PATH="$PATH:$GOPATH/bin"
 fi
 
 # jenv && java
@@ -65,6 +57,6 @@ fi
 [[ -e ~/.phpbrew/bashrc ]] && source ~/.phpbrew/bashrc
 
 # cargo
-[ -s $HOME/.cargo/env ] && . $HOME/.cargo/env
+[[ -e $HOME/.cargo/env ]] && . $HOME/.cargo/env
 
 # vim: ft=sh

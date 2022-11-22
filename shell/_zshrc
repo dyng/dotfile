@@ -68,7 +68,7 @@ zplug load
 ### Global {{{
 
 # functions {{{
-run_if_script_exists() {
+source_if_exists() {
     if [[ -e $1 ]]; then
         source $1
     fi
@@ -87,7 +87,7 @@ if [[ ! -e $HOME/.iterm2_shell_integration.zsh ]]; then
         curl -L https://iterm2.com/shell_integration/install_shell_integration.sh | bash
     fi
 fi
-run_if_script_exists $HOME/.iterm2_shell_integration.zsh
+source_if_exists $HOME/.iterm2_shell_integration.zsh
 
 # }}}
 
@@ -151,6 +151,9 @@ if [[ -e /opt/homebrew/bin/brew ]]; then
 fi
 
 export HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile
+
+# language version managers
+source_if_exists $HOME/.virtualenv_profile
 
 # fzf
 if which fzf &>/dev/null; then

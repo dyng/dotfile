@@ -9,7 +9,3 @@ fi
 if [[ -e $HOME/.virtualenv_profile ]]; then
     source $HOME/.virtualenv_profile
 fi
-
-# cargo
-. "$HOME/.cargo/env"
-

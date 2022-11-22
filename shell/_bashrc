@@ -46,6 +46,11 @@ if hash brew &>/dev/null; then
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 fi
 
+# language version managers
+if [[ -e $HOME/.virtualenv_profile ]]; then
+    source $HOME/.virtualenv_profile
+fi
+
 # fzf
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
