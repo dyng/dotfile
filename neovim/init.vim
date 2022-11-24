@@ -20,9 +20,11 @@ endif
 
 call plug#begin(stdpath('data') . '/plugged')
 
+Plug 'nvim-lua/plenary.nvim'
 Plug 'williamboman/mason.nvim'
     \| Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
+Plug 'jose-elias-alvarez/null-ls.nvim'
 Plug 'hrsh7th/cmp-nvim-lsp'
     \| Plug 'hrsh7th/cmp-buffer'
     \| Plug 'hrsh7th/cmp-path'
@@ -32,7 +34,6 @@ Plug 'hrsh7th/vim-vsnip'
     \| Plug 'hrsh7th/cmp-vsnip'
     \| Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
-    \| Plug 'nvim-lua/plenary.nvim'
     \| Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
 Plug 'rafamadriz/friendly-snippets'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
@@ -46,6 +47,7 @@ Plug 'rmagatti/auto-session'
 Plug 'mfussenegger/nvim-dap'
     \| Plug 'rcarriga/nvim-dap-ui'
     \| Plug 'mxsdev/nvim-dap-vscode-js'
+    \| Plug 'leoluz/nvim-dap-go'
 Plug 'RRethy/vim-illuminate'
 Plug 'andymass/vim-matchup'
 Plug 'dylnmc/synstack.vim'
@@ -81,12 +83,9 @@ Plug 'nathangrigg/vim-beancount'
 
 " Colorschemes
 Plug 'tomasr/molokai'
-Plug 'w0ng/vim-hybrid'
-Plug 'nanotech/jellybeans.vim'
-Plug 'joshdick/onedark.vim'
-Plug 'ajmwagar/vim-dues'
-Plug 'rakr/vim-one'
-Plug 'chriskempson/base16-vim'
+Plug 'marko-cerovac/material.nvim'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'navarasu/onedark.nvim'
 
 " Documents
 Plug 'yianwillis/vimcdoc'
@@ -163,6 +162,15 @@ elseif has("gui_vimr") || exists('g:neovide') || exists('g:gonvim_running')
 else
     set guifont=Hack:h14
 endif
+
+" signs
+lua << EOF
+local signs = { Error = " ", Warning = " ", Hint = " ", Information = " " }
+for type, icon in pairs(signs) do
+  local hl = "LspDiagnosticsSign" .. type
+  vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
+end
+EOF
 
 " macvim {{{
 if has('gui_macvim')
@@ -681,6 +689,11 @@ EOF
 " nvim-treesitter {{{
 lua << EOF
 require('nvim-treesitter.configs').setup({
+  ensure_installed = { "c", "lua", "vim", "go", "javascript", "typescript", "rust" },
+  sync_install = false,
+  highlight = {
+    enable = true,
+  }
 })
 EOF
 " }}}
@@ -813,43 +826,23 @@ for _, language in ipairs({ "typescript", "javascript" }) do
 EOF
 " }}}}
 
-" dap(golang) {{{{
+" dap-go {{{{
+nnoremap <silent> gt <Cmd>:lua require('dap-go').debug_test()<CR>
 lua << EOF
-local dap = require("dap")
-dap.adapters.delve = {
-  type = 'server',
-  port = '${port}',
-  executable = {
-    command = 'dlv',
-    args = {'dap', '-l', '127.0.0.1:${port}'},
-  }
-}
-
-dap.configurations.go = {
-  {
-    type = "delve",
-    name = "Debug",
-    request = "launch",
-    program = "${file}"
-  },
-  {
-    type = "delve",
-    name = "Debug test", -- configuration for debugging test files
-    request = "launch",
-    mode = "test",
-    program = "${file}"
-  },
-  -- works with go.mod packages and sub packages 
-  {
-    type = "delve",
-    name = "Debug test (go.mod)",
-    request = "launch",
-    mode = "test",
-    program = "./${relativeFileDirname}"
-  } 
-}
+require('dap-go').setup()
 EOF
 " }}}}
+" }}}
+
+" null-ls {{{
+lua << EOF
+local null_ls = require("null-ls")
+null_ls.setup({
+    sources = {
+        null_ls.builtins.diagnostics.golangci_lint,
+    },
+})
+EOF
 " }}}
 
 " vim-illuminate {{{
