@@ -40,7 +40,6 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'kyazdani42/nvim-tree.lua'
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
-Plug 'ahmedkhalf/project.nvim'
 Plug 'kevinhwang91/nvim-bqf'
 Plug 'rmagatti/auto-session'
     \| Plug 'rmagatti/session-lens'
@@ -102,7 +101,7 @@ endif
 " Encoding & Language {{{
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,sjis,cp936,gb18030,big5,euc-jp,euc-kr,latin1
-language message zh_CN.UTF-8
+language en_US.UTF-8
 " }}}
 
 " Spelling Check {{{
@@ -152,6 +151,8 @@ autocmd FileType git*,help setlocal nolist
 " Colorscheme
 set t_Co=256
 set background=dark
+
+let g:onedark_config = { 'style': 'darker' }
 colorscheme onedark
 
 " Font
@@ -165,9 +166,9 @@ endif
 
 " signs
 lua << EOF
-local signs = { Error = " ", Warning = " ", Hint = " ", Information = " " }
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
 for type, icon in pairs(signs) do
-  local hl = "LspDiagnosticsSign" .. type
+  local hl = "DiagnosticSign" .. type
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 EOF
@@ -225,7 +226,8 @@ inoremap <Down> <C-O>gj
 inoremap <Up>   <C-O>gk
 
 " quickfix
-autocmd FileType qf nmap <buffer><silent> q :cclose<cr>
+nnoremap <silent> Q :botright copen<cr>
+autocmd FileType qf nnoremap <buffer><silent> q :cclose<cr>
 
 " Tab navigation
 nnoremap <silent> <C-Tab> :tabnext<CR>
@@ -326,32 +328,15 @@ set helplang=cn
 " }}}
 
 " Custom Functions {{{
-" Highlight current line {{{
-function! ToggleHighlightCurrentLine()
-    if !exists('b:myhllines')
-        let b:myhllines = {}
-    endif
-
-    let lnum = line('.')
-    if has_key(b:myhllines, lnum)
-        silent! call matchdelete(b:myhllines[lnum])
-        unlet b:myhllines[lnum]
-    else
-        let matchid = matchadd('Search', '\%'.lnum.'l')
-        let b:myhllines[lnum] = matchid
-    endif
+" cyclic mark {{
+let s:mark_symbols = "ABCDEFGHI"
+let s:next_mark = 0
+function CyclicMark()
+    execute 'normal m'. s:mark_symbols[s:next_mark]
+    let s:next_mark = (s:next_mark + 1) % len(s:mark_symbols)
 endfunction
-function! ClearHighlightLines()
-    if exists('b:myhllines')
-        for value in values(b:myhllines)
-            silent! call matchdelete(value)
-        endfor
-    endif
-    let b:myhllines = {}
-endfunction
-nnoremap <silent> ml :call ToggleHighlightCurrentLine()<CR>
-autocmd InsertEnter * call ClearHighlightLines()
-"}}}
+nnoremap <silent> mz :call CyclicMark()<cr>
+" }}
 " }}}
 
 " Custom FileType {{{
@@ -397,18 +382,8 @@ require("nvim-tree").setup{
         },
     },
     git = {
-        enable = false
+        enable = true
     },
-}
-EOF
-" }}}
-
-" nvim-project {{{
-lua << EOF
-require("project_nvim").setup {
--- your configuration comes here
--- or leave it empty to use the default settings
--- refer to the configuration section below
 }
 EOF
 " }}}
@@ -444,9 +419,9 @@ EOF
 nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files()<cr>
 nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
 nnoremap <silent>gM <cmd>lua require('session-lens').search_session()<cr>
-nnoremap <silent>gl <cmd>lua require("telescope.builtin").live_grep()<cr>
 nnoremap <silent>gb <cmd>lua require("telescope.builtin").lsp_document_symbols()<cr>
 nnoremap <silent>gB <cmd>lua query_workspace_symbols()<cr>
+nnoremap <silent>gp <cmd>lua require("telescope.builtin").marks()<cr>
 " }}}
 
 " undotree {{{
@@ -606,9 +581,8 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gD', vim.lsp.buf.type_definition, bufopts)
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
   vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-  vim.keymap.set('n', 'S', vim.lsp.buf.document_symbol, bufopts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', 'gr', vim.lsp.buf.references, bufopts)
+  vim.keymap.set('n', 'gr', function() vim.lsp.buf.references { includeDeclaration = false } end, bufopts)
   vim.keymap.set('n', 'ea', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set('n', 'ef', function() vim.lsp.buf.format { async = true } end, bufopts)
   vim.keymap.set('n', 'ern', vim.lsp.buf.rename, bufopts)
@@ -682,6 +656,9 @@ require('bqf').setup({
         open = 'o',
         openc = '<cr>',
     },
+    preview = {
+        win_height = 999
+    },
 })
 EOF
 " }}}
@@ -689,7 +666,7 @@ EOF
 " nvim-treesitter {{{
 lua << EOF
 require('nvim-treesitter.configs').setup({
-  ensure_installed = { "c", "lua", "vim", "go", "javascript", "typescript", "rust" },
+  ensure_installed = { "c", "lua", "vim", "go", "javascript", "typescript", "rust", "python" },
   sync_install = false,
   highlight = {
     enable = true,
@@ -742,6 +719,7 @@ vnoremap <M-k> <Cmd>lua require("dapui").eval()<CR>
 lua << EOF
 local dap, dapui = require("dap"), require("dapui")
 dapui.setup({
+  icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
   mappings = {
     expand = "<CR>",
     open = "o",
@@ -756,16 +734,16 @@ dapui.setup({
       size = 40,
       elements = {
         { id = "stacks", size = 0.4 },
-        { id = "scopes", size = 0.4 },
-        { id = "watches", size = 0.2 },
+        { id = "scopes", size = 0.3 },
+        { id = "watches", size = 0.3 },
       },
     },
     {
       position = "bottom",
       size = 0.25,
       elements = {
-        { id = "breakpoints", size = 0.4 },
-        { id = "repl", size = 0.6 },
+        { id = "breakpoints", size = 0.3 },
+        { id = "repl", size = 0.7 },
       },
     },
   },
