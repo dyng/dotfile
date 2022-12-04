@@ -11,5 +11,5 @@ curl_benchmark() {
     ----------
     time_total: %{time_total}
     "
-    /usr/local/opt/curl/bin/curl -v -w "$format" $@
+    curl -v -w "$format" $@
 }

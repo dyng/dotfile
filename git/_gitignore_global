@@ -24,8 +24,8 @@ repl-history
 # object files
 *.pyc
 
-# vendor files
-bourbon/
+# goenv
+.go-version
 
 # Misc Files
 tags

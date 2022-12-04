@@ -123,11 +123,9 @@ augroup END
 set magic
 set ruler
 set autoindent
-set tabstop=8
 set shiftwidth=4
-set softtabstop=4
+set tabstop=8
 set smarttab
-set expandtab
 set display=lastline
 " }}}
 
@@ -339,12 +337,12 @@ nnoremap <silent> mz :call CyclicMark()<cr>
 " }}
 " }}}
 
-" Custom FileType {{{
-augroup customfiletype
-    au!
-    " Freemark template file
-    au BufRead *.ftl set filetype=html
-augroup END
+" Custom FileType Config {{{
+" golang
+autocmd FileType go setlocal tabstop=4 shiftwidth=4
+
+" lua
+autocmd FileType lua setlocal shiftwidth=2
 "}}}
 
 " Plugin Configs {{{
@@ -563,6 +561,7 @@ let g:terminal_kill = 1
 let g:terminal_close = 1
 let g:terminal_pos = "botright"
 let g:terminal_height = 20
+let g:terminal_cwd = 2
 " }}}
 
 " {{{ lsp-config & mason
