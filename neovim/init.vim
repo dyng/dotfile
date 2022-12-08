@@ -50,6 +50,11 @@ Plug 'mfussenegger/nvim-dap'
 Plug 'RRethy/vim-illuminate'
 Plug 'andymass/vim-matchup'
 Plug 'dylnmc/synstack.vim'
+Plug 'vim-test/vim-test'
+Plug 'dyng/vim-bookmarks'
+    \| Plug 'tom-anders/telescope-vim-bookmarks.nvim'
+Plug 'skywind3000/vim-terminal-help'
+Plug 'mhinz/vim-signify'
 
 Plug 'dyng/auto_mkdir'
 Plug 'junegunn/fzf'
@@ -72,8 +77,6 @@ Plug 'tomtom/tcomment_vim'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 'markdown' }
 Plug 'ryanoasis/vim-devicons'
-Plug 'sheerun/vim-polyglot'
-Plug 'skywind3000/vim-terminal-help'
 
 " Language Specific Plugins
 Plug 'guns/vim-sexp'
@@ -126,6 +129,7 @@ set autoindent
 set shiftwidth=4
 set tabstop=8
 set smarttab
+set expandtab
 set display=lastline
 " }}}
 
@@ -253,8 +257,8 @@ nnoremap <silent> <C-W>s :wincmd s\|wincmd j<CR>
 nnoremap <silent> <C-W>v :wincmd v\|wincmd l<CR>
 
 " Nohlsearch
-nnoremap <silent> <F2>      :nohlsearch \| call ClearHighlightLines()<CR>
-inoremap <silent> <F2> <C-O>:nohlsearch \| call ClearHighlightLines()<CR>
+nnoremap <silent> <F2>      :nohlsearch<CR>
+inoremap <silent> <F2> <C-O>:nohlsearch<CR>
 " n always look forward && N always look backward
 nnoremap <expr> n v:searchforward ? "n" : "N"
 nnoremap <expr> N v:searchforward ? "N" : "n"
@@ -302,6 +306,9 @@ cab X x
 " }}}
 
 " Misc {{{
+" increase updatetime
+set updatetime=100
+
 " disable beeping
 set vb t_vb=
 
@@ -326,20 +333,57 @@ set helplang=cn
 " }}}
 
 " Custom Functions {{{
-" cyclic mark {{
-let s:mark_symbols = "ABCDEFGHI"
-let s:next_mark = 0
-function CyclicMark()
-    execute 'normal m'. s:mark_symbols[s:next_mark]
-    let s:next_mark = (s:next_mark + 1) % len(s:mark_symbols)
+" s:project_root {{{
+let s:rootmarkers = ['.git', '.svn', '.hg', '.project', '.root']
+
+function s:project_root() abort
+    let name = expand('%:p')
+    return s:find_root(name, s:rootmarkers, 0)
 endfunction
-nnoremap <silent> mz :call CyclicMark()<cr>
-" }}
+
+function s:find_root(name, markers, strict) abort
+    let name = fnamemodify((a:name != '')? a:name : bufname('%'), ':p')
+    let finding = ''
+    " iterate all markers
+    for marker in a:markers
+        if marker != ''
+            " search as a file
+            let x = findfile(marker, name . '/;')
+            let x = (x == '')? '' : fnamemodify(x, ':p:h')
+            " search as a directory
+            let y = finddir(marker, name . '/;')
+            let y = (y == '')? '' : fnamemodify(y, ':p:h:h')
+            " which one is the nearest directory ?
+            let z = (strchars(x) > strchars(y))? x : y
+            " keep the nearest one in finding
+            let finding = (strchars(z) > strchars(finding))? z : finding
+        endif
+    endfor
+    if finding == ''
+        let path = (a:strict == 0)? fnamemodify(name, ':h') : ''
+    else
+        let path = fnamemodify(finding, ':p')
+    endif
+    if has('win32') || has('win16') || has('win64') || has('win95')
+        let path = substitute(path, '\/', '\', 'g')
+    endif
+    if path =~ '[\/\\]$'
+        let path = fnamemodify(path, ':h')
+    endif
+    return path
+endfunction
+" }}}
+
+" s:to_valid_fname {{{
+function s:to_valid_fname(fname) abort
+    return substitute(substitute(a:fname, "[\\/]", "%2F", "g"), " ", "%20", "g")
+endfunction
+" }}}
 " }}}
 
 " Custom FileType Config {{{
 " golang
-autocmd FileType go setlocal tabstop=4 shiftwidth=4
+autocmd FileType go setlocal tabstop=4 shiftwidth=4 nolist noexpandtab
 
 " lua
 autocmd FileType lua setlocal shiftwidth=2
@@ -377,6 +421,9 @@ require("nvim-tree").setup{
     actions = {
         open_file = {
             quit_on_open = true,
+        },
+        change_dir = {
+          enable = false,
         },
     },
     git = {
@@ -419,7 +466,6 @@ nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
 nnoremap <silent>gM <cmd>lua require('session-lens').search_session()<cr>
 nnoremap <silent>gb <cmd>lua require("telescope.builtin").lsp_document_symbols()<cr>
 nnoremap <silent>gB <cmd>lua query_workspace_symbols()<cr>
-nnoremap <silent>gp <cmd>lua require("telescope.builtin").marks()<cr>
 " }}}
 
 " undotree {{{
@@ -457,20 +503,7 @@ autocmd FileType fugitiveblame nmap <buffer> q gq
 " }}}
 
 " Quickrun {{{
-if !exists('g:quickrun_config')
-    let g:quickrun_config = {}
-endif
-let g:quickrun_config['c'] = {
-\ 'type': 'c/gcc',
-\ 'command': 'gcc',
-\ 'exec': ['%c %o %s -o %s:p:r', '%s:p:r %a'],
-\ 'tempfile': '%{tempname()}.c',
-\ 'hook/sweep/files': '%S:p:r',
-\ 'cmdopt': '-std=c99 -Wall'
-\ }
-let g:quickrun_config['perl'] = {
-\ 'cmdopt': '-Ilib'
-\ }
+nmap <leader>r <Plug>(quickrun)
 " }}}
 
 " CtrlSF {{{
@@ -804,7 +837,7 @@ EOF
 " }}}}
 
 " dap-go {{{{
-nnoremap <silent> gt <Cmd>:lua require('dap-go').debug_test()<CR>
+nnoremap <silent> gt <Cmd>lua require('dap-go').debug_test()<CR>
 lua << EOF
 require('dap-go').setup()
 EOF
@@ -835,5 +868,38 @@ augroup END
 let g:matchup_matchparen_offscreen = { 'method': 'popup' }
 " }}}
 
-" modeline {{{
+" vim-test {{{
+nnoremap <leader>t <Cmd>TestNearest<CR>
+nnoremap <leader>T <Cmd>TestFile<CR>
+function! TerminalHelpStrategy(cmd)
+    call TerminalSend(a:cmd . "\r")
+endfunction
+let g:test#custom_strategies = {"thelp": function("TerminalHelpStrategy")}
+let g:test#strategy = "thelp"
+" }}}
+
+" vim-bookmarks {{{
+let s:bookmark_directory = stdpath('data') . '/vim-bookmarks'
+    \| call mkdir(s:bookmark_directory, 'p')
+let g:bookmark_no_default_key_mappings = 1
+let g:bookmark_display_annotation = 1
+let g:bookmark_auto_save_file = s:bookmark_directory . '/default'
+let g:bookmark_save_per_working_dir = 1
+function! g:BMWorkDirFileLocation()
+    return s:bookmark_directory . '/' . s:to_valid_fname(s:project_root())
+endfunction
+nnoremap ma :BookmarkToggleAndAnnotate<CR>
+nnoremap ms :BookmarkShowAll<CR>
+
+lua << EOF
+require('telescope').load_extension('vim_bookmarks')
+EOF
+nnoremap <silent> <C-M> :Telescope vim_bookmarks all<CR>
+" }}}
+
+" signify {{{
+let g:signify_sign_change = "*"
+" }}}
+" }}}
+
 " vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:
