@@ -24,7 +24,6 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'williamboman/mason.nvim'
     \| Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
-Plug 'jose-elias-alvarez/null-ls.nvim'
 Plug 'hrsh7th/cmp-nvim-lsp'
     \| Plug 'hrsh7th/cmp-buffer'
     \| Plug 'hrsh7th/cmp-path'
@@ -41,12 +40,11 @@ Plug 'kyazdani42/nvim-tree.lua'
 Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kevinhwang91/nvim-bqf'
-Plug 'rmagatti/auto-session'
-    \| Plug 'rmagatti/session-lens'
 Plug 'mfussenegger/nvim-dap'
     \| Plug 'rcarriga/nvim-dap-ui'
     \| Plug 'mxsdev/nvim-dap-vscode-js'
     \| Plug 'leoluz/nvim-dap-go'
+Plug 'jose-elias-alvarez/null-ls.nvim'
 Plug 'RRethy/vim-illuminate'
 Plug 'andymass/vim-matchup'
 Plug 'dylnmc/synstack.vim'
@@ -55,14 +53,18 @@ Plug 'dyng/vim-bookmarks'
     \| Plug 'tom-anders/telescope-vim-bookmarks.nvim'
 Plug 'skywind3000/vim-terminal-help'
 Plug 'mhinz/vim-signify'
+Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-dispatch'
+Plug 'Shatur/neovim-session-manager'
+Plug 'stevearc/dressing.nvim'
+Plug 'gbprod/yanky.nvim'
+Plug 'folke/trouble.nvim'
 
 Plug 'dyng/auto_mkdir'
-Plug 'junegunn/fzf'
 Plug 'easymotion/vim-easymotion'
 Plug 'thinca/vim-quickrun'
 Plug 'mbbill/undotree'
 Plug 'machakann/vim-sandwich'
-Plug 'vim-scripts/Rename'
 Plug 'junegunn/vim-easy-align'
 Plug '~/Dropbox/Projects/CtrlSF'
 Plug '~/Dropbox/Projects/formatiu.vim'
@@ -76,10 +78,8 @@ Plug 'Raimondi/delimitMate'
 Plug 'tomtom/tcomment_vim'
 Plug 'dhruvasagar/vim-table-mode'
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 'markdown' }
-Plug 'ryanoasis/vim-devicons'
 
 " Language Specific Plugins
-Plug 'guns/vim-sexp'
 Plug '~/Dropbox/Projects/dejava.vim'
 Plug 'nathangrigg/vim-beancount'
 
@@ -454,18 +454,12 @@ require('telescope').setup{
 }
 require('telescope').load_extension('fzf')
 EOF
-
-lua <<EOF
-function query_workspace_symbols()
-    local q = vim.fn.input("Query: ", "")
-    require("telescope.builtin").lsp_workspace_symbols({ query = q })
-end
-EOF
 nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files()<cr>
 nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
-nnoremap <silent>gM <cmd>lua require('session-lens').search_session()<cr>
 nnoremap <silent>gb <cmd>lua require("telescope.builtin").lsp_document_symbols()<cr>
-nnoremap <silent>gB <cmd>lua query_workspace_symbols()<cr>
+nnoremap <silent>gB <cmd>lua require("telescope.builtin").lsp_dynamic_workspace_symbols()<cr>
+" nnoremap <silent>gB <cmd>lua vim.ui.input({ prompt = 'Query Name' },
+"             \ function(q) require("telescope.builtin").lsp_workspace_symbols({ query = q }) end)<cr>
 " }}}
 
 " undotree {{{
@@ -533,13 +527,6 @@ hi ctrlsfFilename guifg=#ffffff guibg=NONE guisp=NONE gui=bold ctermfg=30 ctermb
 " }}}
 
 " vim-visual-multi {{{
-let g:multi_cursor_use_default_mapping = 0
-
-" Default mapping
-let g:multi_cursor_next_key='<C-N>'
-let g:multi_cursor_prev_key='<C-U>'
-let g:multi_cursor_skip_key='<C-X>'
-let g:multi_cursor_quit_key='<Esc>'
 " }}}
 
 " mark {{{
@@ -571,8 +558,8 @@ au FileType clojure let b:delimitMate_quotes = '"'
 
 " tComment {{{
 let g:tcomment_maps = 0
-nnoremap <silent> gc :TComment<CR>
-vnoremap <silent> gc :TComment<CR>
+nnoremap <silent> ec :TComment<CR>
+vnoremap <silent> ec :TComment<CR>
 " }}}
 
 " csv.vim {{{
@@ -580,8 +567,8 @@ let g:no_csv_maps = 1
 " }}}
 
 " {{{ vim-easy-align
-xmap ga <Plug>(EasyAlign)*
-nmap ga <Plug>(EasyAlign)*
+xmap eg <Plug>(EasyAlign)*
+nmap eg <Plug>(EasyAlign)*
 " }}}
 
 " {{{ vim-sandwich
@@ -683,7 +670,6 @@ lua require('lualine').setup()
 lua << EOF
 require('bqf').setup({
     auto_enable = true,
-    auto_resize_height = true,
     func_map = {
         open = 'o',
         openc = '<cr>',
@@ -704,25 +690,6 @@ require('nvim-treesitter.configs').setup({
     enable = true,
   }
 })
-EOF
-" }}}
-
-" auto-session {{{
-lua << EOF
-require('auto-session').setup {
-    auto_session_enabled = true,
-    auto_session_create_enabled = false,
-    auto_save_enabled = true,
-    auto_restore_enabled = true,
-    auto_session_enable_last_session = false,
-}
-EOF
-" }}}
-
-" session-lens {{{
-lua << EOF
-require('session-lens').setup {
-}
 EOF
 " }}}
 
@@ -837,7 +804,7 @@ EOF
 " }}}}
 
 " dap-go {{{{
-nnoremap <silent> gt <Cmd>lua require('dap-go').debug_test()<CR>
+nnoremap <silent> gut <Cmd>lua require('dap-go').debug_test()<CR>
 lua << EOF
 require('dap-go').setup()
 EOF
@@ -869,13 +836,13 @@ let g:matchup_matchparen_offscreen = { 'method': 'popup' }
 " }}}
 
 " vim-test {{{
-nnoremap <leader>t <Cmd>TestNearest<CR>
-nnoremap <leader>T <Cmd>TestFile<CR>
+nnoremap gtt <Cmd>TestNearest<CR>
+nnoremap gtf <Cmd>TestFile<CR>
 function! TerminalHelpStrategy(cmd)
     call TerminalSend(a:cmd . "\r")
 endfunction
 let g:test#custom_strategies = {"thelp": function("TerminalHelpStrategy")}
-let g:test#strategy = "thelp"
+let g:test#strategy = "dispatch"
 " }}}
 
 " vim-bookmarks {{{
@@ -899,6 +866,59 @@ nnoremap <silent> <C-M> :Telescope vim_bookmarks all<CR>
 
 " signify {{{
 let g:signify_sign_change = "*"
+" }}}
+
+" dispatch.vim {{{
+let g:dispatch_no_maps = 1
+" }}}
+
+" neovim-session-manager {{{
+lua <<EOF
+require('session_manager').setup({
+  autoload_mode = require('session_manager.config').AutoloadMode.LastSession,
+  autosave_ignore_filetypes = {
+    'gitcommit',
+  },
+  autosave_ignore_buftypes = {
+    'help',
+    'terminal',
+  },
+  autosave_only_in_session = true,
+})
+EOF
+nnoremap <silent>gM <cmd>SessionManager load_session<cr>
+" }}}
+
+" dressing.nvim {{{
+lua <<EOF
+require('dressing').setup {}
+EOF
+" }}}
+
+" yanky.nvim {{{
+lua <<EOF
+require("yanky").setup({
+  ring = {
+    storage = "memory",
+  },
+  highlight = {
+    on_put = false,
+    on_yank = false,
+  },
+})
+require("telescope").load_extension("yank_history")
+EOF
+nnoremap <silent> ey <cmd>Telescope yank_history<cr>
+" }}}
+
+" trouble.nvim {{{
+lua << EOF
+require("trouble").setup {
+  mode = "document_diagnostics",
+  padding = false,
+}
+EOF
+nnoremap <silent>go <cmd>Trouble document_diagnostics<cr>
 " }}}
 " }}}
 
