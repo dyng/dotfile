@@ -27,6 +27,7 @@ Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp'
     \| Plug 'hrsh7th/cmp-buffer'
     \| Plug 'hrsh7th/cmp-path'
+    \| Plug 'hrsh7th/cmp-cmdline'
     \| Plug 'hrsh7th/nvim-cmp'
     \| Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 Plug 'hrsh7th/vim-vsnip'
@@ -58,7 +59,6 @@ Plug 'tpope/vim-dispatch'
 Plug 'Shatur/neovim-session-manager'
 Plug 'stevearc/dressing.nvim'
 Plug 'gbprod/yanky.nvim'
-Plug 'folke/trouble.nvim'
 
 Plug 'dyng/auto_mkdir'
 Plug 'easymotion/vim-easymotion'
@@ -229,7 +229,7 @@ inoremap <Up>   <C-O>gk
 
 " quickfix
 nnoremap <silent> Q :botright copen<cr>
-autocmd FileType qf nnoremap <buffer><silent> q :cclose<cr>
+autocmd FileType qf nnoremap <buffer><silent> q :quit<cr>
 
 " Tab navigation
 nnoremap <silent> <C-Tab> :tabnext<CR>
@@ -512,6 +512,7 @@ let g:ctrlsf_search_mode = 'async'
 let g:ctrlsf_populate_qflist = 1
 let g:ctrlsf_default_root = 'project'
 let g:ctrlsf_toggle_map_key = '\t'
+let g:ctrlsf_auto_preview = 1
 let g:ctrlsf_extra_backend_args = {
     \ 'pt': '--global-gitignore'
     \ }
@@ -602,8 +603,9 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, bufopts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
   vim.keymap.set('n', 'gr', function() vim.lsp.buf.references { includeDeclaration = false } end, bufopts)
+  vim.keymap.set('n', 'go', vim.diagnostic.setloclist, bufopts)
   vim.keymap.set('n', 'ea', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set('n', 'ef', function() vim.lsp.buf.format { async = true } end, bufopts)
+  vim.keymap.set({'n', 'v'}, 'ef', function() vim.lsp.buf.format { async = true } end, bufopts)
   vim.keymap.set('n', 'ern', vim.lsp.buf.rename, bufopts)
 end
 
@@ -648,8 +650,8 @@ cmp.setup({
       ['<Up>'] = cmp.mapping.select_prev_item(),
       ['<CR>'] = cmp.mapping.confirm({ select = false }),
       ['<C-c>'] = cmp.mapping.abort(),
-      ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-u>'] = cmp.mapping.scroll_docs(4),
+      ['<C-k>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-j>'] = cmp.mapping.scroll_docs(4),
     },
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
@@ -659,11 +661,31 @@ cmp.setup({
       { name = 'buffer' },
     })
 })
+
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' },
+  }, {
+    {
+      name = 'cmdline',
+      option = {
+        ignore_cmds = { 'Man', '!', '%', 'write', 'wall', 'quit', 'qall', 'xit' }
+      }
+    },
+  })
+})
 EOF
 " }}}
 
 " lualine {{{
-lua require('lualine').setup()
+lua <<EOF
+require('lualine').setup({
+  sections = {
+    lualine_b = {'diff', 'diagnostics'}
+  },
+})
+EOF
 " }}}
 
 " nvim-bqf {{{
@@ -673,6 +695,10 @@ require('bqf').setup({
     func_map = {
         open = 'o',
         openc = '<cr>',
+        prevhist = '<c-h>',
+        nexthist = '<c-l>',
+        pscrollup = '<up>',
+        pscrolldown = '<down>',
     },
     preview = {
         win_height = 999
@@ -909,16 +935,7 @@ require("yanky").setup({
 require("telescope").load_extension("yank_history")
 EOF
 nnoremap <silent> ey <cmd>Telescope yank_history<cr>
-" }}}
-
-" trouble.nvim {{{
-lua << EOF
-require("trouble").setup {
-  mode = "document_diagnostics",
-  padding = false,
-}
-EOF
-nnoremap <silent>go <cmd>Trouble document_diagnostics<cr>
+inoremap <silent> <c-y> <cmd>Telescope yank_history<cr>
 " }}}
 " }}}
 
