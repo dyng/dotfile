@@ -59,6 +59,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'Shatur/neovim-session-manager'
 Plug 'stevearc/dressing.nvim'
 Plug 'gbprod/yanky.nvim'
+Plug '907th/vim-auto-save'
 
 Plug 'dyng/auto_mkdir'
 Plug 'easymotion/vim-easymotion'
@@ -333,10 +334,10 @@ set helplang=cn
 " }}}
 
 " Custom Functions {{{
-" s:project_root {{{
+" ProjectRoot {{{
 let s:rootmarkers = ['.git', '.svn', '.hg', '.project', '.root']
 
-function s:project_root() abort
+function ProjectRoot() abort
     let name = expand('%:p')
     return s:find_root(name, s:rootmarkers, 0)
 endfunction
@@ -454,7 +455,7 @@ require('telescope').setup{
 }
 require('telescope').load_extension('fzf')
 EOF
-nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files()<cr>
+nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files({ cwd = vim.fn.ProjectRoot() })<cr>
 nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
 nnoremap <silent>gb <cmd>lua require("telescope.builtin").lsp_document_symbols()<cr>
 nnoremap <silent>gB <cmd>lua require("telescope.builtin").lsp_dynamic_workspace_symbols()<cr>
@@ -595,7 +596,6 @@ local on_attach = function(client, bufnr)
   vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
   -- Mappings.
-  -- See `:help vim.lsp.*` for documentation on any of the below functions
   local bufopts = { noremap=true, silent=true, buffer=bufnr }
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
   vim.keymap.set('n', 'gD', vim.lsp.buf.type_definition, bufopts)
@@ -603,7 +603,9 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, bufopts)
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
   vim.keymap.set('n', 'gr', function() vim.lsp.buf.references { includeDeclaration = false } end, bufopts)
-  vim.keymap.set('n', 'go', vim.diagnostic.setloclist, bufopts)
+  vim.keymap.set('n', 'ge', vim.diagnostic.setloclist, bufopts)
+  vim.keymap.set('n', 'gE', vim.diagnostic.setqflist, bufopts)
+  vim.keymap.set('n', 'E', vim.diagnostic.open_float, bufopts)
   vim.keymap.set('n', 'ea', vim.lsp.buf.code_action, bufopts)
   vim.keymap.set({'n', 'v'}, 'ef', function() vim.lsp.buf.format { async = true } end, bufopts)
   vim.keymap.set('n', 'ern', vim.lsp.buf.rename, bufopts)
@@ -650,8 +652,8 @@ cmp.setup({
       ['<Up>'] = cmp.mapping.select_prev_item(),
       ['<CR>'] = cmp.mapping.confirm({ select = false }),
       ['<C-c>'] = cmp.mapping.abort(),
-      ['<C-k>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-j>'] = cmp.mapping.scroll_docs(4),
+      ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-d>'] = cmp.mapping.scroll_docs(4),
     },
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
@@ -697,8 +699,8 @@ require('bqf').setup({
         openc = '<cr>',
         prevhist = '<c-h>',
         nexthist = '<c-l>',
-        pscrollup = '<up>',
-        pscrolldown = '<down>',
+        pscrollup = '<c-u>',
+        pscrolldown = '<c-d>',
     },
     preview = {
         win_height = 999
@@ -721,11 +723,36 @@ EOF
 
 " nvim-dap & relates {{{
 " nvim-dap {{{{
-nnoremap <silent> B <Cmd>lua require'dap'.toggle_breakpoint()<CR>
-nnoremap <silent> gC <Cmd>lua require'dap'.continue()<CR>
-nnoremap <silent> gJ <Cmd>lua require'dap'.step_into()<CR>
-nnoremap <silent> gj <Cmd>lua require'dap'.step_over()<CR>
-nnoremap <silent> gT <Cmd>lua require'dap'.terminate()<CR>
+lua <<EOF
+function set_dap_keymap(mode, key, fn)
+    local if_dap_running = function(fn, key)
+        -- escape special characters
+        if key:find('^<') then
+            key = "\\"..key
+        end
+        return function()
+            local session = require('dap').session()
+            if session and session.filetype == vim.bo.filetype
+            then
+                fn()
+            else
+                vim.cmd('execute "normal! '..key..'"')
+            end
+        end
+    end
+    local opts = { noremap=true, silent=true }
+    vim.keymap.set(mode, key, if_dap_running(fn, key), opts)
+end
+
+-- set mapping
+vim.keymap.set('n', 'B', require'dap'.toggle_breakpoint, { silent=true })
+vim.keymap.set('n', 'gC', require'dap'.continue, { silent=true })
+set_dap_keymap('n', '<down>', require'dap'.step_over)
+set_dap_keymap('n', '<right>', require'dap'.step_into)
+set_dap_keymap('n', '<left>', require'dap'.step_out)
+set_dap_keymap('n', 'C', require'dap'.run_to_cursor)
+set_dap_keymap('n', 'T', require'dap'.terminate)
+EOF
 
 " sign & highlighting
 hi! NvimDapBreakpoint ctermfg=204 guifg=#e06c75
@@ -855,6 +882,17 @@ augroup illuminate_augroup
     autocmd VimEnter * hi! link IlluminatedWordRead Underlined
     autocmd VimEnter * hi! link IlluminatedWordWrite Underlined
 augroup END
+lua <<EOF
+require('illuminate').configure({
+    large_file_cutoff = 3000,
+    large_file_overrides = {
+        providers = {
+            'lsp',
+            'treesitter',
+        },
+    },
+})
+EOF
 " }}}
 
 " vim-matchup {{{
@@ -879,7 +917,7 @@ let g:bookmark_display_annotation = 1
 let g:bookmark_auto_save_file = s:bookmark_directory . '/default'
 let g:bookmark_save_per_working_dir = 1
 function! g:BMWorkDirFileLocation()
-    return s:bookmark_directory . '/' . s:to_valid_fname(s:project_root())
+    return s:bookmark_directory . '/' . s:to_valid_fname(ProjectRoot())
 endfunction
 nnoremap ma :BookmarkToggleAndAnnotate<CR>
 nnoremap ms :BookmarkShowAll<CR>
@@ -917,7 +955,11 @@ nnoremap <silent>gM <cmd>SessionManager load_session<cr>
 
 " dressing.nvim {{{
 lua <<EOF
-require('dressing').setup {}
+require('dressing').setup {
+    input = {
+        start_in_insert = true,
+    }
+}
 EOF
 " }}}
 
@@ -936,6 +978,11 @@ require("telescope").load_extension("yank_history")
 EOF
 nnoremap <silent> ey <cmd>Telescope yank_history<cr>
 inoremap <silent> <c-y> <cmd>Telescope yank_history<cr>
+" }}}
+
+" vim-auto-save {{{
+let g:auto_save = 1
+let g:auto_save_silent = 1
 " }}}
 " }}}
 

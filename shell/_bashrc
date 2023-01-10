@@ -12,7 +12,8 @@ SAVEHIST=20000
 # Editor
 export EDITOR="vim"
 
-# Add script dir
+# Path
+export PATH="$PATH:$HOME/.local/bin"
 export PATH="$PATH:$HOME/scripts"
 
 # Alias
