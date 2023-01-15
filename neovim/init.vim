@@ -229,7 +229,14 @@ inoremap <Down> <C-O>gj
 inoremap <Up>   <C-O>gk
 
 " quickfix
-nnoremap <silent> Q :botright copen<cr>
+function! ToggleQuickFix()
+    if empty(filter(getwininfo(), 'v:val.quickfix'))
+        copen
+    else
+        cclose
+    endif
+endfunction
+nnoremap <silent> Q :call ToggleQuickFix()<cr>
 autocmd FileType qf nnoremap <buffer><silent> q :quit<cr>
 
 " Tab navigation
@@ -745,14 +752,19 @@ function set_dap_keymap(mode, key, fn)
 end
 
 -- set mapping
+vim.keymap.set('n', 'guu', require'dap'.run_last, { silent=true })
 vim.keymap.set('n', 'B', require'dap'.toggle_breakpoint, { silent=true })
-vim.keymap.set('n', 'gC', require'dap'.continue, { silent=true })
 set_dap_keymap('n', '<down>', require'dap'.step_over)
 set_dap_keymap('n', '<right>', require'dap'.step_into)
 set_dap_keymap('n', '<left>', require'dap'.step_out)
-set_dap_keymap('n', 'C', require'dap'.run_to_cursor)
+set_dap_keymap('n', 'J', require'dap'.continue)
+set_dap_keymap('n', 'R', require'dap'.run_to_cursor)
 set_dap_keymap('n', 'T', require'dap'.terminate)
 EOF
+
+" commands
+command! DapListBreakpoints lua require'dap'.list_breakpoints();vim.cmd('copen')
+command! DapClearBreakpoints lua require'dap'.clear_breakpoints()
 
 " sign & highlighting
 hi! NvimDapBreakpoint ctermfg=204 guifg=#e06c75
@@ -900,7 +912,8 @@ let g:matchup_matchparen_offscreen = { 'method': 'popup' }
 " }}}
 
 " vim-test {{{
-nnoremap gtt <Cmd>TestNearest<CR>
+nnoremap gtt <Cmd>TestLast<CR>
+nnoremap gtn <Cmd>TestNearest<CR>
 nnoremap gtf <Cmd>TestFile<CR>
 function! TerminalHelpStrategy(cmd)
     call TerminalSend(a:cmd . "\r")
