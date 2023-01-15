@@ -18,7 +18,21 @@ nnoremap Y y$
 nnoremap <C-H> <C-W>h
 nnoremap <C-L> <C-W>l
 
+" Back & Forward
+nmap <C-I> <Action>(Forward)
+nmap <C-O> <Action>(Back)
+
+" Lsp-like mappings
+nmap gd <Action>(GotoDeclaration)
+nmap gr <Action>(FindUsages)
+nmap gi <Action>(GotoImplementation)
+
+" Terminal
+nmap <A-/> <Action>(ActivateTerminalToolWindow)
+
 """""""""""""""""""""""""""""""
 " Settings
 """""""""""""""""""""""""""""""
 set ignorecase
+set incsearch
+set scrolloff=5
