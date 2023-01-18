@@ -60,6 +60,7 @@ Plug 'Shatur/neovim-session-manager'
 Plug 'stevearc/dressing.nvim'
 Plug 'gbprod/yanky.nvim'
 Plug '907th/vim-auto-save'
+Plug 'NvChad/nvim-colorizer.lua'
 
 Plug 'dyng/auto_mkdir'
 Plug 'easymotion/vim-easymotion'
@@ -227,6 +228,7 @@ nnoremap <Down> gj
 nnoremap <Up>   gk
 inoremap <Down> <C-O>gj
 inoremap <Up>   <C-O>gk
+nnoremap <C-'>  `^
 
 " quickfix
 function! ToggleQuickFix()
@@ -264,6 +266,63 @@ nnoremap <silent> <A-l> <C-w>l
 nnoremap <silent> <C-W>s :wincmd s\|wincmd j<CR>
 nnoremap <silent> <C-W>v :wincmd v\|wincmd l<CR>
 
+" Window resize
+nnoremap <silent> <C-Up> <cmd>call <SID>responsive_resize('up')<cr>
+nnoremap <silent> <C-Down> <cmd>call <SID>responsive_resize('down')<cr>
+nnoremap <silent> <C-Left> <cmd>call <SID>responsive_resize('left')<cr>
+nnoremap <silent> <C-Right> <cmd>call <SID>responsive_resize('right')<cr>
+
+function s:responsive_resize(key) abort
+    let [leftmost, topmost, rightmost, bottommost] = s:win_relpos(winnr())
+    if a:key == 'up' || a:key == 'down'
+        " assume window is topmost unless bottommost
+        if bottommost
+            if a:key == 'up'
+                resize +3
+            else
+                resize -3
+            endif
+        else
+            if a:key == 'up'
+                resize -3
+            else
+                resize +3
+            endif
+        endif
+    else
+        " assume window is leftmost unless rightmost
+        if rightmost
+            if a:key == 'left'
+                vertical resize +3
+            else
+                vertical resize -3
+            endif
+        else
+            if a:key == 'left'
+                vertical resize -3
+            else
+                vertical resize +3
+            endif
+        endif
+    endif
+endfunction
+
+function! s:win_relpos(winnr) abort
+    let height = &lines
+    let width = &columns
+
+    let [row, col] = win_screenpos(a:winnr)
+    let win_width = winwidth(a:winnr)
+    let win_height = winheight(a:winnr)
+
+    let leftmost = (col <= 1)
+    let topmost = (row <= 1)
+    let rightmost = (col + win_width + 1 >= width)
+    let bottommost = (row + win_height + 1 >= height)
+
+    return [leftmost, topmost, rightmost, bottommost]
+endfunction
+
 " Nohlsearch
 nnoremap <silent> <F2>      :nohlsearch<CR>
 inoremap <silent> <F2> <C-O>:nohlsearch<CR>
@@ -292,6 +351,7 @@ nnoremap <silent> yf :let @+ = expand('%')<CR>
 nnoremap <silent> yF :let @+ = expand('%:p')<CR>
 " Run current line
 nnoremap <silent> yr :exec getline('.') \| echo 'executed!'<CR>
+vnoremap <silent> R :source \| echo 'executed!'<CR>
 " Shell-style shortcut in command mode
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
@@ -341,6 +401,29 @@ set helplang=cn
 " }}}
 
 " Custom Functions {{{
+" VisualSelection {{{
+function! VisualSelection()
+    if mode()=="v"
+        let [line_start, column_start] = getpos("v")[1:2]
+        let [line_end, column_end] = getpos(".")[1:2]
+    else
+        let [line_start, column_start] = getpos("'<")[1:2]
+        let [line_end, column_end] = getpos("'>")[1:2]
+    end
+    if (line2byte(line_start)+column_start) > (line2byte(line_end)+column_end)
+        let [line_start, column_start, line_end, column_end] =
+        \   [line_end, column_end, line_start, column_start]
+    end
+    let lines = getline(line_start, line_end)
+    if len(lines) == 0
+            return ''
+    endif
+    let lines[-1] = lines[-1][: column_end - 1]
+    let lines[0] = lines[0][column_start - 1:]
+    return join(lines, "\n")
+endfunction
+" }}}
+
 " ProjectRoot {{{
 let s:rootmarkers = ['.git', '.svn', '.hg', '.project', '.root']
 
@@ -382,8 +465,8 @@ function s:find_root(name, markers, strict) abort
 endfunction
 " }}}
 
-" s:to_valid_fname {{{
-function s:to_valid_fname(fname) abort
+" EscapeFilename {{{
+function EscapeFilename(fname) abort
     return substitute(substitute(a:fname, "[\\/]", "%2F", "g"), " ", "%20", "g")
 endfunction
 " }}}
@@ -536,6 +619,13 @@ hi ctrlsfFilename guifg=#ffffff guibg=NONE guisp=NONE gui=bold ctermfg=30 ctermb
 " }}}
 
 " vim-visual-multi {{{
+" let g:VM_default_mappings = 0
+let g:VM_leader = 'M'
+let g:VM_maps = {
+    \ 'Skip Region': 'x',
+    \ 'Add Cursor Up': '',
+    \ 'Add Cursor Down': ''
+    \}
 " }}}
 
 " mark {{{
@@ -930,7 +1020,7 @@ let g:bookmark_display_annotation = 1
 let g:bookmark_auto_save_file = s:bookmark_directory . '/default'
 let g:bookmark_save_per_working_dir = 1
 function! g:BMWorkDirFileLocation()
-    return s:bookmark_directory . '/' . s:to_valid_fname(ProjectRoot())
+    return s:bookmark_directory . '/' . EscapeFilename(ProjectRoot())
 endfunction
 nnoremap ma :BookmarkToggleAndAnnotate<CR>
 nnoremap ms :BookmarkShowAll<CR>
@@ -996,6 +1086,16 @@ inoremap <silent> <c-y> <cmd>Telescope yank_history<cr>
 " vim-auto-save {{{
 let g:auto_save = 1
 let g:auto_save_silent = 1
+" }}}
+
+" nvim-colorizer {{{
+lua <<EOF
+require 'colorizer'.setup {
+    user_default_options = {
+        mode = "background"
+    }
+}
+EOF
 " }}}
 " }}}
 
