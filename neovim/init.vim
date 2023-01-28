@@ -35,6 +35,7 @@ Plug 'hrsh7th/vim-vsnip'
     \| Plug 'hrsh7th/vim-vsnip-integ'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
     \| Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
+    \| Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'rafamadriz/friendly-snippets'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'kyazdani42/nvim-tree.lua'
@@ -59,7 +60,7 @@ Plug 'tpope/vim-dispatch'
 Plug 'Shatur/neovim-session-manager'
 Plug 'stevearc/dressing.nvim'
 Plug 'gbprod/yanky.nvim'
-Plug '907th/vim-auto-save'
+Plug 'dyng/vim-auto-save'
 Plug 'NvChad/nvim-colorizer.lua'
 
 Plug 'dyng/auto_mkdir'
@@ -113,14 +114,14 @@ language en_US.UTF-8
 " default setting
 set nospell
 
-function! s:InitSpellingCheck(lang)
+function! s:SetSpellingCheck(lang)
     setl spell
     exec "setl spelllang=" . a:lang
 endfunction
 
 augroup spelling
     autocmd!
-    autocmd FileType text,markdown call s:InitSpellingCheck("en_us")
+    autocmd FileType text,markdown call s:SetSpellingCheck("en_us")
 augroup END
 " }}}
 
@@ -228,7 +229,6 @@ nnoremap <Down> gj
 nnoremap <Up>   gk
 inoremap <Down> <C-O>gj
 inoremap <Up>   <C-O>gk
-nnoremap <C-'>  `^
 
 " quickfix
 function! ToggleQuickFix()
@@ -267,13 +267,13 @@ nnoremap <silent> <C-W>s :wincmd s\|wincmd j<CR>
 nnoremap <silent> <C-W>v :wincmd v\|wincmd l<CR>
 
 " Window resize
-nnoremap <silent> <C-Up> <cmd>call <SID>responsive_resize('up')<cr>
-nnoremap <silent> <C-Down> <cmd>call <SID>responsive_resize('down')<cr>
-nnoremap <silent> <C-Left> <cmd>call <SID>responsive_resize('left')<cr>
-nnoremap <silent> <C-Right> <cmd>call <SID>responsive_resize('right')<cr>
+nnoremap <silent> <C-Up> <cmd>call <SID>ResponsiveResize('up')<cr>
+nnoremap <silent> <C-Down> <cmd>call <SID>ResponsiveResize('down')<cr>
+nnoremap <silent> <C-Left> <cmd>call <SID>ResponsiveResize('left')<cr>
+nnoremap <silent> <C-Right> <cmd>call <SID>ResponsiveResize('right')<cr>
 
-function s:responsive_resize(key) abort
-    let [leftmost, topmost, rightmost, bottommost] = s:win_relpos(winnr())
+function s:ResponsiveResize(key) abort
+    let [leftmost, topmost, rightmost, bottommost] = s:WinRelpos(winnr())
     if a:key == 'up' || a:key == 'down'
         " assume window is topmost unless bottommost
         if bottommost
@@ -307,7 +307,7 @@ function s:responsive_resize(key) abort
     endif
 endfunction
 
-function! s:win_relpos(winnr) abort
+function! s:WinRelpos(winnr) abort
     let height = &lines
     let width = &columns
 
@@ -480,6 +480,38 @@ autocmd FileType go setlocal tabstop=4 shiftwidth=4 nolist noexpandtab
 autocmd FileType lua setlocal shiftwidth=2
 "}}}
 
+" Inline Plugins {{{
+" LastInsert {{{
+nnoremap <silent> <C-'> <cmd>call <SID>LastInsertJump()<cr>
+augroup lastinsert
+    autocmd!
+    autocmd InsertLeave * call s:LastInsertSave()
+augroup END
+
+let s:LI_PosHist = []
+let s:LI_Idx = 0
+
+function s:LastInsertSave() abort
+    let pos = getpos('.')
+    let pos[0] = bufnr()
+    call insert(s:LI_PosHist, pos)
+    if len(s:LI_PosHist) > 3
+        call remove(s:LI_PosHist, -1)
+    endif
+endfunction
+
+function s:LastInsertJump() abort
+    if len(s:LI_PosHist) == 0
+        return
+    endif
+    let pos = s:LI_PosHist[s:LI_Idx]
+    exec 'buffer ' . pos[0]
+    call setpos('.', pos)
+    let s:LI_Idx = (s:LI_Idx + 1) % len(s:LI_PosHist)
+endfunction
+" }}}
+" }}}
+
 " Plugin Configs {{{
 " vim-vsnip {{{
 imap <expr> <C-o> vsnip#expandable() ? '<Plug>(vsnip-expand)'    : '<C-o>'
@@ -527,23 +559,28 @@ EOF
 " Telescope {{{
 lua << EOF
 require('telescope').setup{
-  defaults = {
-      mappings = {
-          i = {
-              ["<esc>"] = require('telescope.actions').close,
-          },
-      },
-  },
-  extensions = {
-      fzf = {
-          fuzzy = true,
-          override_generic_sorter = true,
-          override_file_sorter = true,
-          case_mode = "smart_case"
-      },
-  },
+    defaults = {
+        mappings = {
+            i = {
+                ["<esc>"] = require('telescope.actions').close,
+            },
+        },
+    },
+    extensions = {
+        fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = false,
+            case_mode = "smart_case"
+        },
+        fzy_native = {
+            override_generic_sorter = false,
+            override_file_sorter = true,
+        }
+    },
 }
 require('telescope').load_extension('fzf')
+require('telescope').load_extension('fzy_native')
 EOF
 nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files({ cwd = vim.fn.ProjectRoot() })<cr>
 nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
@@ -619,12 +656,11 @@ hi ctrlsfFilename guifg=#ffffff guibg=NONE guisp=NONE gui=bold ctermfg=30 ctermb
 " }}}
 
 " vim-visual-multi {{{
-" let g:VM_default_mappings = 0
 let g:VM_leader = 'M'
 let g:VM_maps = {
     \ 'Skip Region': 'x',
-    \ 'Add Cursor Up': '',
-    \ 'Add Cursor Down': ''
+    \ 'Add Cursor Up': 'Mk',
+    \ 'Add Cursor Down': 'Mj'
     \}
 " }}}
 
@@ -823,6 +859,11 @@ EOF
 lua <<EOF
 function set_dap_keymap(mode, key, fn)
     local if_dap_running = function(fn, key)
+        -- remap
+        local rhs = vim.fn.maparg(key, 'n')
+        if rhs ~= '' and not rhs:find('^<') then
+            key = rhs
+        end
         -- escape special characters
         if key:find('^<') then
             key = "\\"..key
@@ -843,6 +884,7 @@ end
 
 -- set mapping
 vim.keymap.set('n', 'guu', require'dap'.run_last, { silent=true })
+vim.keymap.set('n', 'guj', require'dap'.continue, { silent=true })
 vim.keymap.set('n', 'B', require'dap'.toggle_breakpoint, { silent=true })
 set_dap_keymap('n', '<down>', require'dap'.step_over)
 set_dap_keymap('n', '<right>', require'dap'.step_into)
@@ -1086,6 +1128,7 @@ inoremap <silent> <c-y> <cmd>Telescope yank_history<cr>
 " vim-auto-save {{{
 let g:auto_save = 1
 let g:auto_save_silent = 1
+let g:auto_save_write_all_buffers = 1
 " }}}
 
 " nvim-colorizer {{{
