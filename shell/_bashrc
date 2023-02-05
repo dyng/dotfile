@@ -13,7 +13,7 @@ SAVEHIST=20000
 export EDITOR="vim"
 
 # Path
-export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:$HOME/.local/bin:/usr/local/bin"
 export PATH="$PATH:$HOME/scripts"
 
 # Alias

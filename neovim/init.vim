@@ -24,11 +24,11 @@ Plug 'nvim-lua/plenary.nvim'
 Plug 'williamboman/mason.nvim'
     \| Plug 'williamboman/mason-lspconfig.nvim'
 Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/nvim-cmp'
     \| Plug 'hrsh7th/cmp-buffer'
     \| Plug 'hrsh7th/cmp-path'
     \| Plug 'hrsh7th/cmp-cmdline'
-    \| Plug 'hrsh7th/nvim-cmp'
+    \| Plug 'hrsh7th/cmp-nvim-lsp'
     \| Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
 Plug 'hrsh7th/vim-vsnip'
     \| Plug 'hrsh7th/cmp-vsnip'
@@ -62,10 +62,10 @@ Plug 'stevearc/dressing.nvim'
 Plug 'gbprod/yanky.nvim'
 Plug 'dyng/vim-auto-save'
 Plug 'NvChad/nvim-colorizer.lua'
+Plug 'github/copilot.vim'
 
 Plug 'dyng/auto_mkdir'
 Plug 'easymotion/vim-easymotion'
-Plug 'thinca/vim-quickrun'
 Plug 'mbbill/undotree'
 Plug 'machakann/vim-sandwich'
 Plug 'junegunn/vim-easy-align'
@@ -74,7 +74,6 @@ Plug '~/Dropbox/Projects/formatiu.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'mg979/vim-visual-multi'
 Plug 'inkarkat/vim-mark' | Plug 'inkarkat/vim-ingo-library'
-Plug 'tpope/vim-rsi'
 Plug 'AndrewRadev/linediff.vim'
 Plug 'vim-scripts/ReloadScript'
 Plug 'Raimondi/delimitMate'
@@ -207,7 +206,7 @@ set hidden
 syntax on
 filetype plugin indent on
 set modeline                 "modeline is by default disabled on Debian
-set completeopt=longest,menu,menuone
+set completeopt=menu,menuone,noselect
 set wildmenu
 " }}}
 
@@ -478,6 +477,9 @@ autocmd FileType go setlocal tabstop=4 shiftwidth=4 nolist noexpandtab
 
 " lua
 autocmd FileType lua setlocal shiftwidth=2
+
+" java
+autocmd FileType java let $JAVA_HOME = '/usr/local/var/jenv/versions/19'
 "}}}
 
 " Inline Plugins {{{
@@ -509,6 +511,24 @@ function s:LastInsertJump() abort
     call setpos('.', pos)
     let s:LI_Idx = (s:LI_Idx + 1) % len(s:LI_PosHist)
 endfunction
+" }}}
+
+" vim-rsi {{{
+inoremap        <C-A> <C-O>^
+inoremap   <C-X><C-A> <C-A>
+cnoremap        <C-A> <Home>
+cnoremap   <C-X><C-A> <C-A>
+
+inoremap <expr> <C-B> getline('.')=~'^\s*$'&&col('.')>strlen(getline('.'))?"0\<Lt>C-D>\<Lt>Esc>kJs":"\<Lt>Left>"
+cnoremap        <C-B> <Left>
+
+inoremap <expr> <C-D> col('.')>strlen(getline('.'))?"\<Lt>C-D>":"\<Lt>Del>"
+cnoremap <expr> <C-D> getcmdpos()>strlen(getcmdline())?"\<Lt>C-D>":"\<Lt>Del>"
+
+inoremap <expr> <C-E> col('.')>strlen(getline('.'))<bar><bar>pumvisible()?"\<Lt>C-E>":"\<Lt>End>"
+
+inoremap <expr> <C-F> col('.')>strlen(getline('.'))?"\<Lt>C-F>":"\<Lt>Right>"
+cnoremap <expr> <C-F> getcmdpos()>strlen(getcmdline())?&cedit:"\<Lt>Right>"
 " }}}
 " }}}
 
@@ -583,6 +603,7 @@ require('telescope').load_extension('fzf')
 require('telescope').load_extension('fzy_native')
 EOF
 nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files({ cwd = vim.fn.ProjectRoot() })<cr>
+nnoremap <silent>gp <cmd>lua require("telescope.builtin").find_files()<cr>
 nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
 nnoremap <silent>gb <cmd>lua require("telescope.builtin").lsp_document_symbols()<cr>
 nnoremap <silent>gB <cmd>lua require("telescope.builtin").lsp_dynamic_workspace_symbols()<cr>
@@ -622,10 +643,6 @@ endfo
 nnoremap <silent> gs  :Git status<CR>
 nnoremap <silent> gsb :Git blame<CR>
 autocmd FileType fugitiveblame nmap <buffer> q gq
-" }}}
-
-" Quickrun {{{
-nmap <leader>r <Plug>(quickrun)
 " }}}
 
 " CtrlSF {{{
@@ -765,6 +782,7 @@ lua << EOF
 local cmp = require'cmp'
 
 cmp.setup({
+    preselect = cmp.PreselectMode.Item,
     snippet = {
       -- REQUIRED - you must specify a snippet engine
       expand = function(args)
@@ -789,9 +807,9 @@ cmp.setup({
       ['<C-d>'] = cmp.mapping.scroll_docs(4),
     },
     sources = cmp.config.sources({
+      { name = 'vsnip' },
       { name = 'nvim_lsp' },
       { name = 'nvim_lsp_signature_help' },
-      { name = 'vsnip' },
     }, {
       { name = 'buffer' },
     })
@@ -845,7 +863,7 @@ EOF
 " nvim-treesitter {{{
 lua << EOF
 require('nvim-treesitter.configs').setup({
-  ensure_installed = { "c", "lua", "vim", "go", "javascript", "typescript", "rust", "python" },
+  ensure_installed = { "c", "lua", "vim", "go", "javascript", "typescript", "rust", "python", "java" },
   sync_install = false,
   highlight = {
     enable = true,
@@ -1139,6 +1157,17 @@ require 'colorizer'.setup {
     }
 }
 EOF
+" }}}
+
+" copilot.vim {{{
+let g:copilot_no_tab_map = v:true
+let g:copilot_assume_mapped = v:true
+inoremap <silent><script><expr> <C-E> <SID>CopilotAccept("\<End>")
+inoremap <silent><script><expr> <Right> <SID>CopilotAccept("\<Right>")
+function s:CopilotAccept(fallback) abort
+    let s = copilot#GetDisplayedSuggestion()
+    return !empty(s.text) ? copilot#Accept("") : a:fallback
+endfunction
 " }}}
 " }}}
 

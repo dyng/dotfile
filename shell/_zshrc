@@ -129,7 +129,7 @@ setopt share_history
 
 ### PATH {{{
 # add local bin
-export PATH="$PATH:$HOME/.local/bin"
+export PATH="$PATH:$HOME/.local/bin:/usr/local/bin"
 
 # add script dir
 export PATH="$PATH:$HOME/scripts"
