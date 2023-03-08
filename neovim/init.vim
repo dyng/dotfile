@@ -350,7 +350,7 @@ nnoremap <silent> yf :let @+ = expand('%')<CR>
 nnoremap <silent> yF :let @+ = expand('%:p')<CR>
 " Run current line
 nnoremap <silent> yr :exec getline('.') \| echo 'executed!'<CR>
-vnoremap <silent> R :source \| echo 'executed!'<CR>
+vnoremap <silent> R :source \| redraw \| echo 'executed!'<CR>
 " Shell-style shortcut in command mode
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
@@ -1065,10 +1065,7 @@ let g:matchup_matchparen_offscreen = { 'method': 'popup' }
 nnoremap gtt <Cmd>TestLast<CR>
 nnoremap gtn <Cmd>TestNearest<CR>
 nnoremap gtf <Cmd>TestFile<CR>
-function! TerminalHelpStrategy(cmd)
-    call TerminalSend(a:cmd . "\r")
-endfunction
-let g:test#custom_strategies = {"thelp": function("TerminalHelpStrategy")}
+let test#go#gotest#options = "-v"
 let g:test#strategy = "dispatch"
 " }}}
 
@@ -1162,8 +1159,12 @@ EOF
 " copilot.vim {{{
 let g:copilot_no_tab_map = v:true
 let g:copilot_assume_mapped = v:true
+let g:copilot_filetypes = {
+    \ 'markdown': v:true,
+    \ }
 inoremap <silent><script><expr> <C-E> <SID>CopilotAccept("\<End>")
 inoremap <silent><script><expr> <Right> <SID>CopilotAccept("\<Right>")
+imap <silent> <C-]> <Plug>(copilot-next)
 function s:CopilotAccept(fallback) abort
     let s = copilot#GetDisplayedSuggestion()
     return !empty(s.text) ? copilot#Accept("") : a:fallback
