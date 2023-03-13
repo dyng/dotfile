@@ -43,7 +43,6 @@ zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "djui/alias-tips"
-zplug "rupa/z", use:z.sh
 zplug "zsh-users/zsh-autosuggestions"
 zplug "reegnz/jq-zsh-plugin"
 
@@ -102,15 +101,6 @@ bindkey '^J' history-substring-search-down
 #}}}
 
 ### Plugin Config {{{
-
-# bullet-train
-BULLETTRAIN_DIR_EXTENDED=2
-BULLETTRAIN_PROMPT_ORDER=(
-  status
-  time
-  dir
-  git
-)
 
 #}}}
 
@@ -288,9 +278,14 @@ if hash gpg &>/dev/null; then
 fi
 
 # neovim
-if which nvim &>/dev/null; then
+if hash nvim &>/dev/null; then
     export EDITOR="nvim"
     alias vim="nvim"
+fi
+
+# zoxide
+if hash zoxide &>/dev/null; then
+    eval "$(zoxide init zsh)"
 fi
 
 # }}}

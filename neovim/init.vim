@@ -543,7 +543,7 @@ smap <expr> <C-k> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-k>'
 " }}}
 
 " nvim-tree {{{
-nnoremap <silent> gn :NvimTreeFindFile<cr>
+nnoremap <silent> gn :NvimTreeFindFile!<cr>
 nnoremap <silent> gN :NvimTreeOpen .<cr>
 lua << EOF
 require("nvim-tree").setup{
@@ -557,9 +557,8 @@ require("nvim-tree").setup{
         },
     },
     update_focused_file = {
-        enable = true,
-        update_root = true,
-        ignore_list = {},
+        enable = false,
+        update_root = false,
     },
     actions = {
         open_file = {
