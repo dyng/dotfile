@@ -84,6 +84,8 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 
 " Language Specific Plugins
 Plug '~/Dropbox/Projects/dejava.vim'
 Plug 'nathangrigg/vim-beancount'
+Plug 'rvmelkonian/move.vim'
+Plug 'simrat39/rust-tools.nvim'
 
 " Colorschemes
 Plug 'tomasr/molokai'
@@ -770,6 +772,35 @@ require("mason-lspconfig").setup_handlers({
             on_attach = on_attach,
             capabilities = capabilities,
         }
+    end,
+    -- using rust-tools.nvim
+    ["rust_analyzer"] = function ()
+        local rt = require("rust-tools")
+        rt.setup {
+            server = {
+                on_attach = function(client, bufnr)
+                    vim.keymap.set("n", "gk", rt.hover_actions.hover_actions, { buffer = bufnr })
+                    on_attach(client, bufnr)
+                end,
+                capabilities = capabilities,
+            },
+            tools = {
+                hover_actions = {
+                    auto_focus = true,
+                },
+            },
+            dap = {
+                adapter = {
+                    type = "server",
+                    port = "${port}",
+                    host = "127.0.0.1",
+                    executable = {
+                        command = "codelldb",
+                        args = { "--port", "${port}" },
+                    },
+                },
+            },
+        }
     end
 })
 EOF
@@ -907,7 +938,7 @@ set_dap_keymap('n', '<down>', require'dap'.step_over)
 set_dap_keymap('n', '<right>', require'dap'.step_into)
 set_dap_keymap('n', '<left>', require'dap'.step_out)
 set_dap_keymap('n', 'J', require'dap'.continue)
-set_dap_keymap('n', 'R', require'dap'.run_to_cursor)
+set_dap_keymap('n', 'C', require'dap'.run_to_cursor)
 set_dap_keymap('n', 'T', require'dap'.terminate)
 EOF
 
@@ -1018,7 +1049,7 @@ EOF
 " }}}}
 
 " dap-go {{{{
-nnoremap <silent> gut <Cmd>lua require('dap-go').debug_test()<CR>
+autocmd FileType go nnoremap <buffer><silent> gun <Cmd>lua require('dap-go').debug_test()<CR>
 lua << EOF
 require('dap-go').setup()
 EOF
