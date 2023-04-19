@@ -39,6 +39,11 @@ elif which go &>/dev/null; then
     export PATH="$PATH:$GOPATH/bin"
 fi
 
+# rust (cargo)
+if [[ -e "$HOME/.cargo/env" ]]; then
+    . "$HOME/.cargo/env"
+fi
+
 # jenv && java
 export JENV_ROOT=/usr/local/var/jenv
 if which jenv &>/dev/null; then

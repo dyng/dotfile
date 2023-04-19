@@ -779,15 +779,17 @@ require("mason-lspconfig").setup_handlers({
         rt.setup {
             server = {
                 on_attach = function(client, bufnr)
-                    vim.keymap.set("n", "gk", rt.hover_actions.hover_actions, { buffer = bufnr })
                     on_attach(client, bufnr)
+                    vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
                 end,
-                capabilities = capabilities,
-            },
-            tools = {
-                hover_actions = {
-                    auto_focus = true,
+                settings = {
+                    ["rust-analyzer"] = {
+                        procMacro = {
+                            enable = true,
+                        },
+                    },
                 },
+                capabilities = capabilities,
             },
             dap = {
                 adapter = {
