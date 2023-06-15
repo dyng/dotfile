@@ -88,6 +88,9 @@ if [[ ! -e $HOME/.iterm2_shell_integration.zsh ]]; then
 fi
 source_if_exists $HOME/.iterm2_shell_integration.zsh
 
+# load secrets
+source_if_exists $HOME/.secrets
+
 # }}}
 
 ### Key binding {{{
@@ -131,16 +134,10 @@ if [[ -e /usr/local/bin/brew ]]; then
 
     # set root Application as default target
     export HOMEBREW_CASK_OPTS="--appdir=/Applications"
-
-    # set ustc as alternative repo
-    export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 fi
 
 if [[ -e /opt/homebrew/bin/brew ]]; then
     eval $(/opt/homebrew/bin/brew shellenv)
-
-    # set ustc as alternative repo
-    export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles
 fi
 
 export HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile

@@ -44,6 +44,7 @@ Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kevinhwang91/nvim-bqf'
 Plug 'mfussenegger/nvim-dap'
     \| Plug 'rcarriga/nvim-dap-ui'
+    \| Plug 'jay-babu/mason-nvim-dap.nvim'
     \| Plug 'mxsdev/nvim-dap-vscode-js'
     \| Plug 'leoluz/nvim-dap-go'
 Plug 'jose-elias-alvarez/null-ls.nvim'
@@ -957,6 +958,30 @@ call sign_define('DapBreakpointRejected', {'text': '●', 'texthl': 'NvimDapBrea
 call sign_define('DapBreakpointCondition', {'text': '◐', 'texthl': 'NvimDapBreakpoint'})
 call sign_define('DapStopped', {'text': '⮕', 'texthl': 'NvimDapStopped'})
 " }}}}
+
+" mason-nvim-dap {{{
+lua <<EOF
+require ('mason-nvim-dap').setup({
+    handlers = {
+        function(config)
+          -- all sources with no handler get passed here
+          require('mason-nvim-dap').default_setup(config)
+        end,
+        python = function(config)
+            config.adapters = {
+                type = "executable",
+                command = "python3",
+                args = {
+                    "-m",
+                    "debugpy.adapter",
+                },
+            }
+            require('mason-nvim-dap').default_setup(config)
+        end,
+    },
+})
+EOF
+" }}}
 
 " nvim-dap-ui {{{{
 nnoremap <M-r> <Cmd>lua require("dapui").float_element("repl")<CR>
