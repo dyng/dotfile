@@ -1218,6 +1218,7 @@ let g:copilot_no_tab_map = v:true
 let g:copilot_assume_mapped = v:true
 let g:copilot_filetypes = {
     \ 'markdown': v:true,
+    \ 'dap-repl': v:false,
     \ }
 inoremap <silent><script><expr> <C-E> <SID>CopilotAccept("\<End>")
 inoremap <silent><script><expr> <Right> <SID>CopilotAccept("\<Right>")
