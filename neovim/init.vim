@@ -64,6 +64,7 @@ Plug 'gbprod/yanky.nvim'
 Plug 'dyng/vim-auto-save'
 Plug 'NvChad/nvim-colorizer.lua'
 Plug 'github/copilot.vim'
+Plug 'kosayoda/nvim-lightbulb'
 
 Plug 'dyng/auto_mkdir'
 Plug 'easymotion/vim-easymotion'
@@ -87,6 +88,7 @@ Plug '~/Dropbox/Projects/dejava.vim'
 Plug 'nathangrigg/vim-beancount'
 Plug 'rvmelkonian/move.vim'
 Plug 'simrat39/rust-tools.nvim'
+Plug 'jmcantrell/vim-virtualenv'
 
 " Colorschemes
 Plug 'tomasr/molokai'
@@ -552,12 +554,6 @@ lua << EOF
 require("nvim-tree").setup{
     view = {
         adaptive_size = true,
-        mappings = {
-            list = {
-                { key = "<cr>", action = "edit_no_picker" },
-                { key = "U", action = "dir_up" },
-            },
-        },
     },
     update_focused_file = {
         enable = false,
@@ -574,6 +570,17 @@ require("nvim-tree").setup{
     git = {
         enable = true
     },
+    on_attach = function(bufnr)
+        local api = require('nvim-tree.api')
+
+        local function opts(desc)
+          return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+        end
+
+        api.config.mappings.default_on_attach(bufnr)
+
+        vim.keymap.set('n', '<cr>', api.node.open.no_window_picker, opts('Open: No Window Picker'))
+    end,
 }
 EOF
 " }}}
@@ -1227,6 +1234,14 @@ function s:CopilotAccept(fallback) abort
     let s = copilot#GetDisplayedSuggestion()
     return !empty(s.text) ? copilot#Accept("") : a:fallback
 endfunction
+" }}}
+
+" nvim-lightbulb {{{
+lua <<EOF
+require("nvim-lightbulb").setup({
+  autocmd = { enabled = true }
+})
+EOF
 " }}}
 " }}}
 
