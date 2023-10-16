@@ -45,6 +45,7 @@ zplug "zsh-users/zsh-syntax-highlighting"
 zplug "djui/alias-tips"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "reegnz/jq-zsh-plugin"
+zplug "MichaelAquilina/zsh-autoswitch-virtualenv", defer:2
 
 # Theme
 # zplug "caiogondim/bullet-train.zsh", use:bullet-train.zsh-theme, defer:3

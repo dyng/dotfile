@@ -65,6 +65,7 @@ Plug 'dyng/vim-auto-save'
 Plug 'NvChad/nvim-colorizer.lua'
 Plug 'github/copilot.vim'
 Plug 'kosayoda/nvim-lightbulb'
+Plug 'inkarkat/vim-ExtractMatches'
 
 Plug 'dyng/auto_mkdir'
 Plug 'easymotion/vim-easymotion'
@@ -772,7 +773,9 @@ end
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-require("mason").setup()
+require("mason").setup({
+    log_level = vim.log.levels.DEBUG
+})
 require("mason-lspconfig").setup()
 require("mason-lspconfig").setup_handlers({
     function (server_name)
