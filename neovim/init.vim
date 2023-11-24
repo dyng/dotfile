@@ -33,7 +33,7 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/vim-vsnip'
     \| Plug 'hrsh7th/cmp-vsnip'
     \| Plug 'hrsh7th/vim-vsnip-integ'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.0' }
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.3' }
     \| Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
     \| Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'rafamadriz/friendly-snippets'
@@ -202,10 +202,6 @@ if exists('g:gonvim_running')
     GuiMacmeta 1
 endif
 " }}}
-" }}}
-
-" Buffer {{{
-set hidden
 " }}}
 
 " Syntax {{{
@@ -397,7 +393,7 @@ augroup END
 
 " persistent undo
 if has("persistent_undo")
-    exec "set undodir='" . stdpath('data') . "/undodir'"
+    exec "set undodir=" . stdpath('data') . "/undodir"
 endif
 
 " language of help doc
@@ -1107,9 +1103,9 @@ EOF
 " vim-illuminate {{{
 augroup illuminate_augroup
     autocmd!
-    autocmd VimEnter * hi! link IlluminatedWordText Underlined
-    autocmd VimEnter * hi! link IlluminatedWordRead Underlined
-    autocmd VimEnter * hi! link IlluminatedWordWrite Underlined
+    autocmd VimEnter * hi! link IlluminatedWordText MatchParen
+    autocmd VimEnter * hi! link IlluminatedWordRead MatchParen
+    autocmd VimEnter * hi! link IlluminatedWordWrite MatchParen
 augroup END
 lua <<EOF
 require('illuminate').configure({
@@ -1119,6 +1115,9 @@ require('illuminate').configure({
             'lsp',
             'treesitter',
         },
+    },
+    filetypes_denylist = {
+        'NvimTree',
     },
 })
 EOF
