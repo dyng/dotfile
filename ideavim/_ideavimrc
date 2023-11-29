@@ -22,10 +22,18 @@ nnoremap <C-L> <C-W>l
 nmap <C-I> <Action>(Forward)
 nmap <C-O> <Action>(Back)
 
+" Search
+nmap <C-P> <Action>(SearchEverywhere)
+
 " Lsp-like mappings
 nmap gd <Action>(GotoDeclaration)
 nmap gr <Action>(FindUsages)
 nmap gi <Action>(GotoImplementation)
+nmap gb <Action>(FileStructurePopup)
+nmap gB <Action>(GotoSymbol)
+
+" Copilot
+imap <C-E> <Action>(copilot.applyInlaysNextLine)
 
 " Terminal
 nmap <A-/> <Action>(ActivateTerminalToolWindow)
