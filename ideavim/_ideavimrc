@@ -31,12 +31,10 @@ nmap gr <Action>(FindUsages)
 nmap gi <Action>(GotoImplementation)
 nmap gb <Action>(FileStructurePopup)
 nmap gB <Action>(GotoSymbol)
+nmap ern <Action>(RenameElement)
 
 " Copilot
-imap <C-E> <Action>(copilot.applyInlaysNextLine)
-
-" Terminal
-nmap <A-/> <Action>(ActivateTerminalToolWindow)
+imap <C-E> <Action>(copilot.applyInlays)
 
 """""""""""""""""""""""""""""""
 " Settings
