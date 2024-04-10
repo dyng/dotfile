@@ -33,7 +33,7 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/vim-vsnip'
     \| Plug 'hrsh7th/cmp-vsnip'
     \| Plug 'hrsh7th/vim-vsnip-integ'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.3' }
+Plug 'nvim-telescope/telescope.nvim'
     \| Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
     \| Plug 'nvim-telescope/telescope-fzy-native.nvim'
 Plug 'rafamadriz/friendly-snippets'
@@ -50,7 +50,6 @@ Plug 'mfussenegger/nvim-dap'
 Plug 'jose-elias-alvarez/null-ls.nvim'
 Plug 'RRethy/vim-illuminate'
 Plug 'andymass/vim-matchup'
-Plug 'dylnmc/synstack.vim'
 Plug 'vim-test/vim-test'
 Plug 'dyng/vim-bookmarks'
     \| Plug 'tom-anders/telescope-vim-bookmarks.nvim'
@@ -90,6 +89,7 @@ Plug 'nathangrigg/vim-beancount'
 Plug 'rvmelkonian/move.vim'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'jmcantrell/vim-virtualenv'
+Plug 'luckasRanarison/nvim-devdocs'
 
 " Colorschemes
 Plug 'tomasr/molokai'
@@ -426,7 +426,7 @@ endfunction
 " }}}
 
 " ProjectRoot {{{
-let s:rootmarkers = ['.git', '.svn', '.hg', '.project', '.root']
+let s:rootmarkers = ['.git', '.svn', '.hg']
 
 function ProjectRoot() abort
     let name = expand('%:p')
@@ -613,8 +613,6 @@ nnoremap <silent>gp <cmd>lua require("telescope.builtin").find_files()<cr>
 nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
 nnoremap <silent>gb <cmd>lua require("telescope.builtin").lsp_document_symbols()<cr>
 nnoremap <silent>gB <cmd>lua require("telescope.builtin").lsp_dynamic_workspace_symbols()<cr>
-" nnoremap <silent>gB <cmd>lua vim.ui.input({ prompt = 'Query Name' },
-"             \ function(q) require("telescope.builtin").lsp_workspace_symbols({ query = q }) end)<cr>
 " }}}
 
 " undotree {{{
@@ -902,7 +900,7 @@ EOF
 " nvim-treesitter {{{
 lua << EOF
 require('nvim-treesitter.configs').setup({
-  ensure_installed = { "c", "lua", "vim", "go", "javascript", "typescript", "rust", "python", "java" },
+  ensure_installed = { "c", "lua", "vim", "javascript", "typescript", "html", "rust", "python", "java", "go" },
   sync_install = false,
   highlight = {
     enable = true,
@@ -1241,9 +1239,32 @@ endfunction
 " nvim-lightbulb {{{
 lua <<EOF
 require("nvim-lightbulb").setup({
-  autocmd = { enabled = true }
+  sign = {
+      enabled = false,
+  },
+  virtual_text = {
+      enabled = true,
+  },
+  autocmd = {
+      enabled = true
+  },
+  ignore = {
+      actions_without_kind = true,
+  }
 })
 EOF
+" }}}
+
+" nvim-devdocs {{{
+lua <<EOF
+require('nvim-devdocs').setup({
+    wrap = true,
+    mappings = {
+        open_in_browser = '<cr>',
+    },
+})
+EOF
+nnoremap <silent> <A-p> :DevdocsOpen<CR>
 " }}}
 " }}}
 
