@@ -63,6 +63,7 @@ Plug 'gbprod/yanky.nvim'
 Plug 'dyng/vim-auto-save'
 Plug 'NvChad/nvim-colorizer.lua'
 Plug 'github/copilot.vim'
+    \| Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'canary' }
 Plug 'kosayoda/nvim-lightbulb'
 Plug 'inkarkat/vim-ExtractMatches'
 
@@ -89,7 +90,6 @@ Plug 'nathangrigg/vim-beancount'
 Plug 'rvmelkonian/move.vim'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'jmcantrell/vim-virtualenv'
-Plug 'luckasRanarison/nvim-devdocs'
 
 " Colorschemes
 Plug 'tomasr/molokai'
@@ -168,7 +168,7 @@ colorscheme onedark
 " Font
 if has('gui_macvim')
     set guifont=Inconsolata\ Nerd\ Font\ Mono:h16
-elseif has("gui_vimr") || exists('g:neovide') || exists('g:gonvim_running')
+elseif exists("g:gui_vimr") || exists('g:neovide') || exists('g:gonvim_running')
     set guifont=BlexMono\ Nerd\ Font\ Mono:h14
 else
     set guifont=Hack:h14
@@ -375,6 +375,10 @@ cab X x
 " }}}
 
 " Misc {{{
+
+" split window at right side
+set splitright
+
 " increase updatetime
 set updatetime=100
 
@@ -770,45 +774,46 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 require("mason").setup({
     log_level = vim.log.levels.DEBUG
 })
-require("mason-lspconfig").setup()
-require("mason-lspconfig").setup_handlers({
-    function (server_name)
-        require("lspconfig")[server_name].setup {
-            on_attach = on_attach,
-            capabilities = capabilities,
-        }
-    end,
-    -- using rust-tools.nvim
-    ["rust_analyzer"] = function ()
-        local rt = require("rust-tools")
-        rt.setup {
-            server = {
-                on_attach = function(client, bufnr)
-                    on_attach(client, bufnr)
-                    vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
-                end,
-                settings = {
-                    ["rust-analyzer"] = {
-                        procMacro = {
-                            enable = true,
+require("mason-lspconfig").setup({
+    handlers = {
+        function (server_name)
+            require("lspconfig")[server_name].setup {
+                on_attach = on_attach,
+                capabilities = capabilities,
+            }
+        end,
+        -- using rust-tools.nvim
+        ["rust_analyzer"] = function ()
+            local rt = require("rust-tools")
+            rt.setup {
+                server = {
+                    on_attach = function(client, bufnr)
+                        on_attach(client, bufnr)
+                        vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
+                    end,
+                    settings = {
+                        ["rust-analyzer"] = {
+                            procMacro = {
+                                enable = true,
+                            },
+                        },
+                    },
+                    capabilities = capabilities,
+                },
+                dap = {
+                    adapter = {
+                        type = "server",
+                        port = "${port}",
+                        host = "127.0.0.1",
+                        executable = {
+                            command = "codelldb",
+                            args = { "--port", "${port}" },
                         },
                     },
                 },
-                capabilities = capabilities,
-            },
-            dap = {
-                adapter = {
-                    type = "server",
-                    port = "${port}",
-                    host = "127.0.0.1",
-                    executable = {
-                        command = "codelldb",
-                        args = { "--port", "${port}" },
-                    },
-                },
-            },
-        }
-    end
+            }
+        end
+    }
 })
 EOF
 " }}}
@@ -900,7 +905,7 @@ EOF
 " nvim-treesitter {{{
 lua << EOF
 require('nvim-treesitter.configs').setup({
-  ensure_installed = { "c", "lua", "vim", "javascript", "typescript", "html", "rust", "python", "java", "go" },
+  ensure_installed = { "c", "lua", "vim", "javascript", "typescript", "html", "rust", "python", "java", "go", "markdown", "markdown_inline" },
   sync_install = false,
   highlight = {
     enable = true,
@@ -1116,6 +1121,7 @@ require('illuminate').configure({
     },
     filetypes_denylist = {
         'NvimTree',
+        'copilot-chat',
     },
 })
 EOF
@@ -1236,6 +1242,39 @@ function s:CopilotAccept(fallback) abort
 endfunction
 " }}}
 
+" CopilotChat.nvim {{{
+lua <<EOF
+require("CopilotChat").setup {
+    auto_follow_cursor = false,
+    auto_insert_mode = true,
+    show_help = false,
+    context = 'buffer',
+    mappings = {
+        submit_prompt = {
+            normal = '<CR>',
+            insert = '<CR>'
+        },
+        reset = {
+            normal = '',
+            insert = '<C-l>'
+        },
+    },
+}
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = 'copilot-chat',
+    callback = function()
+        print('in copilot-chat')
+        vim.keymap.set('n', 'i', function()
+            vim.cmd.normal('G$')
+            vim.cmd('startinsert!')
+        end, { silent = true, buffer = true })
+    end
+})
+EOF
+nnoremap <silent> P :CopilotChatToggle<CR>
+vnoremap <silent> P :CopilotChatExplain<CR>
+" }}}
+
 " nvim-lightbulb {{{
 lua <<EOF
 require("nvim-lightbulb").setup({
@@ -1253,18 +1292,6 @@ require("nvim-lightbulb").setup({
   }
 })
 EOF
-" }}}
-
-" nvim-devdocs {{{
-lua <<EOF
-require('nvim-devdocs').setup({
-    wrap = true,
-    mappings = {
-        open_in_browser = '<cr>',
-    },
-})
-EOF
-nnoremap <silent> <A-p> :DevdocsOpen<CR>
 " }}}
 " }}}
 
