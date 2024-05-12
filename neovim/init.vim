@@ -43,6 +43,7 @@ Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'kevinhwang91/nvim-bqf'
 Plug 'mfussenegger/nvim-dap'
+    \| Plug 'nvim-neotest/nvim-nio'
     \| Plug 'rcarriga/nvim-dap-ui'
     \| Plug 'jay-babu/mason-nvim-dap.nvim'
     \| Plug 'mxsdev/nvim-dap-vscode-js'
@@ -65,7 +66,6 @@ Plug 'NvChad/nvim-colorizer.lua'
 Plug 'github/copilot.vim'
     \| Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'canary' }
 Plug 'kosayoda/nvim-lightbulb'
-Plug 'inkarkat/vim-ExtractMatches'
 
 Plug 'dyng/auto_mkdir'
 Plug 'easymotion/vim-easymotion'
@@ -76,7 +76,8 @@ Plug '~/Dropbox/Projects/CtrlSF'
 Plug '~/Dropbox/Projects/formatiu.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'mg979/vim-visual-multi'
-Plug 'inkarkat/vim-mark' | Plug 'inkarkat/vim-ingo-library'
+Plug 'inkarkat/vim-mark'
+    \| Plug 'inkarkat/vim-ingo-library'
 Plug 'AndrewRadev/linediff.vim'
 Plug 'vim-scripts/ReloadScript'
 Plug 'Raimondi/delimitMate'
@@ -86,8 +87,6 @@ Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 
 
 " Language Specific Plugins
 Plug '~/Dropbox/Projects/dejava.vim'
-Plug 'nathangrigg/vim-beancount'
-Plug 'rvmelkonian/move.vim'
 Plug 'simrat39/rust-tools.nvim'
 Plug 'jmcantrell/vim-virtualenv'
 
@@ -590,6 +589,7 @@ EOF
 lua << EOF
 require('telescope').setup{
     defaults = {
+        path_display = { 'filename_first' },
         mappings = {
             i = {
                 ["<esc>"] = require('telescope.actions').close,
