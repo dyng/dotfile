@@ -951,7 +951,7 @@ set_dap_keymap('n', '<right>', require'dap'.step_into)
 set_dap_keymap('n', '<left>', require'dap'.step_out)
 set_dap_keymap('n', 'J', require'dap'.continue)
 set_dap_keymap('n', 'C', require'dap'.run_to_cursor)
-set_dap_keymap('n', 'T', require'dap'.terminate)
+set_dap_keymap('n', '<C-c>', require'dap'.terminate)
 EOF
 
 " commands
@@ -993,20 +993,13 @@ EOF
 " }}}
 
 " nvim-dap-ui {{{{
-nnoremap <M-r> <Cmd>lua require("dapui").float_element("repl")<CR>
-nnoremap <M-k> <Cmd>lua require("dapui").eval()<CR>
-vnoremap <M-k> <Cmd>lua require("dapui").eval()<CR>
 lua << EOF
 local dap, dapui = require("dap"), require("dapui")
 dapui.setup({
   icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
   mappings = {
-    expand = "<CR>",
-    open = "o",
-    remove = "d",
-    edit = "e",
-    repl = "r",
-    toggle = "t",
+    expand = "o",
+    open = "<cr>",
   },
   layouts = {
     {
@@ -1014,37 +1007,22 @@ dapui.setup({
       size = 40,
       elements = {
         { id = "stacks", size = 0.4 },
-        { id = "scopes", size = 0.3 },
+        { id = "breakpoints", size = 0.3 },
         { id = "watches", size = 0.3 },
       },
     },
     {
       position = "bottom",
-      size = 0.25,
+      size = 0.3,
       elements = {
-        { id = "breakpoints", size = 0.3 },
-        { id = "repl", size = 0.7 },
+        { id = "scopes", size = 0.5 },
+        { id = "console", size = 0.5 },
       },
     },
   },
-  floating = {
-    mappings = {
-      close = { "q", "<Esc>" }
-    }
-  },
   controls = {
     enabled = true,
-    element = "repl",
-    icons = {
-      pause = "",
-      play = "",
-      step_into = "",
-      step_over = "",
-      step_out = "",
-      step_back = "",
-      run_last = "",
-      terminate = "",
-    },
+    element = "console",
   },
 })
 dap.listeners.after.event_initialized["dapui_config"] = function()
@@ -1053,6 +1031,8 @@ end
 dap.listeners.before.event_terminated["dapui_config"] = function()
   dapui.close()
 end
+set_dap_keymap({'n', 'v'}, 'V', dapui.eval)
+set_dap_keymap('n', 'R', function() dapui.float_element('repl') end)
 EOF
 " }}}}
 
