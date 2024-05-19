@@ -45,8 +45,8 @@ Plug 'kevinhwang91/nvim-bqf'
 Plug 'mfussenegger/nvim-dap'
     \| Plug 'nvim-neotest/nvim-nio'
     \| Plug 'rcarriga/nvim-dap-ui'
+    \| Plug 'rcarriga/cmp-dap'
     \| Plug 'jay-babu/mason-nvim-dap.nvim'
-    \| Plug 'mxsdev/nvim-dap-vscode-js'
     \| Plug 'leoluz/nvim-dap-go'
 Plug 'jose-elias-alvarez/null-ls.nvim'
 Plug 'RRethy/vim-illuminate'
@@ -822,39 +822,51 @@ EOF
 lua << EOF
 -- Setup nvim-cmp.
 local cmp = require'cmp'
-
 cmp.setup({
-    preselect = cmp.PreselectMode.Item,
-    snippet = {
-      -- REQUIRED - you must specify a snippet engine
-      expand = function(args)
-        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
-      end,
-    },
-    window = {
-      -- completion = cmp.config.window.bordered(),
-      -- documentation = cmp.config.window.bordered(),
-    },
-    matching = {
-        disallow_fuzzy_matching = false,
-    },
-    mapping = {
-      ['<TAB>'] = cmp.mapping.select_next_item(),
-      ['<Down>'] = cmp.mapping.select_next_item(),
-      ['<S-TAB>'] = cmp.mapping.select_prev_item(),
-      ['<Up>'] = cmp.mapping.select_prev_item(),
-      ['<CR>'] = cmp.mapping.confirm({ select = false }),
-      ['<C-c>'] = cmp.mapping.abort(),
-      ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-      ['<C-d>'] = cmp.mapping.scroll_docs(4),
-    },
-    sources = cmp.config.sources({
-      { name = 'vsnip' },
-      { name = 'nvim_lsp' },
-      { name = 'nvim_lsp_signature_help' },
-    }, {
-      { name = 'buffer' },
-    })
+  preselect = cmp.PreselectMode.Item,
+  snippet = {
+    -- REQUIRED - you must specify a snippet engine
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+    end,
+  },
+  window = {
+    -- completion = cmp.config.window.bordered(),
+    -- documentation = cmp.config.window.bordered(),
+  },
+  matching = {
+      disallow_fuzzy_matching = false,
+  },
+  mapping = {
+    ['<TAB>'] = cmp.mapping.select_next_item(),
+    ['<Down>'] = cmp.mapping.select_next_item(),
+    ['<S-TAB>'] = cmp.mapping.select_prev_item(),
+    ['<Up>'] = cmp.mapping.select_prev_item(),
+    ['<CR>'] = cmp.mapping.confirm({ select = false }),
+    ['<C-c>'] = cmp.mapping.abort(),
+    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-d>'] = cmp.mapping.scroll_docs(4),
+  },
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'nvim_lsp_signature_help' },
+    { name = 'vsnip' },
+  }, {
+    { name = 'buffer' },
+  })
+})
+
+-- cmp-dap
+require("cmp").setup({
+  enabled = function()
+    return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt'
+      or require("cmp_dap").is_dap_buffer()
+  end,
+})
+require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+  sources = {
+    { name = "dap" },
+  },
 })
 
 cmp.setup.cmdline(':', {
@@ -1033,34 +1045,6 @@ dap.listeners.before.event_terminated["dapui_config"] = function()
 end
 set_dap_keymap({'n', 'v'}, 'V', dapui.eval)
 set_dap_keymap('n', 'R', function() dapui.float_element('repl') end)
-EOF
-" }}}}
-
-" dap-vscode-js {{{{
-lua << EOF
-require("dap-vscode-js").setup({
-  debugger_cmd = { "js-debug-adapter" },
-  adapters = { 'pwa-node' },
-})
-
-for _, language in ipairs({ "typescript", "javascript" }) do
-  require("dap").configurations[language] = {
-      {
-        type = "pwa-node",
-        request = "launch",
-        name = "Launch file",
-        program = "${file}",
-        cwd = "${workspaceFolder}",
-      },
-      {
-        type = "pwa-node",
-        request = "attach",
-        name = "Attach",
-        processId = require'dap.utils'.pick_process,
-        cwd = "${workspaceFolder}",
-      }
-    }
-  end
 EOF
 " }}}}
 
