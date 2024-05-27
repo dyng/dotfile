@@ -48,7 +48,8 @@ Plug 'mfussenegger/nvim-dap'
     \| Plug 'rcarriga/cmp-dap'
     \| Plug 'jay-babu/mason-nvim-dap.nvim'
     \| Plug 'leoluz/nvim-dap-go'
-Plug 'jose-elias-alvarez/null-ls.nvim'
+Plug 'nvimtools/none-ls.nvim'
+    \| Plug 'jay-babu/mason-null-ls.nvim'
 Plug 'RRethy/vim-illuminate'
 Plug 'andymass/vim-matchup'
 Plug 'vim-test/vim-test'
@@ -167,7 +168,7 @@ colorscheme onedark
 " Font
 if has('gui_macvim')
     set guifont=Inconsolata\ Nerd\ Font\ Mono:h16
-elseif exists("g:gui_vimr") || exists('g:neovide') || exists('g:gonvim_running')
+elseif exists("g:gui_vimr")
     set guifont=BlexMono\ Nerd\ Font\ Mono:h14
 else
     set guifont=Hack:h14
@@ -181,26 +182,6 @@ for type, icon in pairs(signs) do
   vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = "" })
 end
 EOF
-
-" macvim {{{
-if has('gui_macvim')
-    " use option key as meta key in MacVim
-    set macmeta
-endif
-" }}}
-
-" neovide {{{
-if exists("g:neovide")
-    let g:neovide_input_macos_alt_is_meta = v:true
-    let g:neovide_cursor_animation_length = 0
-endif
-" }}}
-
-" goneovim {{{
-if exists('g:gonvim_running')
-    GuiMacmeta 1
-endif
-" }}}
 " }}}
 
 " Syntax {{{
@@ -351,7 +332,7 @@ nnoremap <silent> yf :let @+ = expand('%')<CR>
 nnoremap <silent> yF :let @+ = expand('%:p')<CR>
 " Run current line
 nnoremap <silent> yr :exec getline('.') \| echo 'executed!'<CR>
-vnoremap <silent> R :source \| redraw \| echo 'executed!'<CR>
+vnoremap <silent> Yr :source \| redraw \| echo 'executed!'<CR>
 " Shell-style shortcut in command mode
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
@@ -765,7 +746,7 @@ local on_attach = function(client, bufnr)
   vim.keymap.set('n', 'gE', vim.diagnostic.setqflist, bufopts)
   vim.keymap.set('n', 'E', vim.diagnostic.open_float, bufopts)
   vim.keymap.set('n', 'ea', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set({'n', 'v'}, 'ef', function() vim.lsp.buf.format { async = true } end, bufopts)
+  vim.keymap.set({'n', 'v'}, 'ef', function() vim.lsp.buf.format { async = false } end, bufopts)
   vim.keymap.set('n', 'ern', vim.lsp.buf.rename, bufopts)
 end
 
@@ -958,6 +939,7 @@ end
 vim.keymap.set('n', 'guu', require'dap'.run_last, { silent=true })
 vim.keymap.set('n', 'guj', require'dap'.continue, { silent=true })
 vim.keymap.set('n', 'B', require'dap'.toggle_breakpoint, { silent=true })
+set_dap_keymap('n', '<up>', require'dap'.step_back)
 set_dap_keymap('n', '<down>', require'dap'.step_over)
 set_dap_keymap('n', '<right>', require'dap'.step_into)
 set_dap_keymap('n', '<left>', require'dap'.step_out)
@@ -1056,12 +1038,22 @@ EOF
 " }}}}
 " }}}
 
-" null-ls {{{
+" none-ls & mason-null-ls {{{
 lua << EOF
+require("mason-null-ls").setup({
+    ensure_installed = {
+        "golangci-lint",
+        "black",
+        "prettierd",
+        "stylua",
+    },
+    automatic_installation = false,
+    handlers = {},
+})
 local null_ls = require("null-ls")
 null_ls.setup({
     sources = {
-        null_ls.builtins.diagnostics.golangci_lint,
+        -- Anything not supported by mason.
     },
 })
 EOF
@@ -1235,8 +1227,9 @@ vim.api.nvim_create_autocmd('FileType', {
     end
 })
 EOF
-nnoremap <silent> P :CopilotChatToggle<CR>
-vnoremap <silent> P :CopilotChatExplain<CR>
+nnoremap <silent> <A-'> :CopilotChatToggle<CR>
+inoremap <silent> <A-'> <C-O>:CopilotChatToggle<CR>
+vnoremap <silent> <A-'> :CopilotChatExplain<CR>
 " }}}
 
 " nvim-lightbulb {{{
