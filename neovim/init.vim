@@ -55,7 +55,7 @@ Plug 'andymass/vim-matchup'
 Plug 'vim-test/vim-test'
 Plug 'dyng/vim-bookmarks'
     \| Plug 'tom-anders/telescope-vim-bookmarks.nvim'
-Plug 'skywind3000/vim-terminal-help'
+Plug 'akinsho/toggleterm.nvim'
 Plug 'mhinz/vim-signify'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-dispatch'
@@ -192,6 +192,22 @@ set completeopt=menu,menuone,noselect
 set wildmenu
 " }}}
 
+" Terminal {{{
+tnoremap <A-q> <C-\><C-n>
+tnoremap <silent> <A-h> <C-\><C-N><C-w>h
+tnoremap <silent> <A-j> <C-\><C-N><C-w>j
+tnoremap <silent> <A-k> <C-\><C-N><C-w>k
+tnoremap <silent> <A-l> <C-\><C-N><C-w>l
+inoremap <silent> <A-h> <C-\><C-N><C-w>h
+inoremap <silent> <A-j> <C-\><C-N><C-w>j
+inoremap <silent> <A-k> <C-\><C-N><C-w>k
+inoremap <silent> <A-l> <C-\><C-N><C-w>l
+nnoremap <silent> <A-h> <C-w>h
+nnoremap <silent> <A-j> <C-w>j
+nnoremap <silent> <A-k> <C-w>k
+nnoremap <silent> <A-l> <C-w>l
+" }}}
+
 " Maps {{{
 let mapleader = ","
 
@@ -230,19 +246,6 @@ nnoremap <silent> <C-H> :wincmd h<CR>
 nnoremap <silent> <C-J> :wincmd j<CR>
 nnoremap <silent> <C-K> :wincmd k<CR>
 nnoremap <silent> <C-L> :wincmd l<CR>
-" Switching in terminal
-tnoremap <silent> <A-h> <C-\><C-N><C-w>h
-tnoremap <silent> <A-j> <C-\><C-N><C-w>j
-tnoremap <silent> <A-k> <C-\><C-N><C-w>k
-tnoremap <silent> <A-l> <C-\><C-N><C-w>l
-inoremap <silent> <A-h> <C-\><C-N><C-w>h
-inoremap <silent> <A-j> <C-\><C-N><C-w>j
-inoremap <silent> <A-k> <C-\><C-N><C-w>k
-inoremap <silent> <A-l> <C-\><C-N><C-w>l
-nnoremap <silent> <A-h> <C-w>h
-nnoremap <silent> <A-j> <C-w>j
-nnoremap <silent> <A-k> <C-w>k
-nnoremap <silent> <A-l> <C-w>l
 " Focus new splited window
 nnoremap <silent> <C-W>s :wincmd s\|wincmd j<CR>
 nnoremap <silent> <C-W>v :wincmd v\|wincmd l<CR>
@@ -716,15 +719,6 @@ nmap eg <Plug>(EasyAlign)*
 runtime macros/sandwich/keymap/surround.vim
 " }}}
 
-" {{{ vim-terminal-helper
-let g:terminal_key = "<A-/>"
-let g:terminal_kill = 1
-let g:terminal_close = 1
-let g:terminal_pos = "botright"
-let g:terminal_height = 20
-let g:terminal_cwd = 2
-" }}}
-
 " {{{ lsp-config & mason
 lua <<EOF
 -- Use an on_attach function to only map the following keys
@@ -902,7 +896,10 @@ require('nvim-treesitter.configs').setup({
   sync_install = false,
   highlight = {
     enable = true,
-  }
+  },
+  matchup = {
+    enable = true,
+  },
 })
 EOF
 " }}}
@@ -1247,6 +1244,15 @@ require("nvim-lightbulb").setup({
   ignore = {
       actions_without_kind = true,
   }
+})
+EOF
+" }}}
+
+" toggleterm.nvim {{{
+lua <<EOF
+require("toggleterm").setup({
+  open_mapping = '<A-/>',
+  direction = 'float',
 })
 EOF
 " }}}

@@ -141,10 +141,16 @@ if [[ -e /opt/homebrew/bin/brew ]]; then
     eval $(/opt/homebrew/bin/brew shellenv)
 fi
 
+# brew bundle file
 export HOMEBREW_BUNDLE_FILE=$HOME/.Brewfile
 
 # language version managers
 source_if_exists $HOME/.virtualenv_profile
+
+# coreutils
+if [[ -e $HOMEBREW_PREFIX/opt/coreutils ]]; then
+    export PATH="$HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin:$PATH"
+fi
 
 # fzf
 if which fzf &>/dev/null; then
