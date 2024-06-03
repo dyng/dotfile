@@ -67,6 +67,7 @@ Plug 'NvChad/nvim-colorizer.lua'
 Plug 'github/copilot.vim'
     \| Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'canary' }
 Plug 'kosayoda/nvim-lightbulb'
+Plug 'chrisgrieser/nvim-early-retirement'
 
 Plug 'dyng/auto_mkdir'
 Plug 'easymotion/vim-easymotion'
@@ -458,6 +459,17 @@ function EscapeFilename(fname) abort
     return substitute(substitute(a:fname, "[\\/]", "%2F", "g"), " ", "%20", "g")
 endfunction
 " }}}
+
+" BufWipeout {{{
+" Wipe all deleted (unloaded & unlisted) or all unloaded buffers
+function! BufWipeout(listed) abort
+    let l:buffers = filter(getbufinfo(), {_, v -> !v.loaded && (!v.listed || a:listed)})
+    if !empty(l:buffers)
+        execute 'bwipeout' join(map(l:buffers, {_, v -> v.bufnr}))
+    endif
+endfunction
+command! -bar -bang BufWipeout call BufWipeout(<bang>0)
+" }}}
 " }}}
 
 " Custom FileType Config {{{
@@ -832,13 +844,13 @@ cmp.setup({
 })
 
 -- cmp-dap
-require("cmp").setup({
+cmp.setup({
   enabled = function()
     return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt'
       or require("cmp_dap").is_dap_buffer()
   end,
 })
-require("cmp").setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
   sources = {
     { name = "dap" },
   },
@@ -892,7 +904,7 @@ EOF
 " nvim-treesitter {{{
 lua << EOF
 require('nvim-treesitter.configs').setup({
-  ensure_installed = { "c", "lua", "vim", "javascript", "typescript", "html", "rust", "python", "java", "go", "markdown", "markdown_inline" },
+  ensure_installed = { "c", "lua", "vim", "javascript", "typescript", "html", "diff", "rust", "python", "java", "go", "markdown", "markdown_inline" },
   sync_install = false,
   highlight = {
     enable = true,
@@ -1216,7 +1228,6 @@ require("CopilotChat").setup {
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'copilot-chat',
     callback = function()
-        print('in copilot-chat')
         vim.keymap.set('n', 'i', function()
             vim.cmd.normal('G$')
             vim.cmd('startinsert!')
@@ -1253,6 +1264,17 @@ lua <<EOF
 require("toggleterm").setup({
   open_mapping = '<A-/>',
   direction = 'float',
+})
+EOF
+command! TermFloat 1ToggleTerm direction=float
+command! TermBelow 1ToggleTerm size=20 direction=horizontal
+" }}}
+
+" nvim-early-retirement {{{
+lua <<EOF
+require("early-retirement").setup({
+  retirementAgeMins = 20,
+  minimumBufferNum = 20,
 })
 EOF
 " }}}
