@@ -1,112 +1,170 @@
-" Provider {{{
-" python
+" Before lazy.nvim {{{
+" python provider
 let g:python3_host_prog = 'python3'
+
+" set mapleader
+let mapleader = ","
 " }}}
 
 " Load Plugins {{{
-let s:vimplug_path = stdpath('data') . '/site/autoload/plug.vim'
-if !filereadable(s:vimplug_path)
-    let s:first_init = 1
-endif
+lua <<EOF
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  vim.api.nvim_echo({{ "Installing lazy.nvim...", "WarningMsg" }}, true, {})
+  vim.fn.system({
+    "git",
+    "clone",
+    "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git",
+    "--branch=stable", -- latest stable release
+    lazypath,
+  })
+  vim.api.nvim_echo({{ "Installing lazy.nvim complete", "WarningMsg" }}, true, {})
+end
+vim.opt.rtp:prepend(lazypath)
 
-" Install vim-plug
-if exists('s:first_init')
-    echom 'Plugin manager: vim-plug has not been installed. Try to install...'
-    exec '!curl -fL --create-dirs -o ' . s:vimplug_path .
-            \ ' https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    exec 'source ' . fnameescape(s:vimplug_path)
-    echom 'Installing vim-plug complete.'
-endif
+local plugins = {
+    {
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-tree/nvim-web-devicons",
+            "MunifTanjim/nui.nvim",
+        }
+    },
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "rcarriga/nvim-notify",
+        },
+    },
+    {
+        "williamboman/mason.nvim",
+        dependencies = {
+            "williamboman/mason-lspconfig.nvim"
+        }
+    },
+    "neovim/nvim-lspconfig",
+    {
+        "hrsh7th/nvim-cmp",
+        dependencies = {
+            "hrsh7th/cmp-buffer",
+            "hrsh7th/cmp-path",
+            "hrsh7th/cmp-cmdline",
+            "hrsh7th/cmp-nvim-lsp",
+            "hrsh7th/cmp-nvim-lsp-signature-help",
+        }
+    },
+    {
+        "hrsh7th/vim-vsnip",
+        dependencies = {
+            "hrsh7th/cmp-vsnip",
+            "hrsh7th/vim-vsnip-integ",
+        }
+    },
+    {
+        "nvim-telescope/telescope.nvim",
+        dependencies = {
+            {
+                'nvim-telescope/telescope-fzf-native.nvim',
+                build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
+            },
+            "nvim-telescope/telescope-fzy-native.nvim",
+        }
+    },
+    "rafamadriz/friendly-snippets",
+    { "nvim-treesitter/nvim-treesitter", build = ':TSUpdate' },
+    "nvim-lualine/lualine.nvim",
+    "kevinhwang91/nvim-bqf",
+    {
+        "mfussenegger/nvim-dap",
+        dependencies = {
+            "nvim-neotest/nvim-nio",
+            "rcarriga/nvim-dap-ui",
+            "rcarriga/cmp-dap",
+            "jay-babu/mason-nvim-dap.nvim",
+            "leoluz/nvim-dap-go",
+        }
+    },
+    {
+        "nvimtools/none-ls.nvim",
+        dependencies = {
+            "jay-babu/mason-null-ls.nvim",
+        }
+    },
+    "RRethy/vim-illuminate",
+    "andymass/vim-matchup",
+    "vim-test/vim-test",
+    {
+        "dyng/vim-bookmarks",
+        dependencies = {
+            "tom-anders/telescope-vim-bookmarks.nvim",
+        }
+    },
+    "akinsho/toggleterm.nvim",
+    "mhinz/vim-signify",
+    "sheerun/vim-polyglot",
+    "tpope/vim-dispatch",
+    "Shatur/neovim-session-manager",
+    "stevearc/dressing.nvim",
+    "gbprod/yanky.nvim",
+    "dyng/vim-auto-save",
+    "NvChad/nvim-colorizer.lua",
+    {
+        "github/copilot.vim",
+        dependencies = {
+            { "CopilotC-Nvim/CopilotChat.nvim", branch = "canary" },
+        }
+    },
+    "kosayoda/nvim-lightbulb",
+    "chrisgrieser/nvim-early-retirement",
 
-call plug#begin(stdpath('data') . '/plugged')
+    -- old vim plugins
+    "dyng/auto_mkdir",
+    "easymotion/vim-easymotion",
+    "mbbill/undotree",
+    "machakann/vim-sandwich",
+    "junegunn/vim-easy-align",
+    { dir = "~/Dropbox/Projects/CtrlSF" },
+    { dir = "~/Dropbox/Projects/formatiu.vim" },
+    "tpope/vim-fugitive",
+    "mg979/vim-visual-multi",
+    {
+        "inkarkat/vim-mark",
+        dependencies = {
+            "inkarkat/vim-ingo-library",
+        }
+    },
+    "AndrewRadev/linediff.vim",
+    "vim-scripts/ReloadScript",
+    "Raimondi/delimitMate",
+    "tomtom/tcomment_vim",
+    "dhruvasagar/vim-table-mode",
+    {
+        "iamcco/markdown-preview.nvim",
+        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+        ft = { "markdown" },
+        build = function() vim.fn["mkdp#util#install"]() end,
+    },
 
-Plug 'nvim-lua/plenary.nvim'
-Plug 'williamboman/mason.nvim'
-    \| Plug 'williamboman/mason-lspconfig.nvim'
-Plug 'neovim/nvim-lspconfig'
-Plug 'hrsh7th/nvim-cmp'
-    \| Plug 'hrsh7th/cmp-buffer'
-    \| Plug 'hrsh7th/cmp-path'
-    \| Plug 'hrsh7th/cmp-cmdline'
-    \| Plug 'hrsh7th/cmp-nvim-lsp'
-    \| Plug 'hrsh7th/cmp-nvim-lsp-signature-help'
-Plug 'hrsh7th/vim-vsnip'
-    \| Plug 'hrsh7th/cmp-vsnip'
-    \| Plug 'hrsh7th/vim-vsnip-integ'
-Plug 'nvim-telescope/telescope.nvim'
-    \| Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build' }
-    \| Plug 'nvim-telescope/telescope-fzy-native.nvim'
-Plug 'rafamadriz/friendly-snippets'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'kyazdani42/nvim-tree.lua'
-Plug 'nvim-lualine/lualine.nvim'
-Plug 'kyazdani42/nvim-web-devicons'
-Plug 'kevinhwang91/nvim-bqf'
-Plug 'mfussenegger/nvim-dap'
-    \| Plug 'nvim-neotest/nvim-nio'
-    \| Plug 'rcarriga/nvim-dap-ui'
-    \| Plug 'rcarriga/cmp-dap'
-    \| Plug 'jay-babu/mason-nvim-dap.nvim'
-    \| Plug 'leoluz/nvim-dap-go'
-Plug 'nvimtools/none-ls.nvim'
-    \| Plug 'jay-babu/mason-null-ls.nvim'
-Plug 'RRethy/vim-illuminate'
-Plug 'andymass/vim-matchup'
-Plug 'vim-test/vim-test'
-Plug 'dyng/vim-bookmarks'
-    \| Plug 'tom-anders/telescope-vim-bookmarks.nvim'
-Plug 'akinsho/toggleterm.nvim'
-Plug 'mhinz/vim-signify'
-Plug 'sheerun/vim-polyglot'
-Plug 'tpope/vim-dispatch'
-Plug 'Shatur/neovim-session-manager'
-Plug 'stevearc/dressing.nvim'
-Plug 'gbprod/yanky.nvim'
-Plug 'dyng/vim-auto-save'
-Plug 'NvChad/nvim-colorizer.lua'
-Plug 'github/copilot.vim'
-    \| Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'canary' }
-Plug 'kosayoda/nvim-lightbulb'
-Plug 'chrisgrieser/nvim-early-retirement'
+    -- Language Specific Plugins
+    { dir = "~/Dropbox/Projects/dejava.vim" },
+    "simrat39/rust-tools.nvim",
 
-Plug 'dyng/auto_mkdir'
-Plug 'easymotion/vim-easymotion'
-Plug 'mbbill/undotree'
-Plug 'machakann/vim-sandwich'
-Plug 'junegunn/vim-easy-align'
-Plug '~/Dropbox/Projects/CtrlSF'
-Plug '~/Dropbox/Projects/formatiu.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'mg979/vim-visual-multi'
-Plug 'inkarkat/vim-mark'
-    \| Plug 'inkarkat/vim-ingo-library'
-Plug 'AndrewRadev/linediff.vim'
-Plug 'vim-scripts/ReloadScript'
-Plug 'Raimondi/delimitMate'
-Plug 'tomtom/tcomment_vim'
-Plug 'dhruvasagar/vim-table-mode'
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': 'markdown' }
+    -- Colorschemes
+    "tomasr/molokai",
+    "marko-cerovac/material.nvim",
+    "navarasu/onedark.nvim",
 
-" Language Specific Plugins
-Plug '~/Dropbox/Projects/dejava.vim'
-Plug 'simrat39/rust-tools.nvim'
-Plug 'jmcantrell/vim-virtualenv'
+    -- Documents
+    "yianwillis/vimcdoc",
+}
 
-" Colorschemes
-Plug 'tomasr/molokai'
-Plug 'marko-cerovac/material.nvim'
-Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-Plug 'navarasu/onedark.nvim'
-
-" Documents
-Plug 'yianwillis/vimcdoc'
-
-call plug#end()
-
-" Install all plugins
-if exists("s:first_init")
-    PlugInstall
-endif
+require("lazy").setup(plugins)
+EOF
 " }}}
 
 " Basic Config {{{
@@ -210,8 +268,6 @@ nnoremap <silent> <A-l> <C-w>l
 " }}}
 
 " Maps {{{
-let mapleader = ","
-
 " Move line start and end
 noremap H ^
 noremap L $
@@ -543,42 +599,36 @@ imap <expr> <C-k> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-k>'
 smap <expr> <C-k> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-k>'
 " }}}
 
-" nvim-tree {{{
-nnoremap <silent> gn :NvimTreeFindFile!<cr>
-nnoremap <silent> gN :NvimTreeOpen .<cr>
-lua << EOF
-require("nvim-tree").setup{
-    view = {
-        adaptive_size = true,
+" neo-tree {{{
+lua <<EOF
+require('neo-tree').setup {
+  close_if_last_window = true,
+  enable_diagnostics = false,
+  window = {
+    mappings = {
+      ["<space>"] = "none",
+      ["e"] = "toggle_node",
     },
-    update_focused_file = {
-        enable = false,
-        update_root = false,
+  },
+  filesystem = {
+    group_empty_dirs = true,
+    use_libuv_file_watcher = true,
+    follow_current_file = {
+      enabled = true,
     },
-    actions = {
-        open_file = {
-            quit_on_open = true,
-        },
-        change_dir = {
-          enable = false,
-        },
+  },
+  event_handlers = {
+    {
+      event = "file_opened",
+      handler = function(arg)
+        require('neo-tree').close_all()
+      end,
     },
-    git = {
-        enable = true
-    },
-    on_attach = function(bufnr)
-        local api = require('nvim-tree.api')
-
-        local function opts(desc)
-          return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
-        end
-
-        api.config.mappings.default_on_attach(bufnr)
-
-        vim.keymap.set('n', '<cr>', api.node.open.no_window_picker, opts('Open: No Window Picker'))
-    end,
+  },
 }
 EOF
+nnoremap <silent> gn :Neotree reveal<cr>
+nnoremap <silent> gN :Neotree dir=.<cr>
 " }}}
 
 " Telescope {{{
@@ -904,7 +954,7 @@ EOF
 " nvim-treesitter {{{
 lua << EOF
 require('nvim-treesitter.configs').setup({
-  ensure_installed = { "c", "lua", "vim", "javascript", "typescript", "html", "diff", "rust", "python", "java", "go", "markdown", "markdown_inline" },
+  ensure_installed = { "javascript", "typescript", "html", "diff", "rust", "python", "java", "go", "markdown", "markdown_inline" },
   sync_install = false,
   highlight = {
     enable = true,
@@ -1275,6 +1325,29 @@ lua <<EOF
 require("early-retirement").setup({
   retirementAgeMins = 20,
   minimumBufferNum = 20,
+})
+EOF
+" }}}
+
+" noice.nvim {{{
+lua <<EOF
+require("noice").setup({
+  lsp = {
+    -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+    override = {
+      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+      ["vim.lsp.util.stylize_markdown"] = true,
+      ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+    },
+  },
+  -- you can enable a preset for easier configuration
+  presets = {
+    bottom_search = true, -- use a classic bottom cmdline for search
+    command_palette = false, -- position the cmdline and popupmenu together
+    long_message_to_split = true, -- long messages will be sent to a split
+    inc_rename = false, -- enables an input dialog for inc-rename.nvim
+    lsp_doc_border = true, -- add a border to hover docs and signature help
+  },
 })
 EOF
 " }}}
