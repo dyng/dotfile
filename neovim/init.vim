@@ -605,6 +605,7 @@ require('neo-tree').setup {
   close_if_last_window = true,
   enable_diagnostics = false,
   window = {
+    width = 30,
     mappings = {
       ["<space>"] = "none",
       ["e"] = "toggle_node",
@@ -617,17 +618,9 @@ require('neo-tree').setup {
       enabled = true,
     },
   },
-  event_handlers = {
-    {
-      event = "file_opened",
-      handler = function(arg)
-        require('neo-tree').close_all()
-      end,
-    },
-  },
 }
 EOF
-nnoremap <silent> gn :Neotree reveal<cr>
+nnoremap <silent> gn :Neotree reveal_force_cwd<cr>
 nnoremap <silent> gN :Neotree dir=.<cr>
 " }}}
 
@@ -783,28 +776,20 @@ runtime macros/sandwich/keymap/surround.vim
 
 " {{{ lsp-config & mason
 lua <<EOF
--- Use an on_attach function to only map the following keys
--- after the language server attaches to the current buffer
-local on_attach = function(client, bufnr)
-
-  -- Enable completion triggered by <c-x><c-o>
-  vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
-
-  -- Mappings.
-  local bufopts = { noremap=true, silent=true, buffer=bufnr }
-  vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
-  vim.keymap.set('n', 'gD', vim.lsp.buf.type_definition, bufopts)
-  vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
-  vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, bufopts)
-  vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
-  vim.keymap.set('n', 'gr', function() vim.lsp.buf.references { includeDeclaration = false } end, bufopts)
-  vim.keymap.set('n', 'ge', vim.diagnostic.setloclist, bufopts)
-  vim.keymap.set('n', 'gE', vim.diagnostic.setqflist, bufopts)
-  vim.keymap.set('n', 'E', vim.diagnostic.open_float, bufopts)
-  vim.keymap.set('n', 'ea', vim.lsp.buf.code_action, bufopts)
-  vim.keymap.set({'n', 'v'}, 'ef', function() vim.lsp.buf.format { async = false } end, bufopts)
-  vim.keymap.set('n', 'ern', vim.lsp.buf.rename, bufopts)
-end
+-- Mappings
+local bufopts = { noremap=true, silent=true }
+vim.keymap.set('n', 'gd', vim.lsp.buf.definition, bufopts)
+vim.keymap.set('n', 'gD', vim.lsp.buf.type_definition, bufopts)
+vim.keymap.set('n', 'K', vim.lsp.buf.hover, bufopts)
+vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, bufopts)
+vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, bufopts)
+vim.keymap.set('n', 'gr', function() vim.lsp.buf.references { includeDeclaration = false } end, bufopts)
+vim.keymap.set('n', 'ge', vim.diagnostic.setloclist, bufopts)
+vim.keymap.set('n', 'gE', vim.diagnostic.setqflist, bufopts)
+vim.keymap.set('n', 'E', vim.diagnostic.open_float, bufopts)
+vim.keymap.set('n', 'ea', vim.lsp.buf.code_action, bufopts)
+vim.keymap.set({'n', 'v'}, 'ef', function() vim.lsp.buf.format { async = false } end, bufopts)
+vim.keymap.set('n', 'ern', vim.lsp.buf.rename, bufopts)
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
@@ -815,7 +800,6 @@ require("mason-lspconfig").setup({
     handlers = {
         function (server_name)
             require("lspconfig")[server_name].setup {
-                on_attach = on_attach,
                 capabilities = capabilities,
             }
         end,
@@ -825,7 +809,6 @@ require("mason-lspconfig").setup({
             rt.setup {
                 server = {
                     on_attach = function(client, bufnr)
-                        on_attach(client, bufnr)
                         vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
                     end,
                     settings = {
@@ -1021,29 +1004,39 @@ call sign_define('DapBreakpointCondition', {'text': '◐', 'texthl': 'NvimDapBre
 call sign_define('DapStopped', {'text': '⮕', 'texthl': 'NvimDapStopped'})
 " }}}}
 
-" mason-nvim-dap {{{
+" mason-nvim-dap {{{{
 lua <<EOF
 require ('mason-nvim-dap').setup({
-    handlers = {
-        function(config)
-          -- all sources with no handler get passed here
-          require('mason-nvim-dap').default_setup(config)
+  handlers = {
+    function(config)
+      require('mason-nvim-dap').default_setup(config)
+    end,
+    python = function(config)
+      config.adapters = {
+        type = "executable",
+        command = "python3",
+        args = {
+          "-m",
+          "debugpy.adapter",
+        },
+      }
+      table.insert(config.configurations, {
+        type = "python",
+        request = "launch",
+        name = "Python: Launch with Arguments",
+        program = "${file}",
+        console = 'integratedTerminal',
+        args = function()
+          local args_string = vim.fn.input("Arguments: ")
+          return vim.split(args_string, " ")
         end,
-        python = function(config)
-            config.adapters = {
-                type = "executable",
-                command = "python3",
-                args = {
-                    "-m",
-                    "debugpy.adapter",
-                },
-            }
-            require('mason-nvim-dap').default_setup(config)
-        end,
-    },
+      })
+      require('mason-nvim-dap').default_setup(config)
+    end,
+  },
 })
 EOF
-" }}}
+" }}}}
 
 " nvim-dap-ui {{{{
 lua << EOF
@@ -1051,7 +1044,8 @@ local dap, dapui = require("dap"), require("dapui")
 dapui.setup({
   icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
   mappings = {
-    expand = "o",
+    edit = "m",
+    expand = "e",
     open = "<cr>",
   },
   layouts = {
@@ -1214,10 +1208,6 @@ require("yanky").setup({
   ring = {
     storage = "memory",
   },
-  highlight = {
-    on_put = false,
-    on_yank = false,
-  },
 })
 require("telescope").load_extension("yank_history")
 EOF
@@ -1333,14 +1323,12 @@ EOF
 lua <<EOF
 require("noice").setup({
   lsp = {
-    -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
     override = {
       ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
       ["vim.lsp.util.stylize_markdown"] = true,
       ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
     },
   },
-  -- you can enable a preset for easier configuration
   presets = {
     bottom_search = true, -- use a classic bottom cmdline for search
     command_palette = false, -- position the cmdline and popupmenu together
