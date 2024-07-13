@@ -180,7 +180,9 @@ alias -r la="ls -aTlFGh"
 alias -r lr="ls -Rlh"
 alias -r lR="ls -RAlh"
 alias -r diff="diff -u"
-alias -r stat="stat -x"
+if [ $(which stat) = "/usr/bin/stat" ]; then
+    alias -r stat="stat -x"
+fi
 
 # Git Alias
 alias -r gd="git diff"

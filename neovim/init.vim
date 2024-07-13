@@ -86,7 +86,6 @@ local plugins = {
             "rcarriga/nvim-dap-ui",
             "rcarriga/cmp-dap",
             "jay-babu/mason-nvim-dap.nvim",
-            "leoluz/nvim-dap-go",
         }
     },
     {
@@ -97,7 +96,6 @@ local plugins = {
     },
     "RRethy/vim-illuminate",
     "andymass/vim-matchup",
-    "vim-test/vim-test",
     {
         "dyng/vim-bookmarks",
         dependencies = {
@@ -107,7 +105,6 @@ local plugins = {
     "akinsho/toggleterm.nvim",
     "mhinz/vim-signify",
     "sheerun/vim-polyglot",
-    "tpope/vim-dispatch",
     "Shatur/neovim-session-manager",
     "stevearc/dressing.nvim",
     "gbprod/yanky.nvim",
@@ -121,6 +118,20 @@ local plugins = {
     },
     "kosayoda/nvim-lightbulb",
     "chrisgrieser/nvim-early-retirement",
+    {
+      "nvim-neotest/neotest",
+      dependencies = {
+        "nvim-neotest/nvim-nio",
+        "nvim-lua/plenary.nvim",
+        "antoinemadec/FixCursorHold.nvim",
+        "nvim-treesitter/nvim-treesitter",
+        "nvim-neotest/neotest-python",
+      }
+    },
+    {
+      "linux-cultist/venv-selector.nvim",
+      branch = "regexp",
+    },
 
     -- old vim plugins
     "dyng/auto_mkdir",
@@ -415,7 +426,6 @@ cab X x
 " }}}
 
 " Misc {{{
-
 " split window at right side
 set splitright
 
@@ -1140,14 +1150,6 @@ EOF
 let g:matchup_matchparen_offscreen = { 'method': 'popup' }
 " }}}
 
-" vim-test {{{
-nnoremap gtt <Cmd>TestLast<CR>
-nnoremap gtn <Cmd>TestNearest<CR>
-nnoremap gtf <Cmd>TestFile<CR>
-let test#go#gotest#options = "-v"
-let g:test#strategy = "dispatch"
-" }}}
-
 " vim-bookmarks {{{
 let s:bookmark_directory = stdpath('data') . '/vim-bookmarks'
     \| call mkdir(s:bookmark_directory, 'p')
@@ -1171,10 +1173,6 @@ nnoremap <silent> <C-M> :Telescope vim_bookmarks all<CR>
 let g:signify_sign_change = "*"
 " }}}
 
-" dispatch.vim {{{
-let g:dispatch_no_maps = 1
-" }}}
-
 " neovim-session-manager {{{
 lua <<EOF
 require('session_manager').setup({
@@ -1187,6 +1185,12 @@ require('session_manager').setup({
     'terminal',
   },
   autosave_only_in_session = true,
+})
+vim.api.nvim_create_autocmd({ 'User' }, {
+  pattern = "SessionLoadPre",
+  callback = function()
+    require("venv-selector").deactivate()
+  end,
 })
 EOF
 nnoremap <silent>gM <cmd>SessionManager load_session<cr>
@@ -1253,7 +1257,6 @@ require("CopilotChat").setup {
     auto_follow_cursor = false,
     auto_insert_mode = true,
     show_help = false,
-    context = 'buffer',
     mappings = {
         submit_prompt = {
             normal = '<CR>',
@@ -1263,12 +1266,16 @@ require("CopilotChat").setup {
             normal = '',
             insert = '<C-l>'
         },
+        accept_diff = {
+            normal = '',
+            insert = ''
+        },
     },
 }
 vim.api.nvim_create_autocmd('FileType', {
     pattern = 'copilot-chat',
     callback = function()
-        vim.keymap.set('n', 'i', function()
+        vim.keymap.set('n', 'A', function()
             vim.cmd.normal('G$')
             vim.cmd('startinsert!')
         end, { silent = true, buffer = true })
@@ -1337,6 +1344,29 @@ require("noice").setup({
     lsp_doc_border = true, -- add a border to hover docs and signature help
   },
 })
+EOF
+" }}}
+
+" neotest {{{
+lua <<EOF
+local neotest = require("neotest")
+neotest.setup({
+  adapters = {
+    require("neotest-python")({
+      dap = { justMyCode = false },
+    }),
+  },
+})
+vim.keymap.set('n', 'gto', function() neotest.output.open({ enter = true }) end, { noremap = true })
+vim.keymap.set('n', 'gtn', neotest.run.run, { noremap = true })
+vim.keymap.set('n', 'gtf', function() neotest.run.run(vim.fn.expand("%")) end, { noremap = true })
+vim.keymap.set('n', 'gun', function() neotest.run.run({ strategy = "dap" }) end, { noremap = true })
+EOF
+" }}}
+
+" venv-selector {{{
+lua <<EOF
+require("venv-selector").setup()
 EOF
 " }}}
 " }}}
