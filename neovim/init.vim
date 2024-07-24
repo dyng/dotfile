@@ -132,6 +132,13 @@ local plugins = {
       "linux-cultist/venv-selector.nvim",
       branch = "regexp",
     },
+    {
+      'stevearc/aerial.nvim',
+      dependencies = {
+         "nvim-treesitter/nvim-treesitter",
+         "nvim-tree/nvim-web-devicons"
+      },
+    },
 
     -- old vim plugins
     "dyng/auto_mkdir",
@@ -1367,6 +1374,19 @@ EOF
 " venv-selector {{{
 lua <<EOF
 require("venv-selector").setup()
+EOF
+" }}}
+
+" aerial {{{
+lua <<EOF
+require("aerial").setup({
+  on_attach = function(bufnr)
+    vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
+    vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
+  end,
+})
+-- You probably also want to set a keymap to toggle aerial
+vim.keymap.set("n", "ga", "<cmd>AerialToggle!<CR>")
 EOF
 " }}}
 " }}}
