@@ -110,6 +110,8 @@ bindkey '^J' history-substring-search-down
 
 ### Environment {{{
 export EDITOR="vim"
+
+export PYTHONPATH=$PYTHONPATH:.
 # }}}
 
 ### History {{{

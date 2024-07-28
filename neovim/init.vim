@@ -433,6 +433,9 @@ cab X x
 " }}}
 
 " Misc {{{
+" recent used files
+set viminfo+='500
+
 " split window at right side
 set splitright
 
@@ -954,7 +957,7 @@ EOF
 " nvim-treesitter {{{
 lua << EOF
 require('nvim-treesitter.configs').setup({
-  ensure_installed = { "javascript", "typescript", "html", "diff", "rust", "python", "java", "go", "markdown", "markdown_inline" },
+  ensure_installed = { "javascript", "typescript", "json", "html", "diff", "rust", "python", "java", "go", "markdown", "markdown_inline" },
   sync_install = false,
   highlight = {
     enable = true,
@@ -1194,7 +1197,7 @@ require('session_manager').setup({
   autosave_only_in_session = true,
 })
 vim.api.nvim_create_autocmd({ 'User' }, {
-  pattern = "SessionLoadPre",
+  pattern = "SessionSavePost",
   callback = function()
     require("venv-selector").deactivate()
   end,
@@ -1380,13 +1383,19 @@ EOF
 " aerial {{{
 lua <<EOF
 require("aerial").setup({
-  on_attach = function(bufnr)
-    vim.keymap.set("n", "{", "<cmd>AerialPrev<CR>", { buffer = bufnr })
-    vim.keymap.set("n", "}", "<cmd>AerialNext<CR>", { buffer = bufnr })
-  end,
+  nav = {
+    preview = false,
+    keymaps = {
+      ["<Left>"] = "actions.left",
+      ["<Right>"] = "actions.right",
+      ["<Esc>"] = "actions.close",
+      ["q"] = "actions.close",
+    },
+  },
 })
 -- You probably also want to set a keymap to toggle aerial
-vim.keymap.set("n", "ga", "<cmd>AerialToggle!<CR>")
+vim.keymap.set("n", "ga", "<cmd>AerialNavOpen<CR>")
+vim.keymap.set("n", "gA", "<cmd>AerialToggle!<CR>")
 EOF
 " }}}
 " }}}
