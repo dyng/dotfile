@@ -63,6 +63,7 @@ local plugins = {
         dependencies = {
             "hrsh7th/cmp-vsnip",
             "hrsh7th/vim-vsnip-integ",
+            "rafamadriz/friendly-snippets",
         }
     },
     {
@@ -73,12 +74,13 @@ local plugins = {
                 build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
             },
             "nvim-telescope/telescope-fzy-native.nvim",
+            "smartpde/telescope-recent-files",
         }
     },
-    "rafamadriz/friendly-snippets",
-    { "nvim-treesitter/nvim-treesitter", build = ':TSUpdate' },
-    "nvim-lualine/lualine.nvim",
-    "kevinhwang91/nvim-bqf",
+    {
+        "nvim-treesitter/nvim-treesitter",
+        build = ":TSUpdate"
+    },
     {
         "mfussenegger/nvim-dap",
         dependencies = {
@@ -94,6 +96,8 @@ local plugins = {
             "jay-babu/mason-null-ls.nvim",
         }
     },
+    "nvim-lualine/lualine.nvim",
+    "kevinhwang91/nvim-bqf",
     "RRethy/vim-illuminate",
     "andymass/vim-matchup",
     {
@@ -103,7 +107,6 @@ local plugins = {
         }
     },
     "akinsho/toggleterm.nvim",
-    "mhinz/vim-signify",
     "sheerun/vim-polyglot",
     "Shatur/neovim-session-manager",
     "stevearc/dressing.nvim",
@@ -139,6 +142,20 @@ local plugins = {
          "nvim-tree/nvim-web-devicons"
       },
     },
+    "nvim-treesitter/nvim-treesitter-context",
+    {
+      "sindrets/diffview.nvim",
+      cmd = { "DiffviewFileHistory" },
+    },
+    "lewis6991/gitsigns.nvim",
+    "numToStr/Comment.nvim",
+    {
+      'windwp/nvim-autopairs',
+      event = "InsertEnter",
+      opts = {
+        check_ts = true,
+      }
+    },
 
     -- old vim plugins
     "dyng/auto_mkdir",
@@ -147,25 +164,21 @@ local plugins = {
     "machakann/vim-sandwich",
     "junegunn/vim-easy-align",
     { dir = "~/Dropbox/Projects/CtrlSF" },
-    { dir = "~/Dropbox/Projects/formatiu.vim" },
     "tpope/vim-fugitive",
     "mg979/vim-visual-multi",
     {
-        "inkarkat/vim-mark",
-        dependencies = {
-            "inkarkat/vim-ingo-library",
-        }
+      "inkarkat/vim-mark",
+      dependencies = {
+        "inkarkat/vim-ingo-library",
+      }
     },
     "AndrewRadev/linediff.vim",
     "vim-scripts/ReloadScript",
-    "Raimondi/delimitMate",
-    "tomtom/tcomment_vim",
-    "dhruvasagar/vim-table-mode",
     {
-        "iamcco/markdown-preview.nvim",
-        cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-        ft = { "markdown" },
-        build = function() vim.fn["mkdp#util#install"]() end,
+      "iamcco/markdown-preview.nvim",
+      cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+      ft = { "markdown" },
+      build = function() vim.fn["mkdp#util#install"]() end,
     },
 
     -- Language Specific Plugins
@@ -176,6 +189,7 @@ local plugins = {
     "tomasr/molokai",
     "marko-cerovac/material.nvim",
     "navarasu/onedark.nvim",
+    "projekt0n/github-nvim-theme",
 
     -- Documents
     "yianwillis/vimcdoc",
@@ -239,7 +253,6 @@ autocmd FileType git*,help setlocal nolist
 set t_Co=256
 set background=dark
 
-let g:onedark_config = { 'style': 'darker' }
 colorscheme onedark
 
 " Font
@@ -433,9 +446,6 @@ cab X x
 " }}}
 
 " Misc {{{
-" recent used files
-set viminfo+='500
-
 " split window at right side
 set splitright
 
@@ -640,7 +650,7 @@ require('neo-tree').setup {
   },
 }
 EOF
-nnoremap <silent> gn :Neotree reveal_force_cwd<cr>
+nnoremap <silent> gn :Neotree reveal<cr>
 nnoremap <silent> gN :Neotree dir=.<cr>
 " }}}
 
@@ -665,15 +675,20 @@ require('telescope').setup{
         fzy_native = {
             override_generic_sorter = false,
             override_file_sorter = true,
-        }
+        },
+        recent_files = {
+            ignore_patterns = {},
+        },
     },
 }
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('fzy_native')
+require("telescope").load_extension("recent_files")
 EOF
 nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files({ cwd = vim.fn.ProjectRoot() })<cr>
 nnoremap <silent>gp <cmd>lua require("telescope.builtin").find_files()<cr>
-nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
+" nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
+nnoremap <silent>gm <cmd>lua require("telescope").extensions.recent_files.pick()<cr>
 nnoremap <silent>gb <cmd>lua require("telescope.builtin").lsp_document_symbols()<cr>
 nnoremap <silent>gB <cmd>lua require("telescope.builtin").lsp_dynamic_workspace_symbols()<cr>
 " }}}
@@ -707,7 +722,6 @@ endfo
 " }}}
 
 " Fugitive {{{
-nnoremap <silent> gs  :Git status<CR>
 nnoremap <silent> gsb :Git blame<CR>
 autocmd FileType fugitiveblame nmap <buffer> q gq
 " }}}
@@ -761,24 +775,6 @@ nmap <silent> mN <Plug>MarkSearchAnyPrev
 let g:linediff_buffer_type = 'scratch'
 vnoremap zd :Linediff<CR>
 autocmd User LinediffBufferReady nnoremap <buffer> q :LinediffReset<CR>
-" }}}
-
-" delimitMate {{{
-let g:delimitMate_expand_cr = 1
-
-" Maps to overwrite custom maps for completion
-imap <silent><expr> <Space> pumvisible() ? "\<C-Y>\<Space>" : "<Plug>delimitMateSpace"
-imap <silent><expr> <CR>    pumvisible() ? "\<C-Y>\<CR>"    : "<Plug>delimitMateCR"
-imap <silent><expr> <BS>    pumvisible() ? "\<BS>"          : "<Plug>delimitMateBS"
-
-" language specific configuration
-au FileType clojure let b:delimitMate_quotes = '"'
-" }}}
-
-" tComment {{{
-let g:tcomment_maps = 0
-nnoremap <silent> ec :TComment<CR>
-vnoremap <silent> ec :TComment<CR>
 " }}}
 
 " csv.vim {{{
@@ -957,8 +953,7 @@ EOF
 " nvim-treesitter {{{
 lua << EOF
 require('nvim-treesitter.configs').setup({
-  ensure_installed = { "javascript", "typescript", "json", "html", "diff", "rust", "python", "java", "go", "markdown", "markdown_inline" },
-  sync_install = false,
+  auto_install = true,
   highlight = {
     enable = true,
   },
@@ -1157,7 +1152,7 @@ EOF
 " }}}
 
 " vim-matchup {{{
-let g:matchup_matchparen_offscreen = { 'method': 'popup' }
+let g:matchup_matchparen_offscreen = { 'method': 'status' }
 " }}}
 
 " vim-bookmarks {{{
@@ -1177,10 +1172,6 @@ lua << EOF
 require('telescope').load_extension('vim_bookmarks')
 EOF
 nnoremap <silent> <C-M> :Telescope vim_bookmarks all<CR>
-" }}}
-
-" signify {{{
-let g:signify_sign_change = "*"
 " }}}
 
 " neovim-session-manager {{{
@@ -1267,6 +1258,11 @@ require("CopilotChat").setup {
     auto_follow_cursor = false,
     auto_insert_mode = true,
     show_help = false,
+    window = {
+        layout = 'float',
+        width = 0.8,
+        height = 0.8,
+    },
     mappings = {
         submit_prompt = {
             normal = '<CR>',
@@ -1393,9 +1389,44 @@ require("aerial").setup({
     },
   },
 })
--- You probably also want to set a keymap to toggle aerial
 vim.keymap.set("n", "ga", "<cmd>AerialNavOpen<CR>")
 vim.keymap.set("n", "gA", "<cmd>AerialToggle!<CR>")
+EOF
+" }}}
+
+" nvim-treesitter-context {{{
+lua <<EOF
+require("treesitter-context").setup {
+  separator = "━",
+}
+EOF
+" }}}
+
+" diffview.nvim {{{
+nnoremap <silent> gsh :DiffviewFileHistory<CR>
+autocmd FileType DiffviewFileHistory nnoremap <buffer><silent> q :DiffviewClose<cr>
+" }}}
+
+" gitsigns {{{
+lua <<EOF
+require("gitsigns").setup {
+}
+EOF
+" }}}
+
+" Comment.nvim {{{
+lua <<EOF
+require('Comment').setup({
+  padding = true,
+  mappings = {
+    basic = false,
+    extra = false,
+  },
+})
+vim.keymap.set('n', 'ec', '<Plug>(comment_toggle_linewise_current)')
+vim.keymap.set('n', 'eC', '<Plug>(comment_toggle_blockwise_current)')
+vim.keymap.set('x', 'ec', '<Plug>(comment_toggle_linewise_visual)')
+vim.keymap.set('x', 'eC', '<Plug>(comment_toggle_blockwise_visual)')
 EOF
 " }}}
 " }}}
