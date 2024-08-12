@@ -74,7 +74,6 @@ local plugins = {
                 build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
             },
             "nvim-telescope/telescope-fzy-native.nvim",
-            "smartpde/telescope-recent-files",
         }
     },
     {
@@ -142,7 +141,12 @@ local plugins = {
          "nvim-tree/nvim-web-devicons"
       },
     },
-    "nvim-treesitter/nvim-treesitter-context",
+    {
+      "nvim-treesitter/nvim-treesitter-context",
+      opts = {
+        separator = "━",
+      }
+    },
     {
       "sindrets/diffview.nvim",
       cmd = { "DiffviewFileHistory" },
@@ -154,6 +158,17 @@ local plugins = {
       event = "InsertEnter",
       opts = {
         check_ts = true,
+      }
+    },
+    {
+      "amitds1997/remote-nvim.nvim",
+      version = "*",
+      dependencies = {
+        "nvim-lua/plenary.nvim",
+        "MunifTanjim/nui.nvim",
+        "nvim-telescope/telescope.nvim",
+      },
+      opts = {
       }
     },
 
@@ -676,19 +691,14 @@ require('telescope').setup{
             override_generic_sorter = false,
             override_file_sorter = true,
         },
-        recent_files = {
-            ignore_patterns = {},
-        },
     },
 }
 require('telescope').load_extension('fzf')
 require('telescope').load_extension('fzy_native')
-require("telescope").load_extension("recent_files")
 EOF
 nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files({ cwd = vim.fn.ProjectRoot() })<cr>
 nnoremap <silent>gp <cmd>lua require("telescope.builtin").find_files()<cr>
-" nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
-nnoremap <silent>gm <cmd>lua require("telescope").extensions.recent_files.pick()<cr>
+nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
 nnoremap <silent>gb <cmd>lua require("telescope.builtin").lsp_document_symbols()<cr>
 nnoremap <silent>gB <cmd>lua require("telescope.builtin").lsp_dynamic_workspace_symbols()<cr>
 " }}}
@@ -925,7 +935,17 @@ EOF
 lua <<EOF
 require('lualine').setup({
   sections = {
-    lualine_b = {'diff', 'diagnostics'}
+    lualine_b = {
+        'diff',
+        'diagnostics',
+        {
+            function()
+                return vim.g.remote_neovim_host and ("Remote: %s"):format(vim.uv.os_gethostname()) or ""
+            end,
+            padding = { right = 1, left = 1 },
+            separator = { left = "", right = "" },
+        },
+    }
   },
 })
 EOF
@@ -955,6 +975,9 @@ lua << EOF
 require('nvim-treesitter.configs').setup({
   auto_install = true,
   highlight = {
+    enable = true,
+  },
+  indent = {
     enable = true,
   },
   matchup = {
@@ -1176,8 +1199,9 @@ nnoremap <silent> <C-M> :Telescope vim_bookmarks all<CR>
 
 " neovim-session-manager {{{
 lua <<EOF
+local sm_conf = require('session_manager.config')
 require('session_manager').setup({
-  autoload_mode = require('session_manager.config').AutoloadMode.LastSession,
+  autoload_mode = { sm_conf.AutoloadMode.CurrentDir, sm_conf.AutoloadMode.GitSession },
   autosave_ignore_filetypes = {
     'gitcommit',
   },
@@ -1185,6 +1209,7 @@ require('session_manager').setup({
     'help',
     'terminal',
   },
+  autosave_last_session = true,
   autosave_only_in_session = true,
 })
 vim.api.nvim_create_autocmd({ 'User' }, {
@@ -1391,14 +1416,6 @@ require("aerial").setup({
 })
 vim.keymap.set("n", "ga", "<cmd>AerialNavOpen<CR>")
 vim.keymap.set("n", "gA", "<cmd>AerialToggle!<CR>")
-EOF
-" }}}
-
-" nvim-treesitter-context {{{
-lua <<EOF
-require("treesitter-context").setup {
-  separator = "━",
-}
 EOF
 " }}}
 
