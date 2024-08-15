@@ -150,6 +150,7 @@ local plugins = {
       "linux-cultist/venv-selector.nvim",
       branch = "regexp",
       opts = {},
+      ft = { "python" },
     },
     {
       'stevearc/aerial.nvim',
@@ -219,7 +220,9 @@ local plugins = {
         "nvim-telescope/telescope.nvim",
       },
       opts = {
-      }
+        log = { level = "debug" },
+      },
+      cmd = { "RemoteStart", "RemoteInfo", "RemoteLog" },
     },
 
     -- old vim plugins
@@ -1130,11 +1133,16 @@ dapui.setup({
     element = "console",
   },
 })
-dap.listeners.after.event_initialized["dapui_config"] = function()
-  dapui.open()
+dap.listeners.after.event_initialized["dapui_config"] = function(session, body)
+  if session.parent == nil then
+      dapui.open()
+  end
 end
-dap.listeners.before.event_terminated["dapui_config"] = function()
-  dapui.close()
+dap.listeners.before.event_terminated["dapui_config"] = function(session, body)
+  if session.parent == nil then
+      dapui.close()
+  end
+end
 end
 set_dap_keymap({'n', 'v'}, 'V', dapui.eval)
 set_dap_keymap('n', 'R', function() dapui.float_element('repl') end)
