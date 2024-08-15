@@ -108,10 +108,20 @@ local plugins = {
     "akinsho/toggleterm.nvim",
     "sheerun/vim-polyglot",
     "Shatur/neovim-session-manager",
-    "stevearc/dressing.nvim",
+    {
+      "stevearc/dressing.nvim",
+      opts = {
+        input = { start_in_insert = true }
+      },
+    },
     "gbprod/yanky.nvim",
     "dyng/vim-auto-save",
-    "NvChad/nvim-colorizer.lua",
+    {
+      "NvChad/nvim-colorizer.lua",
+      opts = {
+        user_default_options = { mode = "background" }
+      },
+    },
     {
         "github/copilot.vim",
         dependencies = {
@@ -119,7 +129,13 @@ local plugins = {
         }
     },
     "kosayoda/nvim-lightbulb",
-    "chrisgrieser/nvim-early-retirement",
+    {
+      "chrisgrieser/nvim-early-retirement",
+      opts = {
+        retirementAgeMins = 20,
+        minimumBufferNum = 20,
+      },
+    },
     {
       "nvim-neotest/neotest",
       dependencies = {
@@ -133,12 +149,28 @@ local plugins = {
     {
       "linux-cultist/venv-selector.nvim",
       branch = "regexp",
+      opts = {},
     },
     {
       'stevearc/aerial.nvim',
       dependencies = {
          "nvim-treesitter/nvim-treesitter",
          "nvim-tree/nvim-web-devicons"
+      },
+      opts = {
+        nav = {
+          preview = false,
+          keymaps = {
+            ["<Left>"] = "actions.left",
+            ["<Right>"] = "actions.right",
+            ["<Esc>"] = "actions.close",
+            ["q"] = "actions.close",
+          },
+        },
+      },
+      keys = {
+        { "ga", "<cmd>AerialNavOpen<CR>" },
+        { "gA", "<cmd>AerialToggle!<CR>" },
       },
     },
     {
@@ -151,8 +183,26 @@ local plugins = {
       "sindrets/diffview.nvim",
       cmd = { "DiffviewFileHistory" },
     },
-    "lewis6991/gitsigns.nvim",
-    "numToStr/Comment.nvim",
+    {
+      "lewis6991/gitsigns.nvim",
+      opts = {}
+    },
+    {
+      "numToStr/Comment.nvim",
+      opts = {
+        padding = true,
+        mappings = {
+          basic = false,
+          extra = false,
+        },
+      },
+      keys = {
+        { "ec", "<Plug>(comment_toggle_linewise_current)",  mode = "n" },
+        { "eC", "<Plug>(comment_toggle_blockwise_current)", mode = "n" },
+        { "ec", "<Plug>(comment_toggle_linewise_visual)",   mode = "x" },
+        { "eC", "<Plug>(comment_toggle_blockwise_visual)",  mode = "x" },
+      },
+    },
     {
       'windwp/nvim-autopairs',
       event = "InsertEnter",
@@ -178,7 +228,7 @@ local plugins = {
     "mbbill/undotree",
     "machakann/vim-sandwich",
     "junegunn/vim-easy-align",
-    { dir = "~/Dropbox/Projects/CtrlSF" },
+    "dyng/ctrlsf.vim",
     "tpope/vim-fugitive",
     "mg979/vim-visual-multi",
     {
@@ -787,10 +837,6 @@ vnoremap zd :Linediff<CR>
 autocmd User LinediffBufferReady nnoremap <buffer> q :LinediffReset<CR>
 " }}}
 
-" csv.vim {{{
-let g:no_csv_maps = 1
-" }}}
-
 " {{{ vim-easy-align
 xmap eg <Plug>(EasyAlign)*
 nmap eg <Plug>(EasyAlign)*
@@ -817,50 +863,24 @@ vim.keymap.set('n', 'ea', vim.lsp.buf.code_action, bufopts)
 vim.keymap.set({'n', 'v'}, 'ef', function() vim.lsp.buf.format { async = false } end, bufopts)
 vim.keymap.set('n', 'ern', vim.lsp.buf.rename, bufopts)
 
-local capabilities = require('cmp_nvim_lsp').default_capabilities()
-
 require("mason").setup({
     log_level = vim.log.levels.DEBUG
 })
 require("mason-lspconfig").setup({
     handlers = {
         function (server_name)
-            require("lspconfig")[server_name].setup {
-                capabilities = capabilities,
-            }
+            require("lspconfig")[server_name].setup {}
         end,
-        -- using rust-tools.nvim
+        ["clangd"] = function ()
+            require("lspconfig").clangd.setup {}
+        end,
         ["rust_analyzer"] = function ()
-            local rt = require("rust-tools")
-            rt.setup {
-                server = {
-                    on_attach = function(client, bufnr)
-                        vim.keymap.set("n", "K", rt.hover_actions.hover_actions, { buffer = bufnr })
-                    end,
-                    settings = {
-                        ["rust-analyzer"] = {
-                            procMacro = {
-                                enable = true,
-                            },
-                        },
-                    },
-                    capabilities = capabilities,
-                },
-                dap = {
-                    adapter = {
-                        type = "server",
-                        port = "${port}",
-                        host = "127.0.0.1",
-                        executable = {
-                            command = "codelldb",
-                            args = { "--port", "${port}" },
-                        },
-                    },
-                },
-            }
-        end
+            require("rust-tools").setup {}
+        end,
     }
 })
+-- use system clangd
+require("lspconfig").clangd.setup {}
 EOF
 " }}}
 
@@ -943,7 +963,6 @@ require('lualine').setup({
                 return vim.g.remote_neovim_host and ("Remote: %s"):format(vim.uv.os_gethostname()) or ""
             end,
             padding = { right = 1, left = 1 },
-            separator = { left = "", right = "" },
         },
     }
   },
@@ -974,6 +993,7 @@ EOF
 lua << EOF
 require('nvim-treesitter.configs').setup({
   auto_install = true,
+  ensure_installed = { "regex", "markdown", "markdown_inline" },
   highlight = {
     enable = true,
   },
@@ -1133,7 +1153,6 @@ EOF
 lua << EOF
 require("mason-null-ls").setup({
     ensure_installed = {
-        "golangci-lint",
         "black",
         "prettierd",
         "stylua",
@@ -1172,10 +1191,6 @@ require('illuminate').configure({
     },
 })
 EOF
-" }}}
-
-" vim-matchup {{{
-let g:matchup_matchparen_offscreen = { 'method': 'status' }
 " }}}
 
 " vim-bookmarks {{{
@@ -1222,16 +1237,6 @@ EOF
 nnoremap <silent>gM <cmd>SessionManager load_session<cr>
 " }}}
 
-" dressing.nvim {{{
-lua <<EOF
-require('dressing').setup {
-    input = {
-        start_in_insert = true,
-    }
-}
-EOF
-" }}}
-
 " yanky.nvim {{{
 lua <<EOF
 require("yanky").setup({
@@ -1249,16 +1254,6 @@ inoremap <silent> <c-y> <cmd>Telescope yank_history<cr>
 let g:auto_save = 1
 let g:auto_save_silent = 1
 let g:auto_save_write_all_buffers = 1
-" }}}
-
-" nvim-colorizer {{{
-lua <<EOF
-require 'colorizer'.setup {
-    user_default_options = {
-        mode = "background"
-    }
-}
-EOF
 " }}}
 
 " copilot.vim {{{
@@ -1285,6 +1280,7 @@ require("CopilotChat").setup {
     show_help = false,
     window = {
         layout = 'float',
+        boarder = 'solid',
         width = 0.8,
         height = 0.8,
     },
@@ -1341,20 +1337,17 @@ EOF
 lua <<EOF
 require("toggleterm").setup({
   open_mapping = '<A-/>',
-  direction = 'float',
+  direction = 'horizontal',
+  size = function(term)
+    if term.direction == 'horizontal' then
+      return vim.o.lines * 0.4
+    elseif term.direction == 'vertical' then
+      return vim.o.columns * 0.4
+    end
+  end,
 })
 EOF
 command! TermFloat 1ToggleTerm direction=float
-command! TermBelow 1ToggleTerm size=20 direction=horizontal
-" }}}
-
-" nvim-early-retirement {{{
-lua <<EOF
-require("early-retirement").setup({
-  retirementAgeMins = 20,
-  minimumBufferNum = 20,
-})
-EOF
 " }}}
 
 " noice.nvim {{{
@@ -1395,56 +1388,9 @@ vim.keymap.set('n', 'gun', function() neotest.run.run({ strategy = "dap" }) end,
 EOF
 " }}}
 
-" venv-selector {{{
-lua <<EOF
-require("venv-selector").setup()
-EOF
-" }}}
-
-" aerial {{{
-lua <<EOF
-require("aerial").setup({
-  nav = {
-    preview = false,
-    keymaps = {
-      ["<Left>"] = "actions.left",
-      ["<Right>"] = "actions.right",
-      ["<Esc>"] = "actions.close",
-      ["q"] = "actions.close",
-    },
-  },
-})
-vim.keymap.set("n", "ga", "<cmd>AerialNavOpen<CR>")
-vim.keymap.set("n", "gA", "<cmd>AerialToggle!<CR>")
-EOF
-" }}}
-
 " diffview.nvim {{{
 nnoremap <silent> gsh :DiffviewFileHistory<CR>
 autocmd FileType DiffviewFileHistory nnoremap <buffer><silent> q :DiffviewClose<cr>
-" }}}
-
-" gitsigns {{{
-lua <<EOF
-require("gitsigns").setup {
-}
-EOF
-" }}}
-
-" Comment.nvim {{{
-lua <<EOF
-require('Comment').setup({
-  padding = true,
-  mappings = {
-    basic = false,
-    extra = false,
-  },
-})
-vim.keymap.set('n', 'ec', '<Plug>(comment_toggle_linewise_current)')
-vim.keymap.set('n', 'eC', '<Plug>(comment_toggle_blockwise_current)')
-vim.keymap.set('x', 'ec', '<Plug>(comment_toggle_linewise_visual)')
-vim.keymap.set('x', 'eC', '<Plug>(comment_toggle_blockwise_visual)')
-EOF
 " }}}
 " }}}
 
