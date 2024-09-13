@@ -36,9 +36,25 @@ local plugins = {
     {
         "folke/noice.nvim",
         event = "VeryLazy",
+        opts = {
+          lsp = {
+            override = {
+              ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+              ["vim.lsp.util.stylize_markdown"] = true,
+              ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
+            },
+          },
+          presets = {
+            bottom_search = true, -- use a classic bottom cmdline for search
+            command_palette = false, -- position the cmdline and popupmenu together
+            long_message_to_split = true, -- long messages will be sent to a split
+            inc_rename = false, -- enables an input dialog for inc-rename.nvim
+            lsp_doc_border = true, -- add a border to hover docs and signature help
+          },
+        },
         dependencies = {
-            "MunifTanjim/nui.nvim",
-            "rcarriga/nvim-notify",
+          "MunifTanjim/nui.nvim",
+          "rcarriga/nvim-notify",
         },
     },
     {
@@ -67,14 +83,13 @@ local plugins = {
         }
     },
     {
-        "nvim-telescope/telescope.nvim",
-        dependencies = {
-            {
-                'nvim-telescope/telescope-fzf-native.nvim',
-                build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
-            },
-            "nvim-telescope/telescope-fzy-native.nvim",
-        }
+      "nvim-telescope/telescope.nvim",
+      dependencies = {
+        {
+          'nvim-telescope/telescope-fzf-native.nvim',
+          build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
+        },
+      }
     },
     {
         "nvim-treesitter/nvim-treesitter",
@@ -98,14 +113,26 @@ local plugins = {
     "nvim-lualine/lualine.nvim",
     "kevinhwang91/nvim-bqf",
     "RRethy/vim-illuminate",
-    "andymass/vim-matchup",
     {
-        "dyng/vim-bookmarks",
-        dependencies = {
-            "tom-anders/telescope-vim-bookmarks.nvim",
-        }
+      "andymass/vim-matchup",
+      event = "BufReadPost",
     },
-    "akinsho/toggleterm.nvim",
+    {
+      "akinsho/toggleterm.nvim",
+      opts = {
+        open_mapping = '<A-/>',
+        direction = 'horizontal',
+        size = function(term)
+          if term.direction == 'horizontal' then
+            return vim.o.lines * 0.4
+          elseif term.direction == 'vertical' then
+            return vim.o.columns * 0.4
+          end
+        end,
+      },
+      cmd = { "ToggleTerm" },
+      keys = { "<A-/>", "<cmd>ToggleTerm<cr>" },
+    },
     "sheerun/vim-polyglot",
     "Shatur/neovim-session-manager",
     {
@@ -114,7 +141,21 @@ local plugins = {
         input = { start_in_insert = true }
       },
     },
-    "gbprod/yanky.nvim",
+    {
+      "gbprod/yanky.nvim",
+      opts = {
+        ring = {
+          storage = "memory",
+        },
+      },
+      keys = {
+        { "ey", "<cmd>Telescope yank_history<cr>", mode = "n" },
+        { "<c-y>", "<cmd>Telescope yank_history<cr>", mode = "i" },
+      },
+      init = function()
+        require("telescope").load_extension("yank_history")
+      end,
+    },
     "dyng/vim-auto-save",
     {
       "NvChad/nvim-colorizer.lua",
@@ -122,13 +163,63 @@ local plugins = {
         user_default_options = { mode = "background" }
       },
     },
+    "github/copilot.vim",
     {
-        "github/copilot.vim",
+        "CopilotC-Nvim/CopilotChat.nvim",
+        branch = "canary",
         dependencies = {
-            { "CopilotC-Nvim/CopilotChat.nvim", branch = "canary" },
-        }
+            "github/copilot.vim",
+        },
+        build = "make tiktoken",
+        opts = {
+            auto_follow_cursor = false,
+            auto_insert_mode = true,
+            insert_at_end = true,
+            show_help = false,
+            window = {
+                layout = 'float',
+                boarder = 'solid',
+                width = 0.8,
+                height = 0.8,
+            },
+            mappings = {
+                submit_prompt = {
+                    normal = '<CR>',
+                    insert = '<CR>'
+                },
+                reset = {
+                    normal = '',
+                    insert = '<C-l>'
+                },
+                accept_diff = {
+                    normal = '',
+                    insert = ''
+                },
+            },
+        },
+        keys = {
+            { "<A-'>", "<cmd>CopilotChatToggle<cr>", mode = "n" },
+            { "<A-'>", "<cmd>CopilotChatToggle<cr>", mode = "i" },
+            { "<A-'>", "<cmd>CopilotChatExplain<cr>", mode = "x" },
+        },
     },
-    "kosayoda/nvim-lightbulb",
+    {
+      "kosayoda/nvim-lightbulb",
+      opts = {
+        sign = {
+          enabled = false,
+        },
+        virtual_text = {
+          enabled = true,
+        },
+        autocmd = {
+          enabled = true
+        },
+        ignore = {
+          actions_without_kind = true,
+        }
+      },
+    },
     {
       "chrisgrieser/nvim-early-retirement",
       opts = {
@@ -149,8 +240,18 @@ local plugins = {
     {
       "linux-cultist/venv-selector.nvim",
       branch = "regexp",
-      opts = {},
+      opts = {
+        debug = true,
+        enable_cached_venvs = false,
+        cached_venv_automatic_activation = false,
+        activate_venv_in_terminal = false,
+        notify_user_on_venv_activation = true,
+      },
       ft = { "python" },
+      init = function()
+        vim.api.nvim_create_user_command("VenvInfo", require("venv-selector").venv, {})
+        vim.api.nvim_create_user_command("VenvDeactivate", require("venv-selector").deactivate, {})
+      end
     },
     {
       'stevearc/aerial.nvim',
@@ -170,19 +271,29 @@ local plugins = {
         },
       },
       keys = {
-        { "ga", "<cmd>AerialNavOpen<CR>" },
-        { "gA", "<cmd>AerialToggle!<CR>" },
+        { "ga", "<cmd>AerialNavOpen<cr>" },
+        { "gA", "<cmd>AerialToggle!<cr>" },
       },
     },
     {
       "nvim-treesitter/nvim-treesitter-context",
       opts = {
-        separator = "━",
-      }
+        multiline_threshold = 1,
+      },
     },
     {
       "sindrets/diffview.nvim",
       cmd = { "DiffviewFileHistory" },
+      opts = {
+        keymaps = {
+          file_history_panel = {
+            { "n", "q", ":DiffviewClose<CR>", { desc = "Close the panel" } },
+          },
+        },
+      },
+      keys = {
+        { "gsh", "<cmd>DiffviewFileHistory<cr>", mode = "n" }
+      },
     },
     {
       "lewis6991/gitsigns.nvim",
@@ -737,17 +848,12 @@ require('telescope').setup{
         fzf = {
             fuzzy = true,
             override_generic_sorter = true,
-            override_file_sorter = false,
-            case_mode = "smart_case"
-        },
-        fzy_native = {
-            override_generic_sorter = false,
             override_file_sorter = true,
+            case_mode = "smart_case"
         },
     },
 }
 require('telescope').load_extension('fzf')
-require('telescope').load_extension('fzy_native')
 EOF
 nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files({ cwd = vim.fn.ProjectRoot() })<cr>
 nnoremap <silent>gp <cmd>lua require("telescope.builtin").find_files()<cr>
@@ -825,7 +931,7 @@ let g:VM_maps = {
     \}
 " }}}
 
-" mark {{{
+" vim-mark {{{
 let g:mw_no_mappings = 1
 nmap <silent> mm <Plug>MarkSet
 vmap <silent> mm <Plug>MarkSet
@@ -889,7 +995,6 @@ EOF
 
 " nvim-cmp {{{
 lua << EOF
--- Setup nvim-cmp.
 local cmp = require'cmp'
 cmp.setup({
   preselect = cmp.PreselectMode.Item,
@@ -898,10 +1003,6 @@ cmp.setup({
     expand = function(args)
       vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
     end,
-  },
-  window = {
-    -- completion = cmp.config.window.bordered(),
-    -- documentation = cmp.config.window.bordered(),
   },
   matching = {
       disallow_fuzzy_matching = false,
@@ -1087,6 +1188,7 @@ require ('mason-nvim-dap').setup({
         name = "Python: Launch with Arguments",
         program = "${file}",
         console = 'integratedTerminal',
+        env = { PYTHONPATH = "${workspaceFolder}" },
         args = function()
           local args_string = vim.fn.input("Arguments: ")
           return vim.split(args_string, " ")
@@ -1143,16 +1245,11 @@ dap.listeners.before.event_terminated["dapui_config"] = function(session, body)
       dapui.close()
   end
 end
-end
-set_dap_keymap({'n', 'v'}, 'V', dapui.eval)
-set_dap_keymap('n', 'R', function() dapui.float_element('repl') end)
-EOF
-" }}}}
+vim.api.nvim_create_user_command('DapUIToggle', dapui.toggle, {})
 
-" dap-go {{{{
-autocmd FileType go nnoremap <buffer><silent> gun <Cmd>lua require('dap-go').debug_test()<CR>
-lua << EOF
-require('dap-go').setup()
+set_dap_keymap({'n', 'v'}, 'M', dapui.eval)
+set_dap_keymap({'n', 'v'}, 'R', function() dapui.float_element("repl") end)
+
 EOF
 " }}}}
 " }}}
@@ -1180,9 +1277,9 @@ EOF
 " vim-illuminate {{{
 augroup illuminate_augroup
     autocmd!
-    autocmd VimEnter * hi! link IlluminatedWordText MatchParen
-    autocmd VimEnter * hi! link IlluminatedWordRead MatchParen
-    autocmd VimEnter * hi! link IlluminatedWordWrite MatchParen
+    autocmd VimEnter * hi! link IlluminatedWordText LspReferenceText
+    autocmd VimEnter * hi! link IlluminatedWordRead LspReferenceText
+    autocmd VimEnter * hi! link IlluminatedWordWrite LspReferenceText
 augroup END
 lua <<EOF
 require('illuminate').configure({
@@ -1199,25 +1296,6 @@ require('illuminate').configure({
     },
 })
 EOF
-" }}}
-
-" vim-bookmarks {{{
-let s:bookmark_directory = stdpath('data') . '/vim-bookmarks'
-    \| call mkdir(s:bookmark_directory, 'p')
-let g:bookmark_no_default_key_mappings = 1
-let g:bookmark_display_annotation = 1
-let g:bookmark_auto_save_file = s:bookmark_directory . '/default'
-let g:bookmark_save_per_working_dir = 1
-function! g:BMWorkDirFileLocation()
-    return s:bookmark_directory . '/' . EscapeFilename(ProjectRoot())
-endfunction
-nnoremap ma :BookmarkToggleAndAnnotate<CR>
-nnoremap ms :BookmarkShowAll<CR>
-
-lua << EOF
-require('telescope').load_extension('vim_bookmarks')
-EOF
-nnoremap <silent> <C-M> :Telescope vim_bookmarks all<CR>
 " }}}
 
 " neovim-session-manager {{{
@@ -1245,19 +1323,6 @@ EOF
 nnoremap <silent>gM <cmd>SessionManager load_session<cr>
 " }}}
 
-" yanky.nvim {{{
-lua <<EOF
-require("yanky").setup({
-  ring = {
-    storage = "memory",
-  },
-})
-require("telescope").load_extension("yank_history")
-EOF
-nnoremap <silent> ey <cmd>Telescope yank_history<cr>
-inoremap <silent> <c-y> <cmd>Telescope yank_history<cr>
-" }}}
-
 " vim-auto-save {{{
 let g:auto_save = 1
 let g:auto_save_silent = 1
@@ -1280,105 +1345,6 @@ function s:CopilotAccept(fallback) abort
 endfunction
 " }}}
 
-" CopilotChat.nvim {{{
-lua <<EOF
-require("CopilotChat").setup {
-    auto_follow_cursor = false,
-    auto_insert_mode = true,
-    show_help = false,
-    window = {
-        layout = 'float',
-        boarder = 'solid',
-        width = 0.8,
-        height = 0.8,
-    },
-    mappings = {
-        submit_prompt = {
-            normal = '<CR>',
-            insert = '<CR>'
-        },
-        reset = {
-            normal = '',
-            insert = '<C-l>'
-        },
-        accept_diff = {
-            normal = '',
-            insert = ''
-        },
-    },
-}
-vim.api.nvim_create_autocmd('FileType', {
-    pattern = 'copilot-chat',
-    callback = function()
-        vim.keymap.set('n', 'A', function()
-            vim.cmd.normal('G$')
-            vim.cmd('startinsert!')
-        end, { silent = true, buffer = true })
-    end
-})
-EOF
-nnoremap <silent> <A-'> :CopilotChatToggle<CR>
-inoremap <silent> <A-'> <C-O>:CopilotChatToggle<CR>
-vnoremap <silent> <A-'> :CopilotChatExplain<CR>
-" }}}
-
-" nvim-lightbulb {{{
-lua <<EOF
-require("nvim-lightbulb").setup({
-  sign = {
-      enabled = false,
-  },
-  virtual_text = {
-      enabled = true,
-  },
-  autocmd = {
-      enabled = true
-  },
-  ignore = {
-      actions_without_kind = true,
-  }
-})
-EOF
-" }}}
-
-" toggleterm.nvim {{{
-lua <<EOF
-require("toggleterm").setup({
-  open_mapping = '<A-/>',
-  direction = 'horizontal',
-  size = function(term)
-    if term.direction == 'horizontal' then
-      return vim.o.lines * 0.4
-    elseif term.direction == 'vertical' then
-      return vim.o.columns * 0.4
-    end
-  end,
-})
-EOF
-command! TermFloat 1ToggleTerm direction=float
-" }}}
-
-" noice.nvim {{{
-lua <<EOF
-require("noice").setup({
-  lsp = {
-    override = {
-      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-      ["vim.lsp.util.stylize_markdown"] = true,
-      ["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
-    },
-  },
-  presets = {
-    bottom_search = true, -- use a classic bottom cmdline for search
-    command_palette = false, -- position the cmdline and popupmenu together
-    long_message_to_split = true, -- long messages will be sent to a split
-    inc_rename = false, -- enables an input dialog for inc-rename.nvim
-    lsp_doc_border = true, -- add a border to hover docs and signature help
-  },
-})
-EOF
-" }}}
-
 " neotest {{{
 lua <<EOF
 local neotest = require("neotest")
@@ -1389,16 +1355,11 @@ neotest.setup({
     }),
   },
 })
-vim.keymap.set('n', 'gto', function() neotest.output.open({ enter = true }) end, { noremap = true })
+vim.keymap.set('n', 'gto', function() neotest.output.open({ enter = true, auto_close = true }) end, { noremap = true })
 vim.keymap.set('n', 'gtn', neotest.run.run, { noremap = true })
 vim.keymap.set('n', 'gtf', function() neotest.run.run(vim.fn.expand("%")) end, { noremap = true })
 vim.keymap.set('n', 'gun', function() neotest.run.run({ strategy = "dap" }) end, { noremap = true })
 EOF
-" }}}
-
-" diffview.nvim {{{
-nnoremap <silent> gsh :DiffviewFileHistory<CR>
-autocmd FileType DiffviewFileHistory nnoremap <buffer><silent> q :DiffviewClose<cr>
 " }}}
 " }}}
 

@@ -30,7 +30,7 @@ setopt prompt_subst
 autoload bashcompinit
 bashcompinit
 
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+zplug "zplug/zplug", hook-build:"zplug --self-manage"
 zplug "lib/completion", from:oh-my-zsh
 zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/gitfast", from:oh-my-zsh
@@ -50,8 +50,8 @@ zplug "MichaelAquilina/zsh-autoswitch-virtualenv", defer:2
 # Theme
 # zplug "caiogondim/bullet-train.zsh", use:bullet-train.zsh-theme, defer:3
 # If you prefer a minimal theme
-zplug mafredri/zsh-async
-zplug sindresorhus/pure, use:pure.zsh, as:theme
+zplug "mafredri/zsh-async"
+zplug "sindresorhus/pure", use:"pure.zsh", as:theme
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
