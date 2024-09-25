@@ -156,8 +156,8 @@ fi
 
 # fzf
 if which fzf &>/dev/null; then
-    source $HOME/.fzf.zsh
-    export FZF_DEFAULT_OPTS="--bind='ctrl-o:execute(vim {})+abort'"
+    # shell integration
+    source <(fzf --zsh)
 
     # preview command
     if which bat &>/dev/null; then
