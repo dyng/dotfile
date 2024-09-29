@@ -85,10 +85,7 @@ local plugins = {
     {
       "nvim-telescope/telescope.nvim",
       dependencies = {
-        {
-          'nvim-telescope/telescope-fzf-native.nvim',
-          build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build'
-        },
+        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
       }
     },
     {
@@ -177,10 +174,9 @@ local plugins = {
             insert_at_end = true,
             show_help = false,
             window = {
-                layout = 'float',
-                boarder = 'solid',
-                width = 0.8,
-                height = 0.8,
+                layout = 'horizontal',
+                width = 1,
+                height = 0.5,
             },
             mappings = {
                 submit_prompt = {
@@ -235,6 +231,7 @@ local plugins = {
         "antoinemadec/FixCursorHold.nvim",
         "nvim-treesitter/nvim-treesitter",
         "nvim-neotest/neotest-python",
+        "nvim-neotest/neotest-go",
       }
     },
     {
@@ -334,6 +331,16 @@ local plugins = {
         log = { level = "debug" },
       },
       cmd = { "RemoteStart", "RemoteInfo", "RemoteLog" },
+    },
+    {
+      "cbochs/grapple.nvim",
+      dependencies = {
+        { "nvim-tree/nvim-web-devicons", lazy = true }
+      },
+      keys = {
+        { "ma", "<cmd>Grapple toggle<cr>",  mode = "n" },
+        { "mL", "<cmd>Grapple open_tags<cr>",  mode = "n" },
+      },
     },
 
     -- old vim plugins
@@ -975,6 +982,7 @@ vim.keymap.set('n', 'ern', vim.lsp.buf.rename, bufopts)
 require("mason").setup({
     log_level = vim.log.levels.DEBUG
 })
+
 require("mason-lspconfig").setup({
     handlers = {
         function (server_name)
@@ -988,8 +996,9 @@ require("mason-lspconfig").setup({
         end,
     }
 })
--- use system clangd
-require("lspconfig").clangd.setup {}
+
+local lspconfig = require'lspconfig'
+lspconfig.clangd.setup {} -- use system clangd
 EOF
 " }}}
 
@@ -1062,6 +1071,14 @@ require('lualine').setup({
     lualine_b = {
         'diff',
         'diagnostics',
+        {
+            function()
+                return require("grapple").statusline({ inactive = "" })
+            end,
+            cond = function()
+                return package.loaded["grapple"] and require("grapple").exists()
+            end
+        },
         {
             function()
                 return vim.g.remote_neovim_host and ("Remote: %s"):format(vim.uv.os_gethostname()) or ""
@@ -1350,11 +1367,25 @@ lua <<EOF
 local neotest = require("neotest")
 neotest.setup({
   adapters = {
+    -- python
     require("neotest-python")({
       dap = { justMyCode = false },
     }),
+
+    -- go
+    require("neotest-go"),
   },
 })
+local neotest_ns = vim.api.nvim_create_namespace("neotest")
+vim.diagnostic.config({
+  virtual_text = {
+    format = function(diagnostic)
+      local message =
+        diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
+      return message
+    end,
+  },
+}, neotest_ns)
 vim.keymap.set('n', 'gto', function() neotest.output.open({ enter = true, auto_close = true }) end, { noremap = true })
 vim.keymap.set('n', 'gtn', neotest.run.run, { noremap = true })
 vim.keymap.set('n', 'gtf', function() neotest.run.run(vim.fn.expand("%")) end, { noremap = true })
