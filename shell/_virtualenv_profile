@@ -12,14 +12,19 @@ if which pyenv &>/dev/null; then
 fi
 
 # nvm
-for nvm_root in "$HOME/.nvm" "/usr/local/opt/nvm" "/opt/homebrew/opt/nvm"
-do
-    if [[ -s "$nvm_root/nvm.sh" ]]; then
-        export NVM_DIR="$HOME/.nvm"
-        source "$nvm_root/nvm.sh"  # This loads nvm
-        source_if_exists "$nvm_root/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+if [[ -e "$HOME/.nvm" ]]; then
+    opt_prefix=$(brew --prefix nvm)
+    export NVM_DIR="$HOME/.nvm"
+    source "$opt_prefix/nvm.sh"
+    source_if_exists "$opt_prefix/etc/bash_completion.d/nvm"
+
+    # initialize .nvmrc if not exists
+    if [[ ! -e "$HOME/.nvmrc" ]]; then
+        if [ $(nvm version default) = 'N/A' ]; then
+            nvm alias default node
+        fi
     fi
-done
+fi
 
 # rbenv
 if which rbenv &>/dev/null; then

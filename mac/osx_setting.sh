@@ -13,3 +13,5 @@ defaults write -g KeyRepeat -int 1 # 15ms
 
 # disable accent popup
 defaults write -g ApplePressAndHoldEnabled -bool false
+
+echo "Configuration done! Please reboot to apply changes."
