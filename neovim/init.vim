@@ -99,6 +99,13 @@ local plugins = {
             "rcarriga/nvim-dap-ui",
             "rcarriga/cmp-dap",
             "jay-babu/mason-nvim-dap.nvim",
+
+            -- DAP for languages
+            {
+              "leoluz/nvim-dap-go",
+              ft = { "go" },
+              opts = {},
+            },
         }
     },
     {
@@ -231,7 +238,10 @@ local plugins = {
         "antoinemadec/FixCursorHold.nvim",
         "nvim-treesitter/nvim-treesitter",
         "nvim-neotest/neotest-python",
-        "nvim-neotest/neotest-go",
+        {
+          "fredrikaverpil/neotest-golang",
+          dependencies = { "leoluz/nvim-dap-go" }
+        },
       }
     },
     {
@@ -1392,7 +1402,13 @@ neotest.setup({
     }),
 
     -- go
-    require("neotest-go"),
+    require("neotest-golang")({
+      go_test_args = {
+        "-v",
+        "-race",
+        "-count=1",
+      },
+    }),
   },
 })
 local neotest_ns = vim.api.nvim_create_namespace("neotest")
