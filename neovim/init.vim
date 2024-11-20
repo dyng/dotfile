@@ -58,31 +58,6 @@ local plugins = {
         },
     },
     {
-        "williamboman/mason.nvim",
-        dependencies = {
-            "williamboman/mason-lspconfig.nvim"
-        }
-    },
-    "neovim/nvim-lspconfig",
-    {
-        "hrsh7th/nvim-cmp",
-        dependencies = {
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-path",
-            "hrsh7th/cmp-cmdline",
-            "hrsh7th/cmp-nvim-lsp",
-            "hrsh7th/cmp-nvim-lsp-signature-help",
-        }
-    },
-    {
-        "hrsh7th/vim-vsnip",
-        dependencies = {
-            "hrsh7th/cmp-vsnip",
-            "hrsh7th/vim-vsnip-integ",
-            "rafamadriz/friendly-snippets",
-        }
-    },
-    {
       "nvim-telescope/telescope.nvim",
       dependencies = {
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
@@ -93,6 +68,38 @@ local plugins = {
         build = ":TSUpdate"
     },
     {
+        "williamboman/mason.nvim",
+        dependencies = {
+            "williamboman/mason-lspconfig.nvim"
+        }
+    },
+    {
+      "neovim/nvim-lspconfig",
+      dependencies = {
+        -- language specific plugins
+        -- "nvim-java/nvim-java",
+        "simrat39/rust-tools.nvim",
+      },
+    },
+    {
+      "hrsh7th/nvim-cmp",
+      dependencies = {
+        "hrsh7th/cmp-buffer",
+        "hrsh7th/cmp-path",
+        "hrsh7th/cmp-cmdline",
+        "hrsh7th/cmp-nvim-lsp",
+        "hrsh7th/cmp-nvim-lsp-signature-help",
+        {
+          "hrsh7th/vim-vsnip",
+          dependencies = {
+            "hrsh7th/cmp-vsnip",
+            "hrsh7th/vim-vsnip-integ",
+            "rafamadriz/friendly-snippets",
+          }
+        },
+      }
+    },
+    {
         "mfussenegger/nvim-dap",
         dependencies = {
             "nvim-neotest/nvim-nio",
@@ -100,7 +107,7 @@ local plugins = {
             "rcarriga/cmp-dap",
             "jay-babu/mason-nvim-dap.nvim",
 
-            -- DAP for languages
+            -- language specific plugins
             {
               "leoluz/nvim-dap-go",
               ft = { "go" },
@@ -397,8 +404,7 @@ local plugins = {
     },
 
     -- Language Specific Plugins
-    { dir = "~/Dropbox/Projects/dejava.vim" },
-    "simrat39/rust-tools.nvim",
+    "dyng/dejava.vim",
 
     -- Colorschemes
     "tomasr/molokai",
