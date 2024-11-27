@@ -24,6 +24,7 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 local plugins = {
+    -- neo-tree.nvim
     {
         "nvim-neo-tree/neo-tree.nvim",
         branch = "v3.x",
@@ -33,6 +34,8 @@ local plugins = {
             "MunifTanjim/nui.nvim",
         }
     },
+
+    -- noice.nvim
     {
         "folke/noice.nvim",
         event = "VeryLazy",
@@ -57,22 +60,30 @@ local plugins = {
           "rcarriga/nvim-notify",
         },
     },
+
+    -- telescope.nvim
     {
       "nvim-telescope/telescope.nvim",
       dependencies = {
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
       }
     },
+
+    -- nvim-treesitter
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate"
     },
+
+    -- mason.nvim
     {
         "williamboman/mason.nvim",
         dependencies = {
             "williamboman/mason-lspconfig.nvim"
         }
     },
+
+    -- nvim-lspconfig
     {
       "neovim/nvim-lspconfig",
       dependencies = {
@@ -81,6 +92,8 @@ local plugins = {
         "simrat39/rust-tools.nvim",
       },
     },
+
+    -- nvim-cmp
     {
       "hrsh7th/nvim-cmp",
       dependencies = {
@@ -99,6 +112,8 @@ local plugins = {
         },
       }
     },
+
+    -- nvim-dap
     {
         "mfussenegger/nvim-dap",
         dependencies = {
@@ -115,19 +130,31 @@ local plugins = {
             },
         }
     },
+
+    -- none-ls.nvim
     {
         "nvimtools/none-ls.nvim",
         dependencies = {
             "jay-babu/mason-null-ls.nvim",
         }
     },
+
+    -- lualine.nvim
     "nvim-lualine/lualine.nvim",
+
+    -- nvim-bqf
     "kevinhwang91/nvim-bqf",
+
+    -- vim-illuminate
     "RRethy/vim-illuminate",
+
+    -- vim-matchup
     {
       "andymass/vim-matchup",
       event = "BufReadPost",
     },
+
+    -- toggleterm.nvim
     {
       "akinsho/toggleterm.nvim",
       opts = {
@@ -144,14 +171,47 @@ local plugins = {
       cmd = { "ToggleTerm" },
       keys = { "<A-/>", "<cmd>ToggleTerm<cr>" },
     },
-    "sheerun/vim-polyglot",
-    "Shatur/neovim-session-manager",
+
+    -- neovim-session-manager
+    {
+      "Shatur/neovim-session-manager",
+      keys = {
+        { "gM", "<cmd>SessionManager load_session<cr>", mode = "n" },
+      },
+      cmd = { "SessionManager" },
+      config = function()
+        require("session_manager").setup({
+          autoload_mode = {
+              require("session_manager.config").AutoloadMode.CurrentDir,
+              require("session_manager.config").AutoloadMode.GitSession
+          },
+          autosave_ignore_filetypes = { 'gitcommit' },
+          autosave_ignore_buftypes = {
+            'help',
+            'terminal',
+          },
+          autosave_last_session = true,
+          autosave_only_in_session = true,
+        })
+        vim.api.nvim_create_autocmd({ 'User' }, {
+          pattern = "SessionSavePost",
+          callback = function()
+            require("venv-selector").deactivate()
+          end,
+        })
+      end,
+      enabled = (vim.fn.has("nvim-0.10.0") == 1),
+    },
+
+    -- dressing.nvim
     {
       "stevearc/dressing.nvim",
       opts = {
         input = { start_in_insert = true }
       },
     },
+
+    -- yanky.nvim
     {
       "gbprod/yanky.nvim",
       opts = {
@@ -167,14 +227,22 @@ local plugins = {
         require("telescope").load_extension("yank_history")
       end,
     },
+
+    -- vim-auto-save
     "dyng/vim-auto-save",
+
+    -- nvim-colorizer.lua
     {
       "NvChad/nvim-colorizer.lua",
       opts = {
         user_default_options = { mode = "background" }
       },
     },
+
+    -- copilot.vim
     "github/copilot.vim",
+
+    -- CopilotChat
     {
         "CopilotC-Nvim/CopilotChat.nvim",
         branch = "canary",
@@ -213,6 +281,8 @@ local plugins = {
             { "<A-'>", "<cmd>CopilotChatExplain<cr>", mode = "x" },
         },
     },
+
+    -- nvim-lightbulb
     {
       "kosayoda/nvim-lightbulb",
       opts = {
@@ -230,6 +300,8 @@ local plugins = {
         }
       },
     },
+
+    -- nvim-early-retirement
     {
       "chrisgrieser/nvim-early-retirement",
       opts = {
@@ -237,6 +309,8 @@ local plugins = {
         minimumBufferNum = 20,
       },
     },
+
+    -- neotest
     {
       "nvim-neotest/neotest",
       dependencies = {
@@ -251,6 +325,8 @@ local plugins = {
         },
       }
     },
+
+    -- venv-selector.nvim
     {
       "linux-cultist/venv-selector.nvim",
       branch = "regexp",
@@ -267,6 +343,8 @@ local plugins = {
         vim.api.nvim_create_user_command("VenvDeactivate", require("venv-selector").deactivate, {})
       end
     },
+
+    -- aerial.nvim
     {
       'stevearc/aerial.nvim',
       dependencies = {
@@ -289,12 +367,16 @@ local plugins = {
         { "gA", "<cmd>AerialToggle!<cr>" },
       },
     },
+
+    -- nvim-treesitter-context
     {
       "nvim-treesitter/nvim-treesitter-context",
       opts = {
         multiline_threshold = 1,
       },
     },
+
+    -- diffview.nvim
     {
       "sindrets/diffview.nvim",
       cmd = { "DiffviewFileHistory" },
@@ -309,10 +391,14 @@ local plugins = {
         { "gsh", "<cmd>DiffviewFileHistory<cr>", mode = "n" }
       },
     },
+
+    -- gitsigns.nvim
     {
       "lewis6991/gitsigns.nvim",
       opts = {}
     },
+
+    -- Comment.nvim
     {
       "numToStr/Comment.nvim",
       opts = {
@@ -329,6 +415,8 @@ local plugins = {
         { "eC", "<Plug>(comment_toggle_blockwise_visual)",  mode = "x" },
       },
     },
+
+    -- nvim-autopairs
     {
       'windwp/nvim-autopairs',
       event = "InsertEnter",
@@ -336,6 +424,8 @@ local plugins = {
         check_ts = true,
       }
     },
+
+    -- remote-nvim.nvim
     {
       "amitds1997/remote-nvim.nvim",
       version = "*",
@@ -349,16 +439,8 @@ local plugins = {
       },
       cmd = { "RemoteStart", "RemoteInfo", "RemoteLog" },
     },
-    {
-      "cbochs/grapple.nvim",
-      dependencies = {
-        { "nvim-tree/nvim-web-devicons", lazy = true }
-      },
-      keys = {
-        { "ma", "<cmd>Grapple toggle<cr>",  mode = "n" },
-        { "mL", "<cmd>Grapple open_tags<cr>",  mode = "n" },
-      },
-    },
+
+    -- nvim-osc52
     {
       "ojroques/nvim-osc52",
       enabled = (vim.fn.has("nvim-0.10.0") == 0),
@@ -379,6 +461,25 @@ local plugins = {
       end,
     },
 
+    -- bookmarks.nvim
+    {
+      "LintaoAmons/bookmarks.nvim",
+      tag = "v1.4.2",
+      dependencies = {
+        "nvim-telescope/telescope.nvim",
+        "stevearc/dressing.nvim",
+      },
+      opts = {
+        signs = {
+          mark = { icon = "", color = "red", line_bg = "#572626" },
+        },
+      },
+      keys = {
+        { "ma", "<cmd>BookmarksMark<cr>", mode = "n" },
+        { "mL", "<cmd>BookmarksGoto<cr>", mode = "n" },
+      },
+    },
+
     -- old vim plugins
     "dyng/auto_mkdir",
     "easymotion/vim-easymotion",
@@ -388,6 +489,7 @@ local plugins = {
     "dyng/ctrlsf.vim",
     "tpope/vim-fugitive",
     "mg979/vim-visual-multi",
+    "sheerun/vim-polyglot",
     {
       "inkarkat/vim-mark",
       dependencies = {
@@ -1024,16 +1126,15 @@ require("mason-lspconfig").setup({
             require("lspconfig")[server_name].setup {}
         end,
         ["clangd"] = function ()
-            require("lspconfig").clangd.setup {}
+            require("lspconfig").clangd.setup {
+                cmd = { "clangd", "--offset-encoding=utf-16" },
+            }
         end,
         ["rust_analyzer"] = function ()
             require("rust-tools").setup {}
         end,
     }
 })
-
-local lspconfig = require'lspconfig'
-lspconfig.clangd.setup {} -- use system clangd
 EOF
 " }}}
 
@@ -1348,31 +1449,6 @@ require('illuminate').configure({
     },
 })
 EOF
-" }}}
-
-" neovim-session-manager {{{
-lua <<EOF
-local sm_conf = require('session_manager.config')
-require('session_manager').setup({
-  autoload_mode = { sm_conf.AutoloadMode.CurrentDir, sm_conf.AutoloadMode.GitSession },
-  autosave_ignore_filetypes = {
-    'gitcommit',
-  },
-  autosave_ignore_buftypes = {
-    'help',
-    'terminal',
-  },
-  autosave_last_session = true,
-  autosave_only_in_session = true,
-})
-vim.api.nvim_create_autocmd({ 'User' }, {
-  pattern = "SessionSavePost",
-  callback = function()
-    require("venv-selector").deactivate()
-  end,
-})
-EOF
-nnoremap <silent>gM <cmd>SessionManager load_session<cr>
 " }}}
 
 " vim-auto-save {{{
