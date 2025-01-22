@@ -1,0 +1,24 @@
+{
+    "window.commandCenter": 1,
+
+    // General
+    "files.autoSave": "afterDelay",
+    "files.autoSaveDelay": 1000,
+
+    // Extensions
+    // vscodevim
+    "vim.normalModeKeyBindings": [
+        {
+            "before": ["H"],
+            "after": ["^"]
+        },
+        {
+            "before": ["L"],
+            "after": ["$"]
+        },
+        {
+            "before": ["<space>"],
+            "after": ["<c-d>"]
+        }
+    ]
+}

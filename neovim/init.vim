@@ -480,6 +480,24 @@ local plugins = {
       },
     },
 
+    -- fugit2.nvim
+    {
+      'SuperBo/fugit2.nvim',
+      dependencies = {
+        'MunifTanjim/nui.nvim',
+        'nvim-tree/nvim-web-devicons',
+        'nvim-lua/plenary.nvim',
+      },
+      opts = {
+        libgit2_path = "/opt/homebrew/lib/libgit2.dylib",
+        width = 100,
+      },
+      cmd = { 'Fugit2', 'Fugit2Blame', 'Fugit2Diff', 'Fugit2Graph' },
+      keys = {
+        { 'gsb', '<cmd>Fugit2Blame<cr>', mode = 'n' },
+      },
+    },
+
     -- old vim plugins
     "dyng/auto_mkdir",
     "easymotion/vim-easymotion",
@@ -487,7 +505,6 @@ local plugins = {
     "machakann/vim-sandwich",
     "junegunn/vim-easy-align",
     "dyng/ctrlsf.vim",
-    "tpope/vim-fugitive",
     "mg979/vim-visual-multi",
     "sheerun/vim-polyglot",
     {
@@ -518,7 +535,7 @@ local plugins = {
     "yianwillis/vimcdoc",
 }
 
-require("lazy").setup(plugins)
+require("lazy").setup(plugins, { rocks = { enabled = false } })
 EOF
 " }}}
 
@@ -1032,11 +1049,6 @@ for key in keys(easymotion_key_map)
     exec "vmap " . key . " " . easymotion_key_map[key]
     exec "omap " . key . " " . easymotion_key_map[key]
 endfo
-" }}}
-
-" Fugitive {{{
-nnoremap <silent> gsb :Git blame<CR>
-autocmd FileType fugitiveblame nmap <buffer> q gq
 " }}}
 
 " CtrlSF {{{
