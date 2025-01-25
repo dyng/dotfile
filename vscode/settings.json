@@ -19,6 +19,28 @@
         {
             "before": ["<space>"],
             "after": ["<c-d>"]
+        },
+        {
+            "before": ["g", "r"],
+            "commands": ["editor.action.referenceSearch.trigger"]
+        },
+        {
+            "before": ["g", "d"],
+            "commands": ["editor.action.goToDeclaration"]
+        }
+    ],
+    "vim.visualModeKeyBindings": [
+        {
+            "before": ["H"],
+            "after": ["^"]
+        },
+        {
+            "before": ["L"],
+            "after": ["$"]
+        },
+        {
+            "before": ["<space>"],
+            "after": ["<c-d>"]
         }
     ]
 }
