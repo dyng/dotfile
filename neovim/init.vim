@@ -1307,8 +1307,8 @@ end
 -- set mapping
 vim.keymap.set('n', 'guu', require'dap'.run_last, { silent=true })
 vim.keymap.set('n', 'guj', require'dap'.continue, { silent=true })
-vim.keymap.set('n', 'B', require'dap'.toggle_breakpoint, { silent=true })
-vim.keymap.set('n', 'gubc', function()
+vim.keymap.set('n', 'gub', require'dap'.toggle_breakpoint, { silent=true })
+vim.keymap.set('n', 'guB', function()
   local condition = vim.fn.input('Condition: ')
   require'dap'.toggle_breakpoint(condition)
 end, { silent=true })
@@ -1358,6 +1358,7 @@ require ('mason-nvim-dap').setup({
         program = "${file}",
         console = 'integratedTerminal',
         env = { PYTHONPATH = "${workspaceFolder}" },
+        cwd = "${workspaceFolder}",
         args = function()
           local args_string = vim.fn.input("Arguments: ")
           return vim.split(args_string, " ")
