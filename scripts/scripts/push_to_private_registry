@@ -1,0 +1,173 @@
+#!/bin/bash
+
+# Check if docker buildx is available
+if ! docker buildx version &>/dev/null; then
+  echo "Error: docker buildx is not available. Please install or enable it first."
+  exit 1
+fi
+
+# Define your private registry URL
+PRIVATE_REGISTRY="registry.sensetime.com/sensecore-graviton"
+# PRIVATE_REGISTRY="registry.sensetime.com/sensecore"
+
+# Function to display usage
+function usage {
+  echo "Usage: $0 [-p platform1,platform2,...] <image1:tag1> [<image2:tag2> ...]"
+  echo "  -p: Comma-separated list of platforms (e.g., 'linux/amd64,linux/arm64')"
+  echo "Example: $0 -p linux/arm64,linux/amd64 nginx:latest alpine:3.14"
+  exit 1
+}
+
+# Check if at least one argument is provided
+if [ "$#" -lt 1 ]; then
+  usage
+fi
+
+# Parse command line arguments
+PLATFORMS=()
+while getopts "p:h" opt; do
+  case $opt in
+    p)
+      IFS=',' read -ra PLATFORMS <<< "$OPTARG"
+      ;;
+    h)
+      usage
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG"
+      usage
+      ;;
+  esac
+done
+shift $((OPTIND-1))
+
+# Check if at least one image is provided
+if [ "$#" -lt 1 ]; then
+  usage
+fi
+
+# Function to process a single image
+process_image() {
+  local image_tag=$1
+  local platforms_arg=$2
+  local new_tag="$PRIVATE_REGISTRY/$image_tag"
+  
+  echo "Processing image: $image_tag"
+  
+  # Create a multi-platform manifest
+  if [ -n "$platforms_arg" ]; then
+    echo "Creating multi-platform manifest with platforms: $platforms_arg"
+    
+    # Temporary array to hold the platform-specific manifests
+    local platform_manifests=()
+    
+    # Process each platform
+    for platform in "${PLATFORMS[@]}"; do
+      echo "Processing platform $platform for $image_tag"
+      
+      # Use buildx to inspect the manifest for this platform
+      echo "Inspecting manifest for $image_tag on platform $platform"
+      
+      # Pull the image for this platform first to ensure it's available
+      if ! docker pull --platform "$platform" "$image_tag"; then
+        echo "Failed to pull $image_tag for platform $platform. Skipping this platform..."
+        continue
+      fi
+      
+      # Get the manifest
+      local manifest_info
+      manifest_info=$(docker buildx imagetools inspect --raw "$image_tag" 2>/dev/null)
+      if [ $? -ne 0 ] || [ -z "$manifest_info" ]; then
+        echo "Failed to inspect manifest for $image_tag. Skipping this platform..."
+        continue
+      fi
+      
+      # For multi-platform images, find the digest for the specific platform
+      local platform_digest
+      # If it's a manifest list, extract the digest for the specific platform
+      if echo "$manifest_info" | grep -q "manifests"; then
+        platform_digest=$(echo "$manifest_info" | jq -r --arg PLATFORM "$platform" '.manifests[] | select(.platform.architecture == ($PLATFORM | split("/")[1])) | .digest')
+        if [ -z "$platform_digest" ]; then
+          echo "Failed to find digest for platform $platform in manifest list. Skipping this platform..."
+          continue
+        fi
+      else
+        # It's a single platform image, use its digest
+        platform_digest=$(echo "$manifest_info" | jq -r '.config.digest')
+        if [ -z "$platform_digest" ]; then
+          echo "Failed to extract digest from manifest. Skipping this platform..."
+          continue
+        fi
+      fi
+      
+      # Tag the platform-specific image
+      local platform_tag="$new_tag-$(echo $platform | tr '/' '-')"
+      if ! docker tag "$image_tag" "$platform_tag"; then
+        echo "Failed to tag $image_tag as $platform_tag. Skipping this platform..."
+        continue
+      fi
+      
+      # Push to our registry
+      if ! docker push "$platform_tag"; then
+        echo "Failed to push $platform_tag. Skipping this platform..."
+        continue
+      fi
+      
+      # Add to our platform manifests array
+      platform_manifests+=("$image_tag@$platform_digest")
+      
+      echo "Successfully processed platform $platform for $image_tag"
+    done
+    
+    # Check if we have any valid platforms
+    echo "Platform manifests: ${platform_manifests[@]}"
+    if [ ${#platform_manifests[@]} -eq 0 ]; then
+      echo "No valid platform manifests were processed. Skipping multi-arch manifest creation."
+      return 1
+    fi
+    
+    # Create the multi-arch manifest from the platform manifests
+    echo "Creating multi-architecture manifest with ${#platform_manifests[@]} platforms..."
+    if ! docker buildx imagetools create --tag "$new_tag" ${platform_manifests[@]}; then
+      echo "Failed to create multi-architecture manifest for $image_tag. Skipping..."
+      return 1
+    fi
+    
+    echo "Successfully created multi-architecture manifest for $image_tag"
+  else
+    # Pull and push the image without platform specification
+    echo "Pulling image from Docker Hub: $image_tag"
+    if ! docker pull "$image_tag"; then
+      echo "Failed to pull $image_tag. Skipping..."
+      return 1
+    fi
+    
+    echo "Retagging $image_tag to $new_tag"
+    if ! docker tag "$image_tag" "$new_tag"; then
+      echo "Failed to retag $image_tag. Skipping..."
+      return 1
+    fi
+    
+    echo "Pushing $new_tag to the private registry"
+    if ! docker push "$new_tag"; then
+      echo "Failed to push $new_tag. Skipping..."
+      return 1
+    fi
+  fi
+  
+  echo "Successfully processed $image_tag"
+  return 0
+}
+
+# Loop through all provided image:tag arguments
+for image_tag in "$@"; do
+  if [ ${#PLATFORMS[@]} -gt 0 ]; then
+    # Join platforms with commas for display
+    platforms_str=$(IFS=,; echo "${PLATFORMS[*]}")
+    process_image "$image_tag" "$platforms_str"
+  else
+    process_image "$image_tag" ""
+  fi
+done
+
+echo "All tasks completed."
