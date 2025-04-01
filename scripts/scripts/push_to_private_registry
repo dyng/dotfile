@@ -55,7 +55,7 @@ process_image() {
   echo "Processing image: $image_tag"
   
   # Create a multi-platform manifest
-  if [ -n "$platforms_arg" ]; then
+  if [ -n "$platforms_arg" ] && [ ${#PLATFORMS[@]} -gt 1 ]; then
     echo "Creating multi-platform manifest with platforms: $platforms_arg"
     
     # Temporary array to hold the platform-specific manifests
@@ -135,11 +135,22 @@ process_image() {
     
     echo "Successfully created multi-architecture manifest for $image_tag"
   else
-    # Pull and push the image without platform specification
-    echo "Pulling image from Docker Hub: $image_tag"
-    if ! docker pull "$image_tag"; then
-      echo "Failed to pull $image_tag. Skipping..."
-      return 1
+    # Pull and push the image with or without platform specification
+    if [ -n "$platforms" ]; then
+      # If platforms are defined, pull the specific platform image
+      local platform=$(echo "$platforms" | cut -d ',' -f1)
+      echo "Pulling image from Docker Hub with platform $platform: $image_tag"
+      if ! docker pull --platform "$platform" "$image_tag"; then
+        echo "Failed to pull $image_tag with platform $platform. Skipping..."
+        return 1
+      fi
+    else
+      # Pull the image for the current machine's architecture
+      echo "Pulling image from Docker Hub for current architecture: $image_tag"
+      if ! docker pull "$image_tag"; then
+        echo "Failed to pull $image_tag. Skipping..."
+        return 1
+      fi
     fi
     
     echo "Retagging $image_tag to $new_tag"
