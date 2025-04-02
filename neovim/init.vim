@@ -245,7 +245,6 @@ local plugins = {
     -- CopilotChat
     {
         "CopilotC-Nvim/CopilotChat.nvim",
-        branch = "canary",
         dependencies = {
             "github/copilot.vim",
         },
@@ -1238,9 +1237,8 @@ local cmp = require'cmp'
 cmp.setup({
   preselect = cmp.PreselectMode.Item,
   snippet = {
-    -- REQUIRED - you must specify a snippet engine
     expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+      vim.fn["vsnip#anonymous"](args.body)
     end,
   },
   matching = {
@@ -1256,13 +1254,13 @@ cmp.setup({
     ['<C-u>'] = cmp.mapping.scroll_docs(-4),
     ['<C-d>'] = cmp.mapping.scroll_docs(4),
   },
-  sources = cmp.config.sources({
+  sources = {
     { name = 'nvim_lsp' },
     { name = 'nvim_lsp_signature_help' },
     { name = 'vsnip' },
   }, {
     { name = 'buffer' },
-  })
+  }
 })
 
 -- cmp-dap
