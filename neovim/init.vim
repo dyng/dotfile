@@ -330,15 +330,7 @@ local plugins = {
               use_absolute_path = true,
             },
           },
-        },
-        {
-          -- Make sure to set this up properly if you have lazy=true
-          'MeanderingProgrammer/render-markdown.nvim',
-          opts = {
-            file_types = { "markdown", "Avante" },
-          },
-          ft = { "markdown", "Avante" },
-        },
+        }
       },
     },
 
@@ -558,11 +550,26 @@ local plugins = {
       },
     },
 
-    -- render-markdown.nvim
+    -- 
     {
-    'MeanderingProgrammer/render-markdown.nvim',
-      dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' },
-      opts = {},
+      "jbyuki/one-small-step-for-vimkind",
+      dependencies = {
+        "mfussenegger/nvim-dap",
+      },
+      init = function()
+        local dap = require"dap"
+          dap.configurations.lua = { 
+            { 
+              type = 'nlua', 
+              request = 'attach',
+              name = "Attach to running Neovim instance",
+            }
+          }
+
+          dap.adapters.nlua = function(callback, config)
+            callback({ type = 'server', host = config.host or "127.0.0.1", port = config.port or 8086 })
+          end
+      end
     },
 
     -- old vim plugins
@@ -963,6 +970,16 @@ function! BufWipeout(listed) abort
 endfunction
 command! -bar -bang BufWipeout call BufWipeout(<bang>0)
 " }}}
+
+" SynStack {{{
+function! SynStack()
+  if !exists("*synstack")
+    return
+  endif
+  echo map(synstack(line('.'), col('.')), 'synIDattr(v:val, "name")')
+endfunc
+" }}}
+
 " }}}
 
 " Custom FileType Config {{{

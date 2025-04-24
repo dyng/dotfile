@@ -1,10 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
 # profiling flag, set 1 if needed
 PROFILING=
 
@@ -53,11 +46,11 @@ zplug "djui/alias-tips"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "reegnz/jq-zsh-plugin"
 zplug "MichaelAquilina/zsh-autoswitch-virtualenv", defer:2
+zplug "loiccoyle/zsh-github-copilot"
 
 # Theme
-zplug "romkatv/powerlevel10k", as:theme, depth:1
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+zplug "mafredri/zsh-async"
+zplug "sindresorhus/pure", use:"pure.zsh", as:theme
 
 # Install plugins if there are plugins that have not been installed
 if ! zplug check --verbose; then
@@ -271,7 +264,7 @@ export LESS="-XFR"
 
 # }}}
 
-### App Init {{{
+### App & Plugin Setup {{{
 
 # Docker (for mac only)
 if hash docker-machine &>/dev/null; then
@@ -300,6 +293,12 @@ fi
 # zoxide
 if hash zoxide &>/dev/null; then
     eval "$(zoxide init zsh)"
+fi
+
+# zsh-github-copilot
+if which zsh_gh_copilot_suggest &>/dev/null; then
+    bindkey '^[p' zsh_gh_copilot_suggest
+    bindkey '^[o' zsh_gh_copilot_explain
 fi
 
 # }}}
