@@ -5,3 +5,4 @@
 /pentadactyl/_pentadactyl/info
 /vimperator/_vimperator/info
 *.log
+.aider*

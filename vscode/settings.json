@@ -42,5 +42,22 @@
             "before": ["<space>"],
             "after": ["<c-d>"]
         }
-    ]
+    ],
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.profiles.osx": {
+        "bash": {
+            "path": "bash",
+            "args": ["-l"]
+        },
+        "zsh": {
+            "path": "/bin/zsh",
+            "args": ["-l"]
+        },
+        "clean-zsh": {
+            "path": "env",
+            "args": ["-i", "zsh", "-l"]
+        }
+    }
+}
+
 }
