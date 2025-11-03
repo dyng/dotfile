@@ -259,6 +259,15 @@ unset_proxy() {
     echo 'Unset proxy successfully!'
 }
 
+with_proxy() {
+    if [ $# -eq 0 ]; then
+        echo "usage: use_proxy <command> [args...]"
+        return 1
+    fi
+
+    HTTP_PROXY=http://127.0.0.1:1080 HTTPS_PROXY=http://127.0.0.1:1080 "$@"
+}
+
 # Make less readable
 export LESS="-XFR"
 
