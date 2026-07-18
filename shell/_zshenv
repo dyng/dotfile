@@ -1,3 +1,35 @@
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
+_codex_autoswitch_virtualenv() {
+  # Codex command-runner shells do not reliably reach interactive zsh hooks.
+  # When Codex starts inside a project with a .venv marker, activate the matching
+  # virtualenv from ~/.virtualenvs without loading the full zsh plugin stack.
+  [[ -n "$CODEX_THREAD_ID" ]] || return
+
+  _codex_dir="$PWD"
+
+  while [[ "$_codex_dir" != "/" && "$_codex_dir" != "$HOME" ]]; do
+    if [[ -f "$_codex_dir/.venv" ]]; then
+      _codex_venv_name="$(<"$_codex_dir/.venv")"
+      _codex_venv="$HOME/.virtualenvs/$_codex_venv_name"
+
+      if [[ "$_codex_venv_name" != *..* && -r "$_codex_venv/bin/activate" ]]; then
+        if [[ "$VIRTUAL_ENV" != "$_codex_venv" ]]; then
+          source "$_codex_venv/bin/activate"
+        fi
+
+        path=("$_codex_venv/bin" ${path:#"$_codex_venv/bin"})
+        export PATH
+      fi
+
+      break
+    fi
+
+    _codex_dir="${_codex_dir:h}"
+  done
+
+  unset _codex_dir _codex_venv_name _codex_venv
+}
+
+_codex_autoswitch_virtualenv

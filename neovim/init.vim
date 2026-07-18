@@ -239,48 +239,6 @@ local plugins = {
       },
     },
 
-    -- copilot.vim
-    "github/copilot.vim",
-
-    -- CopilotChat
-    {
-        "CopilotC-Nvim/CopilotChat.nvim",
-        dependencies = {
-            "github/copilot.vim",
-        },
-        build = "make tiktoken",
-        opts = {
-            auto_follow_cursor = false,
-            auto_insert_mode = false,
-            insert_at_end = true,
-            show_help = false,
-            window = {
-                layout = 'horizontal',
-                width = 1,
-                height = 0.5,
-            },
-            mappings = {
-                submit_prompt = {
-                    normal = '<CR>',
-                    insert = '<CR>'
-                },
-                reset = {
-                    normal = '',
-                    insert = '<C-l>'
-                },
-                accept_diff = {
-                    normal = '',
-                    insert = ''
-                },
-            },
-        },
-        keys = {
-            { "<A-'>", "<cmd>CopilotChatToggle<cr>", mode = "n" },
-            { "<A-'>", "<cmd>CopilotChatToggle<cr>", mode = "i" },
-            { "<A-'>", "<cmd>CopilotChatExplain<cr>", mode = "x" },
-        },
-    },
-
     -- nvim-lightbulb
     {
       "kosayoda/nvim-lightbulb",
@@ -1545,22 +1503,6 @@ EOF
 let g:auto_save = 1
 let g:auto_save_silent = 1
 let g:auto_save_write_all_buffers = 1
-" }}}
-
-" copilot.vim {{{
-let g:copilot_no_tab_map = v:true
-let g:copilot_assume_mapped = v:true
-let g:copilot_filetypes = {
-    \ 'markdown': v:true,
-    \ 'dap-repl': v:false,
-    \ }
-inoremap <silent><script><expr> <C-E> <SID>CopilotAccept("\<End>")
-inoremap <silent><script><expr> <Right> <SID>CopilotAccept("\<Right>")
-imap <silent> <C-]> <Plug>(copilot-next)
-function s:CopilotAccept(fallback) abort
-    let s = copilot#GetDisplayedSuggestion()
-    return !empty(s.text) ? copilot#Accept("") : a:fallback
-endfunction
 " }}}
 
 " neotest {{{
