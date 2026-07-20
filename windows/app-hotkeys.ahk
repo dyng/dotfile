@@ -18,7 +18,7 @@ capsLockCtrlDown := false
 
     capsLockCtrlDown := true
     capsLockPressedAt := A_TickCount
-    Send "{Blind}{LCtrl down}"
+    Send "{Blind}{LCtrl DownR}"
 }
 
 *CapsLock Up::
@@ -45,6 +45,13 @@ capsLockCtrlDown := false
         capsLockLastTapAt := now
     }
 }
+
+; CapsLock+A/E: move to the start/end of the current line while keeping
+; physical Ctrl+A and Ctrl+E unchanged.
+#HotIf GetKeyState("CapsLock", "P")
+*a::Send "{Home}"
+*e::Send "{End}"
+#HotIf
 
 ; Alt+I: activate Chrome, or start it when it is not running.
 !i::ActivateOrRun(

@@ -4,8 +4,40 @@
 " highlighting remains enabled.
 let g:java_ignore_markdown = 1
 
-" python provider
-let g:python3_host_prog = 'python3'
+" Platform-specific providers and shell
+if has('win32')
+    " These optional providers are not used by this configuration on Windows.
+    let g:loaded_perl_provider = 0
+    let g:loaded_ruby_provider = 0
+
+    let $JAVA_HOME = expand('~/scoop/apps/temurin21-jdk/current')
+    let s:windows_tool_paths = [
+        \ expand('~/scoop/shims'),
+        \ expand('~/scoop/apps/nodejs-lts/current'),
+        \ expand('~/scoop/apps/nodejs-lts/current/bin'),
+        \ expand('~/scoop/apps/mingw/current/bin'),
+        \ $JAVA_HOME . '/bin',
+        \ ]
+    let $PATH = join(s:windows_tool_paths, ';') . ';' . $PATH
+    let $CC = expand('~/scoop/apps/mingw/current/bin/gcc.exe')
+    let $CXX = expand('~/scoop/apps/mingw/current/bin/g++.exe')
+    let g:python3_host_prog = exepath('python')
+
+    let s:pwsh = exepath('pwsh')
+    if !empty(s:pwsh)
+        let &shell = s:pwsh
+        let &shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command'
+        let &shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+        let &shellpipe = '2>&1 | Tee-Object %s; exit $LastExitCode'
+        let &shellquote = ''
+        let &shellxquote = ''
+    endif
+else
+    let g:python3_host_prog = 'python3'
+endif
+
+" Required by UI plugins such as nvim-colorizer on modern terminals/Neovide.
+set termguicolors
 
 " set mapleader
 let mapleader = ","
@@ -84,9 +116,9 @@ local plugins = {
 
     -- mason.nvim
     {
-        "williamboman/mason.nvim",
+        "mason-org/mason.nvim",
         dependencies = {
-            "williamboman/mason-lspconfig.nvim"
+            "mason-org/mason-lspconfig.nvim"
         }
     },
 
@@ -96,7 +128,7 @@ local plugins = {
       dependencies = {
         -- language specific plugins
         "nvim-java/nvim-java",
-        "simrat39/rust-tools.nvim",
+        "mrcjkb/rustaceanvim",
       },
     },
 
@@ -246,48 +278,6 @@ local plugins = {
       },
     },
 
-    -- copilot.vim
-    "github/copilot.vim",
-
-    -- CopilotChat
-    {
-        "CopilotC-Nvim/CopilotChat.nvim",
-        dependencies = {
-            "github/copilot.vim",
-        },
-        build = "make tiktoken",
-        opts = {
-            auto_follow_cursor = false,
-            auto_insert_mode = false,
-            insert_at_end = true,
-            show_help = false,
-            window = {
-                layout = 'horizontal',
-                width = 1,
-                height = 0.5,
-            },
-            mappings = {
-                submit_prompt = {
-                    normal = '<CR>',
-                    insert = '<CR>'
-                },
-                reset = {
-                    normal = '',
-                    insert = '<C-l>'
-                },
-                accept_diff = {
-                    normal = '',
-                    insert = ''
-                },
-            },
-        },
-        keys = {
-            { "<A-'>", "<cmd>CopilotChatToggle<cr>", mode = "n" },
-            { "<A-'>", "<cmd>CopilotChatToggle<cr>", mode = "i" },
-            { "<A-'>", "<cmd>CopilotChatExplain<cr>", mode = "x" },
-        },
-    },
-
     -- nvim-lightbulb
     {
       "kosayoda/nvim-lightbulb",
@@ -335,7 +325,6 @@ local plugins = {
     -- venv-selector.nvim
     {
       "linux-cultist/venv-selector.nvim",
-      branch = "regexp",
       opts = {
         debug = true,
         enable_cached_venvs = false,
@@ -495,7 +484,9 @@ local plugins = {
         'nvim-lua/plenary.nvim',
       },
       opts = {
-        libgit2_path = "/opt/homebrew/lib/libgit2.dylib",
+        libgit2_path = vim.fn.has("win32") == 1
+          and (vim.fn.stdpath("data") .. "/libgit2/bin/git2.dll")
+          or "/opt/homebrew/lib/libgit2.dylib",
         width = 100,
       },
       cmd = { 'Fugit2', 'Fugit2Blame', 'Fugit2Diff', 'Fugit2Graph' },
@@ -504,7 +495,7 @@ local plugins = {
       },
     },
 
-    -- 
+    --
     {
       "jbyuki/one-small-step-for-vimkind",
       dependencies = {
@@ -512,9 +503,9 @@ local plugins = {
       },
       init = function()
         local dap = require"dap"
-          dap.configurations.lua = { 
-            { 
-              type = 'nlua', 
+          dap.configurations.lua = {
+            {
+              type = 'nlua',
               request = 'attach',
               name = "Attach to running Neovim instance",
             }
@@ -547,7 +538,7 @@ local plugins = {
       "iamcco/markdown-preview.nvim",
       cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
       ft = { "markdown" },
-      build = function() vim.fn["mkdp#util#install"]() end,
+      build = function() vim.fn["mkdp#util#install_sync"](true) end,
     },
 
     -- Language Specific Plugins
@@ -571,7 +562,7 @@ EOF
 " Encoding & Language {{{
 set encoding=utf-8
 set fileencodings=ucs-bom,utf-8,sjis,cp936,gb18030,big5,euc-jp,euc-kr,latin1
-language en_US.UTF-8
+silent! language en_US.UTF-8
 " }}}
 
 " Spelling Check {{{
@@ -608,7 +599,9 @@ set smartcase
 
 " UI {{{
 set backspace=indent,eol,start
-set guioptions=
+if exists('+guioptions')
+    set guioptions=
+endif
 set hlsearch
 set showmatch
 set laststatus=2
@@ -618,18 +611,20 @@ set listchars=tab:»-,trail:-,extends:»,precedes:«,nbsp:%
 autocmd FileType git*,help setlocal nolist
 
 " Colorscheme
-set t_Co=256
+if exists('+t_Co')
+    set t_Co=256
+endif
 set background=dark
 
 colorscheme onedark
 
 " Font
-if has('gui_macvim')
+if exists('g:neovide')
+    set guifont=JetBrainsMono\ Nerd\ Font:h14
+elseif has('gui_macvim')
     set guifont=Inconsolata\ Nerd\ Font\ Mono:h16
 elseif exists("g:gui_vimr")
     set guifont=BlexMono\ Nerd\ Font\ Mono:h14
-else
-    set guifont=Hack:h14
 endif
 
 " signs
@@ -821,7 +816,10 @@ set splitright
 set updatetime=100
 
 " disable beeping
-set vb t_vb=
+set vb
+if exists('+t_vb')
+    set t_vb=
+endif
 
 " ignore python3 warning
 silent! py3 pass
@@ -943,8 +941,10 @@ autocmd FileType go setlocal tabstop=4 shiftwidth=4 nolist noexpandtab
 " lua
 autocmd FileType lua setlocal shiftwidth=2
 
-" java
-autocmd FileType java let $JAVA_HOME = '/usr/local/var/jenv/versions/19'
+" Java uses the process-local JDK configured at startup on Windows.
+if !has('win32')
+    autocmd FileType java let $JAVA_HOME = '/usr/local/var/jenv/versions/19'
+endif
 "}}}
 
 " Inline Plugins {{{
@@ -1171,53 +1171,57 @@ require("mason").setup({
 })
 
 -- nvim-java MUST be loaded before lspconfig
-require('java').setup()
+require('java').setup({
+  -- The Spring Boot VSIX host is unreliable on Windows; keep core Java,
+  -- testing and debugging enabled without blocking startup on this optional tool.
+  spring_boot_tools = {
+    enable = false,
+  },
+  -- Use the side-by-side Scoop JDK configured at the top of this file.
+  jdk = {
+    auto_install = false,
+    path = vim.env.JAVA_HOME,
+  },
+})
+
+vim.lsp.config("clangd", {
+  cmd = { "clangd", "--offset-encoding=utf-16" },
+})
+
+vim.lsp.config("pyright", {
+  settings = {
+    python = {
+      analysis = {
+        exclude = {
+          "**/venv",
+          "**/__pycache__",
+          "**/site-packages",
+          "**/dist-packages"
+        },
+        diagnosticMode = "openFilesOnly",
+        autoSearchPaths = true,
+        useLibraryCodeForTypes = true,
+        typeCheckingMode = "basic",
+      },
+    },
+  },
+})
+
+vim.lsp.config("gopls", {
+  settings = {
+    gopls = {
+      env = {
+        -- GOPACKAGESDRIVER can be set here when needed.
+      },
+    },
+  },
+})
 
 require("mason-lspconfig").setup({
-    handlers = {
-        function (server_name)
-            require("lspconfig")[server_name].setup {}
-        end,
-        ["clangd"] = function ()
-            require("lspconfig").clangd.setup {
-                cmd = { "clangd", "--offset-encoding=utf-16" },
-            }
-        end,
-        ["rust_analyzer"] = function ()
-            require("rust-tools").setup {}
-        end,
-        ["pyright"] = function ()
-          require("lspconfig").pyright.setup {
-            settings = {
-              python = {
-                analysis = {
-                  exclude = {
-                    "**/venv",
-                    "**/__pycache__",
-                    "**/site-packages",
-                    "**/dist-packages"
-                  },
-                  diagnosticMode = "openFilesOnly",
-                  autoSearchPaths = true,
-                  useLibraryCodeForTypes = true,
-                  typeCheckingMode = "basic",
-                },
-              },
-            },
-          }
-        end,
-        ["gopls"] = function ()
-          require("lspconfig").gopls.setup {
-            settings = {
-              gopls = {
-                env = {
-                  -- GOPACKAGESDRIVER = "/Users/dingye/Workspace/tmp/debug_bazel_slow/sleepy_gpd.sh",
-                },
-              },
-            },
-          }
-        end,
-    }
+  ensure_installed = { "clangd", "pyright", "gopls", "rust_analyzer" },
+  automatic_enable = {
+    exclude = { "jdtls", "rust_analyzer" },
+  },
 })
 EOF
 " }}}
@@ -1431,7 +1435,7 @@ require ('mason-nvim-dap').setup({
     python = function(config)
       config.adapters = {
         type = "executable",
-        command = "python3",
+        command = vim.fn.exepath("python"),
         args = {
           "-m",
           "debugpy.adapter",
@@ -1567,22 +1571,6 @@ EOF
 let g:auto_save = 1
 let g:auto_save_silent = 1
 let g:auto_save_write_all_buffers = 1
-" }}}
-
-" copilot.vim {{{
-let g:copilot_no_tab_map = v:true
-let g:copilot_assume_mapped = v:true
-let g:copilot_filetypes = {
-    \ 'markdown': v:true,
-    \ 'dap-repl': v:false,
-    \ }
-inoremap <silent><script><expr> <C-E> <SID>CopilotAccept("\<End>")
-inoremap <silent><script><expr> <Right> <SID>CopilotAccept("\<Right>")
-imap <silent> <C-]> <Plug>(copilot-next)
-function s:CopilotAccept(fallback) abort
-    let s = copilot#GetDisplayedSuggestion()
-    return !empty(s.text) ? copilot#Accept("") : a:fallback
-endfunction
 " }}}
 
 " neotest {{{
