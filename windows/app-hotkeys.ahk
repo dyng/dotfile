@@ -59,6 +59,12 @@ capsLockCtrlDown := false
     "C:\Program Files\Google\Chrome\Application\chrome.exe"
 )
 
+; Alt+E: activate Neovide, or start it when it is not running.
+!e::ActivateOrRun(
+    "ahk_exe neovide.exe",
+    "C:\Users\TONGYU\scoop\apps\neovide\current\neovide.exe"
+)
+
 ; Ctrl+Alt+N: activate Notion, or start it when it is not running.
 ^!n::ActivateOrRun(
     "ahk_exe Notion.exe",
@@ -71,8 +77,8 @@ capsLockCtrlDown := false
     "C:\Users\TONGYU\scoop\apps\idea\current\IDE\bin\idea64.exe"
 )
 
-; Alt+L: activate ChatGPT, or start the installed Windows app.
-!l::ActivateOrRun(
+; Alt+U: activate Codex, or start the installed Windows app.
+!u::ActivateOrRun(
     "ahk_exe ChatGPT.exe",
     'explorer.exe "shell:AppsFolder\OpenAI.Codex_2p2nqsd0c76g0!App"'
 )
