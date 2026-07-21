@@ -1,6 +1,9 @@
 #Requires AutoHotkey v2.0
 #SingleInstance Force
 
+LogEvent("script-start", "ahk_version=" A_AhkVersion)
+OnExit(LogScriptExit)
+
 ; Use CapsLock as Left Ctrl system-wide. Double-tap it within 300 ms to
 ; toggle CapsLock.
 capsLockDoubleTapMs := 300
@@ -11,6 +14,7 @@ capsLockCtrlDown := false
 *CapsLock::
 {
     global capsLockPressedAt, capsLockCtrlDown
+    LogHotkey()
 
     ; Ignore key-repeat events while CapsLock is already held.
     if capsLockCtrlDown
@@ -25,6 +29,7 @@ capsLockCtrlDown := false
 {
     global capsLockDoubleTapMs, capsLockPressedAt, capsLockLastTapAt
     global capsLockCtrlDown
+    LogHotkey()
 
     if capsLockCtrlDown {
         Send "{Blind}{LCtrl up}"
@@ -49,8 +54,16 @@ capsLockCtrlDown := false
 ; CapsLock+A/E: move to the start/end of the current line while keeping
 ; physical Ctrl+A and Ctrl+E unchanged.
 #HotIf GetKeyState("CapsLock", "P")
-*a::Send "{Home}"
-*e::Send "{End}"
+*a::
+{
+    LogHotkey()
+    Send "{Home}"
+}
+*e::
+{
+    LogHotkey()
+    Send "{End}"
+}
 #HotIf
 
 ; Alt+I: activate Chrome, or start it when it is not running.
@@ -84,6 +97,8 @@ capsLockCtrlDown := false
 )
 
 ActivateOrRun(windowSelector, launchCommand) {
+    LogHotkey()
+
     if WinExist(windowSelector) {
         if WinGetMinMax(windowSelector) = -1
             WinRestore(windowSelector)
@@ -94,4 +109,46 @@ ActivateOrRun(windowSelector, launchCommand) {
     Run(launchCommand)
     if WinWait(windowSelector, , 10)
         WinActivate(windowSelector)
+}
+
+LogHotkey() {
+    details := Format(
+        'current="{}" prior="{}" elapsed_ms={}',
+        A_ThisHotkey,
+        A_PriorHotkey,
+        A_TimeSincePriorHotkey
+    )
+    LogEvent("hotkey", details)
+}
+
+LogScriptExit(exitReason, exitCode) {
+    LogEvent(
+        "script-exit",
+        Format('reason="{}" code={}', exitReason, exitCode)
+    )
+}
+
+LogEvent(eventType, details := "") {
+    static logDirectory := A_ScriptDir "\logs"
+    static logFile := logDirectory "\app-hotkeys.log"
+    static backupFile := logFile ".1"
+    static maxLogBytes := 512 * 1024
+
+    ; Diagnostics must never stop the hotkey script if logging fails.
+    try {
+        if !DirExist(logDirectory)
+            DirCreate(logDirectory)
+
+        if FileExist(logFile) && FileGetSize(logFile) >= maxLogBytes
+            FileMove(logFile, backupFile, 1)
+
+        line := Format(
+            "{} tick={} event={} {}`n",
+            FormatTime(, "yyyy-MM-dd HH:mm:ss"),
+            A_TickCount,
+            eventType,
+            details
+        )
+        FileAppend(line, logFile, "UTF-8")
+    }
 }
