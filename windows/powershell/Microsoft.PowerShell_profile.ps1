@@ -11,6 +11,11 @@ foreach ($pathEntry in @($scoopShims, $starshipDir)) {
 $env:EDITOR = 'nvim'
 $env:VISUAL = 'nvim'
 
+# Unix-style aliases with fixed arguments are PowerShell functions.
+function tis {
+    tig status @args
+}
+
 # PSReadLine: history search, predictions, and an ergonomic editing baseline.
 Import-Module PSReadLine
 Set-PSReadLineOption -EditMode Windows
