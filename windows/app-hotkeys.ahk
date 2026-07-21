@@ -106,13 +106,22 @@ ActivateOrRun(windowSelector, launchCommand) {
     if WinExist(windowSelector) {
         if WinGetMinMax(windowSelector) = -1
             WinRestore(windowSelector)
-        WinActivate(windowSelector)
+        ActivateAndMaskAlt(windowSelector)
         return
     }
 
     Run(launchCommand)
     if WinWait(windowSelector, , 10)
-        WinActivate(windowSelector)
+        ActivateAndMaskAlt(windowSelector)
+}
+
+ActivateAndMaskAlt(windowSelector) {
+    WinActivate(windowSelector)
+
+    ; Switch immediately, then mask the eventual Alt-up event with an
+    ; unassigned key so the target app does not interpret it as a menu request.
+    if WinWaitActive(windowSelector, , 1) && GetKeyState("Alt", "P")
+        Send "{Blind}{vkE8}"
 }
 
 LogHotkey() {
