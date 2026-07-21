@@ -23,6 +23,10 @@ capsLockCtrlDown := false
     capsLockCtrlDown := true
     capsLockPressedAt := A_TickCount
     Send "{Blind}{LCtrl DownR}"
+
+    ; Keep this hotkey thread active until physical release so keyboard
+    ; auto-repeat cannot trigger enough CapsLock events to trip flood protection.
+    KeyWait("CapsLock")
 }
 
 *CapsLock Up::
