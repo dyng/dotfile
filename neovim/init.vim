@@ -489,6 +489,12 @@ local plugins = {
     -- fugit2.nvim
     {
       'SuperBo/fugit2.nvim',
+      init = function()
+        -- fugit2 main currently loads this module from its former core path.
+        package.preload['fugit2.core.pendulum'] = function()
+          return require('fugit2.util.pendulum')
+        end
+      end,
       dependencies = {
         'MunifTanjim/nui.nvim',
         'nvim-tree/nvim-web-devicons',
