@@ -21,6 +21,7 @@ pwsh -File .\windows\deploy.ps1 -BackupExisting
 ```
 
 The deploy script links the PowerShell profile, Starship configuration,
-Neovim configuration directory, and AutoHotkey configuration. Existing targets
-are moved to timestamped backup paths before the links are created. Creating
-symbolic links requires Windows Developer Mode or an elevated PowerShell.
+Neovim configuration directory, AutoHotkey configuration, and Windows Terminal
+settings. Existing targets are moved to timestamped backup paths before the
+links are created. Creating symbolic links requires Windows Developer Mode or
+an elevated PowerShell.

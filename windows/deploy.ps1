@@ -31,6 +31,11 @@ $links = @(
         Source = Join-Path $repoRoot 'windows\app-hotkeys.ahk'
         Target = Join-Path $documents 'AutoHotkey\app-hotkeys.ahk'
     }
+    [PSCustomObject]@{
+        Name = 'Windows Terminal settings'
+        Source = Join-Path $repoRoot 'windows\terminal\settings.json'
+        Target = Join-Path $env:USERPROFILE 'scoop\persist\windows-terminal\settings\settings.json'
+    }
 )
 
 function Get-NormalizedPath {
