@@ -3,6 +3,9 @@
 " Markdown-doc syntax. Skip only that optional include; normal Java syntax
 " highlighting remains enabled.
 let g:java_ignore_markdown = 1
+" Markdown highlighting is handled by Neovim's built-in runtime and Treesitter.
+" Avoid loading Polyglot's duplicate HTML/CSS/Markdown syntax stack.
+let g:polyglot_disabled = ['markdown']
 
 " Platform-specific providers and shell
 if has('win32')
@@ -65,11 +68,34 @@ local plugins = {
     {
         "nvim-neo-tree/neo-tree.nvim",
         branch = "v3.x",
+        cmd = { "Neotree" },
+        keys = {
+            { "gn", "<cmd>Neotree reveal<cr>", mode = "n" },
+            { "gN", "<cmd>Neotree dir=.<cr>", mode = "n" },
+        },
         dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-tree/nvim-web-devicons",
             "MunifTanjim/nui.nvim",
-        }
+        },
+        opts = {
+          close_if_last_window = true,
+          enable_diagnostics = false,
+          window = {
+            width = 30,
+            mappings = {
+              ["<space>"] = "none",
+              ["e"] = "toggle_node",
+            },
+          },
+          filesystem = {
+            group_empty_dirs = true,
+            use_libuv_file_watcher = true,
+            follow_current_file = {
+              enabled = true,
+            },
+          },
+        },
     },
 
     -- noice.nvim
@@ -101,9 +127,48 @@ local plugins = {
     -- telescope.nvim
     {
       "nvim-telescope/telescope.nvim",
+      cmd = { "Telescope" },
+      keys = {
+        {
+          "<C-P>",
+          function()
+            require("telescope.builtin").find_files({ cwd = vim.fn.ProjectRoot() })
+          end,
+          mode = "n",
+        },
+        { "gp", function() require("telescope.builtin").find_files() end, mode = "n" },
+        { "gm", function() require("telescope.builtin").oldfiles() end, mode = "n" },
+        { "gb", function() require("telescope.builtin").lsp_document_symbols() end, mode = "n" },
+        { "gB", function() require("telescope.builtin").lsp_dynamic_workspace_symbols() end, mode = "n" },
+      },
       dependencies = {
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-      }
+      },
+      opts = {
+        defaults = {
+          path_display = { 'filename_first' },
+          mappings = {
+            i = {
+              ["<esc>"] = function(...)
+                return require('telescope.actions').close(...)
+              end,
+            },
+          },
+        },
+        extensions = {
+          fzf = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = "smart_case",
+          },
+        },
+      },
+      config = function(_, opts)
+        local telescope = require('telescope')
+        telescope.setup(opts)
+        telescope.load_extension('fzf')
+      end,
     },
 
     -- nvim-treesitter
@@ -117,24 +182,90 @@ local plugins = {
     -- mason.nvim
     {
         "mason-org/mason.nvim",
-        dependencies = {
-            "mason-org/mason-lspconfig.nvim"
-        }
+        cmd = { "Mason", "MasonInstall", "MasonUninstall", "MasonUpdate", "MasonLog" },
+        opts = {
+          log_level = vim.log.levels.DEBUG,
+        },
     },
 
     -- nvim-lspconfig
     {
       "neovim/nvim-lspconfig",
+      ft = { "c", "cpp", "go", "python", "rust" },
       dependencies = {
-        -- language specific plugins
-        "nvim-java/nvim-java",
-        "mrcjkb/rustaceanvim",
+        "mason-org/mason.nvim",
+        "mason-org/mason-lspconfig.nvim",
       },
+      config = function()
+        vim.lsp.config("clangd", {
+          cmd = { "clangd", "--offset-encoding=utf-16" },
+        })
+
+        vim.lsp.config("pyright", {
+          settings = {
+            python = {
+              analysis = {
+                exclude = {
+                  "**/venv",
+                  "**/__pycache__",
+                  "**/site-packages",
+                  "**/dist-packages",
+                },
+                diagnosticMode = "openFilesOnly",
+                autoSearchPaths = true,
+                useLibraryCodeForTypes = true,
+                typeCheckingMode = "basic",
+              },
+            },
+          },
+        })
+
+        vim.lsp.config("gopls", {
+          settings = {
+            gopls = {
+              env = {
+                -- GOPACKAGESDRIVER can be set here when needed.
+              },
+            },
+          },
+        })
+
+        require("mason-lspconfig").setup({
+          ensure_installed = { "clangd", "pyright", "gopls", "rust_analyzer" },
+          automatic_enable = {
+            exclude = { "jdtls", "rust_analyzer" },
+          },
+        })
+      end,
+    },
+
+    {
+      "nvim-java/nvim-java",
+      ft = { "java" },
+      dependencies = {
+        "neovim/nvim-lspconfig",
+        "mason-org/mason.nvim",
+      },
+      opts = {
+        spring_boot_tools = {
+          enable = false,
+        },
+        jdk = {
+          auto_install = false,
+          path = vim.env.JAVA_HOME,
+        },
+      },
+    },
+
+    {
+      "mrcjkb/rustaceanvim",
+      ft = { "rust" },
     },
 
     -- nvim-cmp
     {
       "hrsh7th/nvim-cmp",
+      event = { "InsertEnter", "CmdlineEnter" },
       dependencies = {
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
@@ -149,12 +280,83 @@ local plugins = {
             "rafamadriz/friendly-snippets",
           }
         },
-      }
+      },
+      config = function()
+        local cmp = require('cmp')
+        cmp.setup({
+          preselect = cmp.PreselectMode.Item,
+          snippet = {
+            expand = function(args)
+              vim.fn["vsnip#anonymous"](args.body)
+            end,
+          },
+          matching = {
+            disallow_fuzzy_matching = false,
+          },
+          mapping = {
+            ['<TAB>'] = cmp.mapping.select_next_item(),
+            ['<Down>'] = cmp.mapping.select_next_item(),
+            ['<S-TAB>'] = cmp.mapping.select_prev_item(),
+            ['<Up>'] = cmp.mapping.select_prev_item(),
+            ['<CR>'] = cmp.mapping.confirm({ select = false }),
+            ['<C-c>'] = cmp.mapping.abort(),
+            ['<C-u>'] = cmp.mapping.scroll_docs(-4),
+            ['<C-d>'] = cmp.mapping.scroll_docs(4),
+          },
+          sources = {
+            { name = 'nvim_lsp' },
+            { name = 'nvim_lsp_signature_help' },
+            { name = 'vsnip' },
+          }, {
+            { name = 'buffer' },
+          },
+        })
+
+        cmp.setup({
+          enabled = function()
+            return vim.api.nvim_get_option_value('buftype', { buf = 0 }) ~= 'prompt'
+              or (package.loaded['cmp_dap'] and require('cmp_dap').is_dap_buffer())
+          end,
+        })
+        cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
+          sources = {
+            { name = "dap" },
+          },
+        })
+
+        cmp.setup.cmdline(':', {
+          mapping = cmp.mapping.preset.cmdline(),
+          sources = cmp.config.sources({
+            { name = 'path' },
+          }, {
+            {
+              name = 'cmdline',
+              option = {
+                ignore_cmds = { 'Man', '!', '%', 'write', 'wall', 'quit', 'qall', 'xit' },
+              },
+            },
+          }),
+        })
+      end,
     },
 
     -- nvim-dap
     {
         "mfussenegger/nvim-dap",
+        cmd = { "DapListBreakpoints", "DapClearBreakpoints", "DapUIToggle" },
+        keys = {
+          { "guu", function() require('dap').run_last() end, mode = "n" },
+          { "guj", function() require('dap').continue() end, mode = "n" },
+          { "gub", function() require('dap').toggle_breakpoint() end, mode = "n" },
+          {
+            "guB",
+            function()
+              local condition = vim.fn.input('Condition: ')
+              require('dap').toggle_breakpoint(condition)
+            end,
+            mode = "n",
+          },
+        },
         dependencies = {
             "nvim-neotest/nvim-nio",
             "rcarriga/nvim-dap-ui",
@@ -167,25 +369,200 @@ local plugins = {
               ft = { "go" },
               opts = {},
             },
-        }
+        },
+        config = function()
+          local dap = require('dap')
+
+          local function set_dap_keymap(mode, key, fn)
+            local function if_dap_running(callback, fallback_key)
+              local rhs = vim.fn.maparg(fallback_key, 'n')
+              if rhs ~= '' and not rhs:find('^<') then
+                fallback_key = rhs
+              end
+              if fallback_key:find('^<') then
+                fallback_key = "\\" .. fallback_key
+              end
+              return function()
+                local session = dap.session()
+                if session and session.filetype == vim.bo.filetype then
+                  callback()
+                else
+                  vim.cmd('execute "normal! ' .. fallback_key .. '"')
+                end
+              end
+            end
+            vim.keymap.set(mode, key, if_dap_running(fn, key), { noremap = true, silent = true })
+          end
+
+          vim.keymap.set('n', 'guu', dap.run_last, { silent = true })
+          vim.keymap.set('n', 'guj', dap.continue, { silent = true })
+          vim.keymap.set('n', 'gub', dap.toggle_breakpoint, { silent = true })
+          vim.keymap.set('n', 'guB', function()
+            local condition = vim.fn.input('Condition: ')
+            dap.toggle_breakpoint(condition)
+          end, { silent = true })
+          set_dap_keymap('n', '<up>', dap.step_back)
+          set_dap_keymap('n', '<down>', dap.step_over)
+          set_dap_keymap('n', '<right>', dap.step_into)
+          set_dap_keymap('n', '<left>', dap.step_out)
+          set_dap_keymap('n', 'J', dap.continue)
+          set_dap_keymap('n', 'C', dap.run_to_cursor)
+          set_dap_keymap('n', '<C-c>', dap.terminate)
+
+          vim.api.nvim_create_user_command('DapListBreakpoints', function()
+            dap.list_breakpoints()
+            vim.cmd('copen')
+          end, {})
+          vim.api.nvim_create_user_command('DapClearBreakpoints', dap.clear_breakpoints, {})
+
+          vim.api.nvim_set_hl(0, 'NvimDapBreakpoint', { fg = '#e06c75' })
+          vim.api.nvim_set_hl(0, 'NvimDapBreakpointRejected', { fg = '#5c6370' })
+          vim.api.nvim_set_hl(0, 'NvimDapStopped', { fg = '#7ac836' })
+          vim.fn.sign_define('DapBreakpoint', { text = '●', texthl = 'NvimDapBreakpoint' })
+          vim.fn.sign_define('DapBreakpointRejected', { text = '●', texthl = 'NvimDapBreakpointRejected' })
+          vim.fn.sign_define('DapBreakpointCondition', { text = '◐', texthl = 'NvimDapBreakpoint' })
+          vim.fn.sign_define('DapStopped', { text = '⮕', texthl = 'NvimDapStopped' })
+
+          require('mason-nvim-dap').setup({
+            handlers = {
+              function(config)
+                require('mason-nvim-dap').default_setup(config)
+              end,
+              python = function(config)
+                config.adapters = {
+                  type = "executable",
+                  command = vim.fn.exepath("python"),
+                  args = { "-m", "debugpy.adapter" },
+                }
+                table.insert(config.configurations, {
+                  type = "python",
+                  request = "launch",
+                  name = "Python: Launch",
+                  program = "${file}",
+                  console = 'integratedTerminal',
+                  env = { PYTHONPATH = "${workspaceFolder}" },
+                  cwd = "${workspaceFolder}",
+                })
+                table.insert(config.configurations, {
+                  type = "python",
+                  request = "launch",
+                  name = "Python: Launch with Arguments",
+                  program = "${file}",
+                  console = 'integratedTerminal',
+                  env = { PYTHONPATH = "${workspaceFolder}" },
+                  cwd = "${workspaceFolder}",
+                  args = function()
+                    return vim.split(vim.fn.input("Arguments: "), " ")
+                  end,
+                })
+                require('mason-nvim-dap').default_setup(config)
+              end,
+            },
+          })
+
+          local dapui = require('dapui')
+          dapui.setup({
+            icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
+            mappings = { edit = "m", expand = "e", open = "<cr>" },
+            layouts = {
+              {
+                position = "left",
+                size = 40,
+                elements = {
+                  { id = "stacks", size = 0.4 },
+                  { id = "breakpoints", size = 0.3 },
+                  { id = "watches", size = 0.3 },
+                },
+              },
+              {
+                position = "bottom",
+                size = 0.3,
+                elements = {
+                  { id = "scopes", size = 0.5 },
+                  { id = "console", size = 0.5 },
+                },
+              },
+            },
+            controls = { enabled = true, element = "console" },
+          })
+          dap.listeners.after.event_initialized["dapui_config"] = function(session)
+            if session.parent == nil then dapui.open() end
+          end
+          dap.listeners.before.event_terminated["dapui_config"] = function(session)
+            if session.parent == nil then dapui.close() end
+          end
+          vim.api.nvim_create_user_command('DapUIToggle', dapui.toggle, {})
+          set_dap_keymap({ 'n', 'v' }, 'M', dapui.eval)
+          set_dap_keymap({ 'n', 'v' }, 'R', function() dapui.float_element('repl') end)
+        end,
     },
 
     -- none-ls.nvim
     {
         "nvimtools/none-ls.nvim",
+        cmd = { "NullLsInfo", "NullLsLog" },
+        keys = {
+          {
+            "ef",
+            function()
+              vim.lsp.buf.format({ async = false })
+            end,
+            mode = { "n", "v" },
+          },
+        },
         dependencies = {
             "jay-babu/mason-null-ls.nvim",
-        }
+        },
+        config = function()
+          require("mason-null-ls").setup({
+            ensure_installed = { "black", "prettierd", "stylua" },
+            automatic_installation = false,
+            handlers = {},
+          })
+          require("null-ls").setup({ sources = {} })
+        end,
     },
 
     -- lualine.nvim
     "nvim-lualine/lualine.nvim",
 
     -- nvim-bqf
-    "kevinhwang91/nvim-bqf",
+    {
+      "kevinhwang91/nvim-bqf",
+      ft = { "qf" },
+      opts = {
+        auto_enable = true,
+        func_map = {
+          open = 'o',
+          openc = '<cr>',
+          prevhist = '<c-h>',
+          nexthist = '<c-l>',
+          pscrollup = '<c-u>',
+          pscrolldown = '<c-d>',
+        },
+        preview = {
+          win_height = 999,
+        },
+      },
+    },
 
     -- vim-illuminate
-    "RRethy/vim-illuminate",
+    {
+      "RRethy/vim-illuminate",
+      event = "VeryLazy",
+      config = function()
+        require('illuminate').configure({
+          large_file_cutoff = 3000,
+          large_file_overrides = {
+            providers = { 'lsp', 'treesitter' },
+          },
+          filetypes_denylist = { 'NvimTree', 'copilot-chat' },
+        })
+        vim.api.nvim_set_hl(0, 'IlluminatedWordText', { link = 'LspReferenceText' })
+        vim.api.nvim_set_hl(0, 'IlluminatedWordRead', { link = 'LspReferenceText' })
+        vim.api.nvim_set_hl(0, 'IlluminatedWordWrite', { link = 'LspReferenceText' })
+      end,
+    },
 
     -- vim-matchup
     {
@@ -245,6 +622,7 @@ local plugins = {
     -- dressing.nvim
     {
       "stevearc/dressing.nvim",
+      event = "VeryLazy",
       opts = {
         input = { start_in_insert = true }
       },
@@ -262,7 +640,9 @@ local plugins = {
         { "ey", "<cmd>Telescope yank_history<cr>", mode = "n" },
         { "<c-y>", "<cmd>Telescope yank_history<cr>", mode = "i" },
       },
-      init = function()
+      dependencies = { "nvim-telescope/telescope.nvim" },
+      config = function(_, opts)
+        require("yanky").setup(opts)
         require("telescope").load_extension("yank_history")
       end,
     },
@@ -273,6 +653,7 @@ local plugins = {
     -- nvim-colorizer.lua
     {
       "NvChad/nvim-colorizer.lua",
+      event = { "BufReadPost", "BufNewFile" },
       opts = {
         user_default_options = { mode = "background" }
       },
@@ -281,6 +662,7 @@ local plugins = {
     -- nvim-lightbulb
     {
       "kosayoda/nvim-lightbulb",
+      event = "LspAttach",
       opts = {
         sign = {
           enabled = false,
@@ -300,6 +682,7 @@ local plugins = {
     -- nvim-early-retirement
     {
       "chrisgrieser/nvim-early-retirement",
+      event = "VeryLazy",
       opts = {
         retirementAgeMins = 20,
         minimumBufferNum = 20,
@@ -309,6 +692,12 @@ local plugins = {
     -- neotest
     {
       "nvim-neotest/neotest",
+      keys = {
+        { "gto", function() require("neotest").output.open({ enter = true, auto_close = true }) end, mode = "n" },
+        { "gtn", function() require("neotest").run.run() end, mode = "n" },
+        { "gtf", function() require("neotest").run.run(vim.fn.expand("%")) end, mode = "n" },
+        { "gun", function() require("neotest").run.run({ strategy = "dap" }) end, mode = "n" },
+      },
       dependencies = {
         "nvim-neotest/nvim-nio",
         "nvim-lua/plenary.nvim",
@@ -319,7 +708,32 @@ local plugins = {
           "fredrikaverpil/neotest-golang",
           dependencies = { "leoluz/nvim-dap-go" }
         },
-      }
+      },
+      config = function()
+        local neotest = require("neotest")
+        neotest.setup({
+          adapters = {
+            require("neotest-python")({
+              dap = { justMyCode = false },
+            }),
+            require("neotest-golang")({
+              go_test_args = { "-v", "-race", "-count=1" },
+            }),
+          },
+        })
+        local neotest_ns = vim.api.nvim_create_namespace("neotest")
+        vim.diagnostic.config({
+          virtual_text = {
+            format = function(diagnostic)
+              return diagnostic.message
+                :gsub("\n", " ")
+                :gsub("\t", " ")
+                :gsub("%s+", " ")
+                :gsub("^%s+", "")
+            end,
+          },
+        }, neotest_ns)
+      end,
     },
 
     -- venv-selector.nvim
@@ -333,10 +747,13 @@ local plugins = {
         notify_user_on_venv_activation = true,
       },
       ft = { "python" },
-      init = function()
-        vim.api.nvim_create_user_command("VenvInfo", require("venv-selector").venv, {})
-        vim.api.nvim_create_user_command("VenvDeactivate", require("venv-selector").deactivate, {})
-      end
+      cmd = { "VenvInfo", "VenvDeactivate", "VenvSelect", "VenvSelectCached" },
+      config = function(_, opts)
+        local venv = require("venv-selector")
+        venv.setup(opts)
+        vim.api.nvim_create_user_command("VenvInfo", venv.venv, {})
+        vim.api.nvim_create_user_command("VenvDeactivate", venv.deactivate, {})
+      end,
     },
 
     -- aerial.nvim
@@ -366,6 +783,7 @@ local plugins = {
     -- nvim-treesitter-context
     {
       "nvim-treesitter/nvim-treesitter-context",
+      event = { "BufReadPost", "BufNewFile" },
       opts = {
         multiline_threshold = 1,
       },
@@ -390,6 +808,7 @@ local plugins = {
     -- gitsigns.nvim
     {
       "lewis6991/gitsigns.nvim",
+      event = { "BufReadPre", "BufNewFile" },
       opts = {}
     },
 
@@ -504,10 +923,11 @@ local plugins = {
     --
     {
       "jbyuki/one-small-step-for-vimkind",
+      cmd = { "OSVLaunch", "OSVRunThis", "OSVStop" },
       dependencies = {
         "mfussenegger/nvim-dap",
       },
-      init = function()
+      config = function()
         local dap = require"dap"
           dap.configurations.lua = {
             {
@@ -531,7 +951,10 @@ local plugins = {
     "junegunn/vim-easy-align",
     "dyng/ctrlsf.vim",
     "mg979/vim-visual-multi",
-    "sheerun/vim-polyglot",
+    {
+      "sheerun/vim-polyglot",
+      event = { "BufReadPre", "BufNewFile" },
+    },
     {
       "inkarkat/vim-mark",
       dependencies = {
@@ -551,10 +974,10 @@ local plugins = {
     "dyng/dejava.vim",
 
     -- Colorschemes
-    "tomasr/molokai",
-    "marko-cerovac/material.nvim",
-    "navarasu/onedark.nvim",
-    "projekt0n/github-nvim-theme",
+    { "tomasr/molokai", lazy = true },
+    { "marko-cerovac/material.nvim", lazy = true },
+    { "navarasu/onedark.nvim", lazy = false, priority = 1000 },
+    { "projekt0n/github-nvim-theme", lazy = true },
 
     -- Documents
     "yianwillis/vimcdoc",
@@ -827,9 +1250,6 @@ if exists('+t_vb')
     set t_vb=
 endif
 
-" ignore python3 warning
-silent! py3 pass
-
 " add keyword '-'
 augroup filetyeSpecKeyword
     au!
@@ -1013,60 +1433,6 @@ imap <expr> <C-k> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-k>'
 smap <expr> <C-k> vsnip#jumpable(-1) ? '<Plug>(vsnip-jump-prev)' : '<C-k>'
 " }}}
 
-" neo-tree {{{
-lua <<EOF
-require('neo-tree').setup {
-  close_if_last_window = true,
-  enable_diagnostics = false,
-  window = {
-    width = 30,
-    mappings = {
-      ["<space>"] = "none",
-      ["e"] = "toggle_node",
-    },
-  },
-  filesystem = {
-    group_empty_dirs = true,
-    use_libuv_file_watcher = true,
-    follow_current_file = {
-      enabled = true,
-    },
-  },
-}
-EOF
-nnoremap <silent> gn :Neotree reveal<cr>
-nnoremap <silent> gN :Neotree dir=.<cr>
-" }}}
-
-" Telescope {{{
-lua << EOF
-require('telescope').setup{
-    defaults = {
-        path_display = { 'filename_first' },
-        mappings = {
-            i = {
-                ["<esc>"] = require('telescope.actions').close,
-            },
-        },
-    },
-    extensions = {
-        fzf = {
-            fuzzy = true,
-            override_generic_sorter = true,
-            override_file_sorter = true,
-            case_mode = "smart_case"
-        },
-    },
-}
-require('telescope').load_extension('fzf')
-EOF
-nnoremap <silent><C-P> <cmd>lua require("telescope.builtin").find_files({ cwd = vim.fn.ProjectRoot() })<cr>
-nnoremap <silent>gp <cmd>lua require("telescope.builtin").find_files()<cr>
-nnoremap <silent>gm <cmd>lua require("telescope.builtin").oldfiles()<cr>
-nnoremap <silent>gb <cmd>lua require("telescope.builtin").lsp_document_symbols()<cr>
-nnoremap <silent>gB <cmd>lua require("telescope.builtin").lsp_dynamic_workspace_symbols()<cr>
-" }}}
-
 " undotree {{{
 let g:undotree_SetFocusWhenToggle = 1
 nnoremap <silent> <leader>u :UndotreeToggle<CR>
@@ -1169,127 +1535,7 @@ vim.keymap.set('n', 'ge', vim.diagnostic.setloclist, bufopts)
 vim.keymap.set('n', 'gE', vim.diagnostic.setqflist, bufopts)
 vim.keymap.set('n', 'E', vim.diagnostic.open_float, bufopts)
 vim.keymap.set('n', 'ea', vim.lsp.buf.code_action, bufopts)
-vim.keymap.set({'n', 'v'}, 'ef', function() vim.lsp.buf.format { async = false } end, bufopts)
 vim.keymap.set('n', 'ern', vim.lsp.buf.rename, bufopts)
-
-require("mason").setup({
-    log_level = vim.log.levels.DEBUG
-})
-
--- nvim-java MUST be loaded before lspconfig
-require('java').setup({
-  -- The Spring Boot VSIX host is unreliable on Windows; keep core Java,
-  -- testing and debugging enabled without blocking startup on this optional tool.
-  spring_boot_tools = {
-    enable = false,
-  },
-  -- Use the side-by-side Scoop JDK configured at the top of this file.
-  jdk = {
-    auto_install = false,
-    path = vim.env.JAVA_HOME,
-  },
-})
-
-vim.lsp.config("clangd", {
-  cmd = { "clangd", "--offset-encoding=utf-16" },
-})
-
-vim.lsp.config("pyright", {
-  settings = {
-    python = {
-      analysis = {
-        exclude = {
-          "**/venv",
-          "**/__pycache__",
-          "**/site-packages",
-          "**/dist-packages"
-        },
-        diagnosticMode = "openFilesOnly",
-        autoSearchPaths = true,
-        useLibraryCodeForTypes = true,
-        typeCheckingMode = "basic",
-      },
-    },
-  },
-})
-
-vim.lsp.config("gopls", {
-  settings = {
-    gopls = {
-      env = {
-        -- GOPACKAGESDRIVER can be set here when needed.
-      },
-    },
-  },
-})
-
-require("mason-lspconfig").setup({
-  ensure_installed = { "clangd", "pyright", "gopls", "rust_analyzer" },
-  automatic_enable = {
-    exclude = { "jdtls", "rust_analyzer" },
-  },
-})
-EOF
-" }}}
-
-" nvim-cmp {{{
-lua << EOF
-local cmp = require'cmp'
-cmp.setup({
-  preselect = cmp.PreselectMode.Item,
-  snippet = {
-    expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body)
-    end,
-  },
-  matching = {
-      disallow_fuzzy_matching = false,
-  },
-  mapping = {
-    ['<TAB>'] = cmp.mapping.select_next_item(),
-    ['<Down>'] = cmp.mapping.select_next_item(),
-    ['<S-TAB>'] = cmp.mapping.select_prev_item(),
-    ['<Up>'] = cmp.mapping.select_prev_item(),
-    ['<CR>'] = cmp.mapping.confirm({ select = false }),
-    ['<C-c>'] = cmp.mapping.abort(),
-    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-d>'] = cmp.mapping.scroll_docs(4),
-  },
-  sources = {
-    { name = 'nvim_lsp' },
-    { name = 'nvim_lsp_signature_help' },
-    { name = 'vsnip' },
-  }, {
-    { name = 'buffer' },
-  }
-})
-
--- cmp-dap
-cmp.setup({
-  enabled = function()
-    return vim.api.nvim_buf_get_option(0, 'buftype') ~= 'prompt'
-      or require("cmp_dap").is_dap_buffer()
-  end,
-})
-cmp.setup.filetype({ "dap-repl", "dapui_watches", "dapui_hover" }, {
-  sources = {
-    { name = "dap" },
-  },
-})
-
-cmp.setup.cmdline(':', {
-  mapping = cmp.mapping.preset.cmdline(),
-  sources = cmp.config.sources({
-    { name = 'path' },
-  }, {
-    {
-      name = 'cmdline',
-      option = {
-        ignore_cmds = { 'Man', '!', '%', 'write', 'wall', 'quit', 'qall', 'xit' }
-      }
-    },
-  })
-})
 EOF
 " }}}
 
@@ -1320,36 +1566,12 @@ require('lualine').setup({
 EOF
 " }}}
 
-" nvim-bqf {{{
-lua << EOF
-require('bqf').setup({
-    auto_enable = true,
-    func_map = {
-        open = 'o',
-        openc = '<cr>',
-        prevhist = '<c-h>',
-        nexthist = '<c-l>',
-        pscrollup = '<c-u>',
-        pscrolldown = '<c-d>',
-    },
-    preview = {
-        win_height = 999
-    },
-})
-EOF
-" }}}
-
 " nvim-treesitter {{{
 lua << EOF
 local treesitter = require('nvim-treesitter')
-local treesitter_languages = { "regex", "markdown", "markdown_inline" }
-
 treesitter.setup({
   install_dir = vim.fn.stdpath('data') .. '/site',
 })
-
--- Installation is asynchronous and is a no-op for parsers already present.
-treesitter.install(treesitter_languages)
 
 -- The main branch delegates highlighting to Neovim's built-in Treesitter API.
 vim.api.nvim_create_autocmd('FileType', {
@@ -1372,249 +1594,12 @@ vim.api.nvim_create_autocmd('FileType', {
 EOF
 " }}}
 
-" nvim-dap & relates {{{
-" nvim-dap {{{{
-lua <<EOF
-function set_dap_keymap(mode, key, fn)
-    local if_dap_running = function(fn, key)
-        -- remap
-        local rhs = vim.fn.maparg(key, 'n')
-        if rhs ~= '' and not rhs:find('^<') then
-            key = rhs
-        end
-        -- escape special characters
-        if key:find('^<') then
-            key = "\\"..key
-        end
-        return function()
-            local session = require('dap').session()
-            if session and session.filetype == vim.bo.filetype
-            then
-                fn()
-            else
-                vim.cmd('execute "normal! '..key..'"')
-            end
-        end
-    end
-    local opts = { noremap=true, silent=true }
-    vim.keymap.set(mode, key, if_dap_running(fn, key), opts)
-end
-
--- set mapping
-vim.keymap.set('n', 'guu', require'dap'.run_last, { silent=true })
-vim.keymap.set('n', 'guj', require'dap'.continue, { silent=true })
-vim.keymap.set('n', 'gub', require'dap'.toggle_breakpoint, { silent=true })
-vim.keymap.set('n', 'guB', function()
-  local condition = vim.fn.input('Condition: ')
-  require'dap'.toggle_breakpoint(condition)
-end, { silent=true })
-set_dap_keymap('n', '<up>', require'dap'.step_back)
-set_dap_keymap('n', '<down>', require'dap'.step_over)
-set_dap_keymap('n', '<right>', require'dap'.step_into)
-set_dap_keymap('n', '<left>', require'dap'.step_out)
-set_dap_keymap('n', 'J', require'dap'.continue)
-set_dap_keymap('n', 'C', require'dap'.run_to_cursor)
-set_dap_keymap('n', '<C-c>', require'dap'.terminate)
-EOF
-
-" commands
-command! DapListBreakpoints lua require'dap'.list_breakpoints();vim.cmd('copen')
-command! DapClearBreakpoints lua require'dap'.clear_breakpoints()
-
-" sign & highlighting
-hi! NvimDapBreakpoint ctermfg=204 guifg=#e06c75
-hi! NvimDapBreakpointRejected ctermfg=59 guifg=#5c6370
-hi! NvimDapStopped ctermfg=118 guifg=#7ac836
-call sign_define('DapBreakpoint', {'text': '●', 'texthl': 'NvimDapBreakpoint'})
-call sign_define('DapBreakpointRejected', {'text': '●', 'texthl': 'NvimDapBreakpointRejected'})
-call sign_define('DapBreakpointCondition', {'text': '◐', 'texthl': 'NvimDapBreakpoint'})
-call sign_define('DapStopped', {'text': '⮕', 'texthl': 'NvimDapStopped'})
-" }}}}
-
-" mason-nvim-dap {{{{
-lua <<EOF
-require ('mason-nvim-dap').setup({
-  handlers = {
-    function(config)
-      require('mason-nvim-dap').default_setup(config)
-    end,
-    python = function(config)
-      config.adapters = {
-        type = "executable",
-        command = vim.fn.exepath("python"),
-        args = {
-          "-m",
-          "debugpy.adapter",
-        },
-      }
-      table.insert(config.configurations, {
-        type = "python",
-        request = "launch",
-        name = "Python: Launch",
-        program = "${file}",
-        console = 'integratedTerminal',
-        env = { PYTHONPATH = "${workspaceFolder}" },
-        cwd = "${workspaceFolder}",
-      })
-      table.insert(config.configurations, {
-        type = "python",
-        request = "launch",
-        name = "Python: Launch with Arguments",
-        program = "${file}",
-        console = 'integratedTerminal',
-        env = { PYTHONPATH = "${workspaceFolder}" },
-        cwd = "${workspaceFolder}",
-        args = function()
-          local args_string = vim.fn.input("Arguments: ")
-          return vim.split(args_string, " ")
-        end,
-      })
-      require('mason-nvim-dap').default_setup(config)
-    end,
-  },
-})
-EOF
-" }}}}
-
-" nvim-dap-ui {{{{
-lua << EOF
-local dap, dapui = require("dap"), require("dapui")
-dapui.setup({
-  icons = { expanded = "▾", collapsed = "▸", current_frame = "▸" },
-  mappings = {
-    edit = "m",
-    expand = "e",
-    open = "<cr>",
-  },
-  layouts = {
-    {
-      position = "left",
-      size = 40,
-      elements = {
-        { id = "stacks", size = 0.4 },
-        { id = "breakpoints", size = 0.3 },
-        { id = "watches", size = 0.3 },
-      },
-    },
-    {
-      position = "bottom",
-      size = 0.3,
-      elements = {
-        { id = "scopes", size = 0.5 },
-        { id = "console", size = 0.5 },
-      },
-    },
-  },
-  controls = {
-    enabled = true,
-    element = "console",
-  },
-})
-dap.listeners.after.event_initialized["dapui_config"] = function(session, body)
-  if session.parent == nil then
-      dapui.open()
-  end
-end
-dap.listeners.before.event_terminated["dapui_config"] = function(session, body)
-  if session.parent == nil then
-      dapui.close()
-  end
-end
-vim.api.nvim_create_user_command('DapUIToggle', dapui.toggle, {})
-
-set_dap_keymap({'n', 'v'}, 'M', dapui.eval)
-set_dap_keymap({'n', 'v'}, 'R', function() dapui.float_element("repl") end)
-
-EOF
-" }}}}
-" }}}
-
-" none-ls & mason-null-ls {{{
-lua << EOF
-require("mason-null-ls").setup({
-    ensure_installed = {
-        "black",
-        "prettierd",
-        "stylua",
-    },
-    automatic_installation = false,
-    handlers = {},
-})
-local null_ls = require("null-ls")
-null_ls.setup({
-    sources = {
-        -- Anything not supported by mason.
-    },
-})
-EOF
-" }}}
-
-" vim-illuminate {{{
-augroup illuminate_augroup
-    autocmd!
-    autocmd VimEnter * hi! link IlluminatedWordText LspReferenceText
-    autocmd VimEnter * hi! link IlluminatedWordRead LspReferenceText
-    autocmd VimEnter * hi! link IlluminatedWordWrite LspReferenceText
-augroup END
-lua <<EOF
-require('illuminate').configure({
-    large_file_cutoff = 3000,
-    large_file_overrides = {
-        providers = {
-            'lsp',
-            'treesitter',
-        },
-    },
-    filetypes_denylist = {
-        'NvimTree',
-        'copilot-chat',
-    },
-})
-EOF
-" }}}
-
 " vim-auto-save {{{
 let g:auto_save = 1
 let g:auto_save_silent = 1
 let g:auto_save_write_all_buffers = 1
 " }}}
 
-" neotest {{{
-lua <<EOF
-local neotest = require("neotest")
-neotest.setup({
-  adapters = {
-    -- python
-    require("neotest-python")({
-      dap = { justMyCode = false },
-    }),
-
-    -- go
-    require("neotest-golang")({
-      go_test_args = {
-        "-v",
-        "-race",
-        "-count=1",
-      },
-    }),
-  },
-})
-local neotest_ns = vim.api.nvim_create_namespace("neotest")
-vim.diagnostic.config({
-  virtual_text = {
-    format = function(diagnostic)
-      local message =
-        diagnostic.message:gsub("\n", " "):gsub("\t", " "):gsub("%s+", " "):gsub("^%s+", "")
-      return message
-    end,
-  },
-}, neotest_ns)
-vim.keymap.set('n', 'gto', function() neotest.output.open({ enter = true, auto_close = true }) end, { noremap = true })
-vim.keymap.set('n', 'gtn', neotest.run.run, { noremap = true })
-vim.keymap.set('n', 'gtf', function() neotest.run.run(vim.fn.expand("%")) end, { noremap = true })
-vim.keymap.set('n', 'gun', function() neotest.run.run({ strategy = "dap" }) end, { noremap = true })
-EOF
-" }}}
 " }}}
 
 " vim: set foldmarker={{{,}}} foldlevel=0 foldmethod=marker spell:
