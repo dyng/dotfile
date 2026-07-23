@@ -7,9 +7,13 @@ foreach ($pathEntry in @($scoopShims, $starshipDir)) {
     }
 }
 
+# Activate mise so project and global tool versions update PATH and JAVA_HOME.
+(&mise activate pwsh) | Out-String | Invoke-Expression
+
 # Use Neovim as the default terminal editor.
 $env:EDITOR = 'nvim'
 $env:VISUAL = 'nvim'
+Set-Alias -Name vim -Value nvim
 
 # Unix-style aliases with fixed arguments are PowerShell functions.
 function tis {
