@@ -36,6 +36,11 @@ $links = @(
         Source = Join-Path $repoRoot 'windows\terminal\settings.json'
         Target = Join-Path $env:USERPROFILE 'scoop\persist\windows-terminal\settings\settings.json'
     }
+    [PSCustomObject]@{
+        Name = 'Ditto settings'
+        Source = Join-Path $repoRoot 'windows\ditto\Ditto.Settings'
+        Target = Join-Path $env:USERPROFILE 'scoop\persist\ditto\Ditto.Settings'
+    }
 )
 
 function Get-NormalizedPath {
