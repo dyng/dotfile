@@ -7,6 +7,12 @@ foreach ($pathEntry in @($scoopShims, $starshipDir)) {
     }
 }
 
+# Make Scoop-installed PowerShell modules available without requiring a sign-out.
+$scoopModules = Join-Path $HOME 'scoop\modules'
+if (($env:PSModulePath -split [IO.Path]::PathSeparator) -notcontains $scoopModules) {
+    $env:PSModulePath = $scoopModules + [IO.Path]::PathSeparator + $env:PSModulePath
+}
+
 # Activate mise so project and global tool versions update PATH and JAVA_HOME.
 (&mise activate pwsh) | Out-String | Invoke-Expression
 
@@ -22,7 +28,7 @@ function tis {
 
 # PSReadLine: history search, predictions, and an ergonomic editing baseline.
 Import-Module PSReadLine
-Set-PSReadLineOption -EditMode Windows
+Set-PSReadLineOption -EditMode Emacs
 Set-PSReadLineOption -HistoryNoDuplicates
 if (-not [Console]::IsOutputRedirected) {
     Set-PSReadLineOption -PredictionSource History
@@ -30,6 +36,10 @@ if (-not [Console]::IsOutputRedirected) {
 }
 Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
 Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
+
+# Oh My Zsh-style Git aliases.
+Import-Module git-aliases -DisableNameChecking
 
 # fzf: Ctrl+R searches command history; Ctrl+T inserts a selected path.
 Set-PSReadLineKeyHandler -Chord 'Ctrl+r' -ScriptBlock {
