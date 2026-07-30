@@ -191,7 +191,20 @@ local plugins = {
     -- nvim-lspconfig
     {
       "neovim/nvim-lspconfig",
-      ft = { "c", "cpp", "go", "python", "rust" },
+      ft = {
+        "c",
+        "cpp",
+        "go",
+        "python",
+        "rust",
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact",
+        "sh",
+        "bash",
+        "ps1",
+      },
       dependencies = {
         "mason-org/mason.nvim",
         "mason-org/mason-lspconfig.nvim",
@@ -231,7 +244,15 @@ local plugins = {
         })
 
         require("mason-lspconfig").setup({
-          ensure_installed = { "clangd", "pyright", "gopls", "rust_analyzer" },
+          ensure_installed = {
+            "clangd",
+            "pyright",
+            "gopls",
+            "rust_analyzer",
+            "ts_ls",
+            "bashls",
+            "powershell_es",
+          },
           automatic_enable = {
             exclude = { "jdtls", "rust_analyzer" },
           },
@@ -247,14 +268,42 @@ local plugins = {
         "mason-org/mason.nvim",
       },
       opts = {
+        jdtls = {
+          -- Keep JDTLS aligned with nvim-java's Java test/debug extensions.
+          auto_install = true,
+        },
         spring_boot_tools = {
           enable = false,
         },
         jdk = {
           auto_install = false,
-          path = vim.env.JAVA_HOME,
+          -- JDTLS itself requires Java 21, even when the project targets Java 8.
+          path = vim.fn.expand("~/scoop/apps/temurin21-jdk/current"),
         },
       },
+      config = function(_, opts)
+        require("java").setup(opts)
+        vim.lsp.config("jdtls", {
+          settings = {
+            java = {
+              configuration = {
+                runtimes = {
+                  {
+                    name = "JavaSE-1.8",
+                    path = vim.fn.expand("~/scoop/apps/temurin8-jdk/current"),
+                    default = true,
+                  },
+                  {
+                    name = "JavaSE-21",
+                    path = vim.fn.expand("~/scoop/apps/temurin21-jdk/current"),
+                  },
+                },
+              },
+            },
+          },
+        })
+        vim.lsp.enable("jdtls")
+      end,
     },
 
     {
@@ -1049,7 +1098,9 @@ colorscheme onedark
 
 " Font
 if exists('g:neovide')
-    set guifont=JetBrainsMono\ Nerd\ Font:h14
+    set guifont=JetBrainsMono\ Nerd\ Font:h12
+    let g:neovide_cursor_animation_length = 0
+    let g:neovide_cursor_trail_size = 0
 elseif has('gui_macvim')
     set guifont=Inconsolata\ Nerd\ Font\ Mono:h16
 elseif exists("g:gui_vimr")

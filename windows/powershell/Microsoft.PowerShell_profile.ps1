@@ -41,6 +41,23 @@ Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
 # Oh My Zsh-style Git aliases.
 Import-Module git-aliases -DisableNameChecking
 
+# Complete local and remote branch names for `gco` without loading posh-git.
+Register-ArgumentCompleter -Native -CommandName gco -ScriptBlock {
+    param($wordToComplete, $commandAst, $cursorPosition)
+
+    git for-each-ref --format='%(refname:short)' refs/heads refs/remotes 2>$null |
+        Where-Object { $_ -notlike '*/HEAD' -and $_ -like "$wordToComplete*" } |
+        Sort-Object -Unique |
+        ForEach-Object {
+            [System.Management.Automation.CompletionResult]::new(
+                $_,
+                $_,
+                [System.Management.Automation.CompletionResultType]::ParameterValue,
+                $_
+            )
+        }
+}
+
 # fzf: Ctrl+R searches command history; Ctrl+T inserts a selected path.
 Set-PSReadLineKeyHandler -Chord 'Ctrl+r' -ScriptBlock {
     $historyPath = (Get-PSReadLineOption).HistorySavePath
