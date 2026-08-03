@@ -16,6 +16,9 @@ if (($env:PSModulePath -split [IO.Path]::PathSeparator) -notcontains $scoopModul
 # Activate mise so project and global tool versions update PATH and JAVA_HOME.
 (&mise activate pwsh) | Out-String | Invoke-Expression
 
+# Use English (US) and UTF-8 for JVMs launched from this shell.
+$env:JAVA_TOOL_OPTIONS = '-Duser.language=en -Duser.country=US -Dfile.encoding=UTF-8'
+
 # Use Neovim as the default terminal editor.
 $env:EDITOR = 'nvim'
 $env:VISUAL = 'nvim'

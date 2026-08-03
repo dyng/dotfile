@@ -35,6 +35,38 @@ if has('win32')
         let &shellquote = ''
         let &shellxquote = ''
     endif
+
+    " Mixed CRLF/LF files are detected as Unix and expose CR as ^M.
+    " Re-read them as DOS for display only; never write during detection.
+    function! s:ReloadMixedLineEndingsAsDos() abort
+        if &l:buftype !=# '' || &l:binary || &l:fileformat !=# 'unix'
+                    \ || empty(expand('%:p')) || &l:modified
+            return
+        endif
+
+        let l:has_crlf = 0
+        let l:has_lf = 0
+        for l:line in getline(1, '$')
+            if l:line =~# "\r$"
+                let l:has_crlf = 1
+            else
+                let l:has_lf = 1
+            endif
+            if l:has_crlf && l:has_lf
+                let l:view = winsaveview()
+                silent execute 'noautocmd keepalt keepjumps edit! ++ff=dos '
+                            \ . fnameescape(expand('%:p'))
+                let b:mixed_line_endings_read_as_dos = 1
+                call winrestview(l:view)
+                return
+            endif
+        endfor
+    endfunction
+
+    augroup windows_mixed_line_endings
+        autocmd!
+        autocmd BufReadPost * call <SID>ReloadMixedLineEndingsAsDos()
+    augroup END
 else
     let g:python3_host_prog = 'python3'
 endif
@@ -963,6 +995,39 @@ local plugins = {
           or "/opt/homebrew/lib/libgit2.dylib",
         width = 100,
       },
+      config = function(_, opts)
+        require('fugit2').setup(opts)
+
+        -- libgit2 returns workdir paths with forward slashes on Windows, while
+        -- Neovim buffer names use backslashes. Fugit2's relative-path logic
+        -- compares them as strings and otherwise passes an absolute path to Git.
+        if vim.fn.has('win32') == 1 then
+          local function patch_blame_path(module_name)
+            local blame_view = require(module_name)
+            local original_init = blame_view.init
+
+            blame_view.init = function(self, namespace, repo, file_bufnr)
+              original_init(self, namespace, repo, file_bufnr)
+
+              local workdir = repo:workdir()
+              if not workdir then
+                return
+              end
+
+              local relative_path = vim.fs.relpath(
+                vim.fs.normalize(workdir),
+                vim.fs.normalize(vim.api.nvim_buf_get_name(file_bufnr))
+              )
+              if relative_path then
+                self._git.file_path = relative_path:gsub('\\', '/')
+              end
+            end
+          end
+
+          patch_blame_path('fugit2.view.git_blame_file')
+          patch_blame_path('fugit2.view.git_blame')
+        end
+      end,
       cmd = { 'Fugit2', 'Fugit2Blame', 'Fugit2Diff', 'Fugit2Graph' },
       keys = {
         { 'gsb', '<cmd>Fugit2Blame<cr>', mode = 'n' },
