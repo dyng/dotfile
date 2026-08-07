@@ -25,37 +25,6 @@ if has('win32')
     let &shellquote = ''
     let &shellxquote = '"'
 
-    " Mixed CRLF/LF files are detected as Unix and expose CR as ^M.
-    " Re-read them as DOS for display only; never write during detection.
-    function! s:ReloadMixedLineEndingsAsDos() abort
-        if &l:buftype !=# '' || &l:binary || &l:fileformat !=# 'unix'
-                    \ || empty(expand('%:p')) || &l:modified
-            return
-        endif
-
-        let l:has_crlf = 0
-        let l:has_lf = 0
-        for l:line in getline(1, '$')
-            if l:line =~# "\r$"
-                let l:has_crlf = 1
-            else
-                let l:has_lf = 1
-            endif
-            if l:has_crlf && l:has_lf
-                let l:view = winsaveview()
-                silent execute 'noautocmd keepalt keepjumps edit! ++ff=dos '
-                            \ . fnameescape(expand('%:p'))
-                let b:mixed_line_endings_read_as_dos = 1
-                call winrestview(l:view)
-                return
-            endif
-        endfor
-    endfunction
-
-    augroup windows_mixed_line_endings
-        autocmd!
-        autocmd BufReadPost * call <SID>ReloadMixedLineEndingsAsDos()
-    augroup END
 else
     let g:python3_host_prog = 'python3'
 endif
