@@ -72,7 +72,6 @@
   "vim-ingo-library": { "branch": "master", "commit": "8a8c724005e51cdd3b7df55b0ff093636ab90b15" },
   "vim-mark": { "branch": "master", "commit": "a613b0676fce72960c06e26f8f8f6454bcef4564" },
   "vim-matchup": { "branch": "master", "commit": "055881643e1b37038a572c883de7b1969716db77" },
-  "vim-polyglot": { "branch": "master", "commit": "f061eddb7cdcc614c8406847b2bfb53099832a4e" },
   "vim-sandwich": { "branch": "master", "commit": "74cf93d58ccc567d8e2310a69860f1b93af19403" },
   "vim-visual-multi": { "branch": "master", "commit": "a6975e7c1ee157615bbc80fc25e4392f71c344d4" },
   "vim-vsnip": { "branch": "master", "commit": "9bcfabea653abdcdac584283b5097c3f8760abaa" },

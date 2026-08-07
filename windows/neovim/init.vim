@@ -1,12 +1,3 @@
-" Before lazy.nvim {{{
-" vim-polyglot uses legacy mkd* groups which conflict with Neovim's Java
-" Markdown-doc syntax. Skip only that optional include; normal Java syntax
-" highlighting remains enabled.
-let g:java_ignore_markdown = 1
-" Markdown highlighting is handled by Neovim's built-in runtime and Treesitter.
-" Avoid loading Polyglot's duplicate HTML/CSS/Markdown syntax stack.
-let g:polyglot_disabled = ['markdown']
-
 " Platform-specific providers and shell
 if has('win32')
     " These optional providers are not used by this configuration on Windows.
@@ -26,15 +17,13 @@ if has('win32')
     let $CXX = expand('~/scoop/apps/mingw/current/bin/g++.exe')
     let g:python3_host_prog = exepath('python')
 
-    let s:pwsh = exepath('pwsh')
-    if !empty(s:pwsh)
-        let &shell = s:pwsh
-        let &shellcmdflag = '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command'
-        let &shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
-        let &shellpipe = '2>&1 | Tee-Object %s; exit $LastExitCode'
-        let &shellquote = ''
-        let &shellxquote = ''
-    endif
+    " Keep short-lived external commands on Windows' lightweight native shell.
+    let &shell = 'cmd.exe'
+    let &shellcmdflag = '/s /c'
+    let &shellredir = '>%s 2>&1'
+    let &shellpipe = '2>&1| tee'
+    let &shellquote = ''
+    let &shellxquote = '"'
 
     " Mixed CRLF/LF files are detected as Unix and expose CR as ^M.
     " Re-read them as DOS for display only; never write during detection.
@@ -346,7 +335,6 @@ local plugins = {
     -- nvim-cmp
     {
       "hrsh7th/nvim-cmp",
-      event = { "InsertEnter", "CmdlineEnter" },
       dependencies = {
         "hrsh7th/cmp-buffer",
         "hrsh7th/cmp-path",
@@ -656,6 +644,10 @@ local plugins = {
       "akinsho/toggleterm.nvim",
       opts = {
         open_mapping = '<A-/>',
+        shell = function()
+          local pwsh = vim.fn.exepath('pwsh')
+          return pwsh ~= '' and (vim.fn.shellescape(pwsh) .. ' -NoLogo') or vim.o.shell
+        end,
         direction = 'horizontal',
         size = function(term)
           if term.direction == 'horizontal' then
@@ -1066,10 +1058,6 @@ local plugins = {
     "dyng/ctrlsf.vim",
     "mg979/vim-visual-multi",
     {
-      "sheerun/vim-polyglot",
-      event = { "BufReadPre", "BufNewFile" },
-    },
-    {
       "inkarkat/vim-mark",
       dependencies = {
         "inkarkat/vim-ingo-library",
@@ -1097,7 +1085,14 @@ local plugins = {
     "yianwillis/vimcdoc",
 }
 
-require("lazy").setup(plugins, { rocks = { enabled = false } })
+local lazy_profile = vim.env.NVIM_LAZY_PROFILE == "1"
+require("lazy").setup(plugins, {
+  rocks = { enabled = false },
+  profiling = {
+    loader = lazy_profile,
+    require = lazy_profile,
+  },
+})
 EOF
 " }}}
 
@@ -1687,6 +1682,24 @@ lua << EOF
 local treesitter = require('nvim-treesitter')
 treesitter.setup({
   install_dir = vim.fn.stdpath('data') .. '/site',
+})
+
+-- nvim-treesitter main no longer supports the old ensure_installed option.
+-- install() is its asynchronous equivalent and skips parsers already present.
+treesitter.install({
+  'javascript',
+  'typescript',
+  'tsx',
+  'python',
+  'java',
+  'c',
+  'cpp',
+  'go',
+  'rust',
+  'bash',
+  'markdown',
+  'markdown_inline',
+  'sql',
 })
 
 -- The main branch delegates highlighting to Neovim's built-in Treesitter API.
