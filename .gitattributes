@@ -1,0 +1,6 @@
+windows/**/*.ahk  text eol=lf
+windows/**/*.json text eol=lf
+windows/**/*.lua  text eol=lf
+windows/**/*.ps1  text eol=lf
+windows/**/*.toml text eol=lf
+windows/**/*.vim  text eol=lf

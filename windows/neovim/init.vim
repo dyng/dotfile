@@ -1,9 +1,12 @@
 " Platform-specific providers and shell
-if has('win32')
-    " These optional providers are not used by this configuration on Windows.
-    let g:loaded_perl_provider = 0
-    let g:loaded_ruby_provider = 0
+" No configured plugin uses Neovim's remote-plugin providers. Python and Node
+" executables are still available to LSP, DAP, tests, and Markdown Preview.
+let g:loaded_python3_provider = 0
+let g:loaded_node_provider = 0
+let g:loaded_perl_provider = 0
+let g:loaded_ruby_provider = 0
 
+if has('win32')
     let $JAVA_HOME = expand('~/scoop/apps/temurin21-jdk/current')
     let s:windows_tool_paths = [
         \ expand('~/scoop/shims'),
@@ -15,7 +18,6 @@ if has('win32')
     let $PATH = join(s:windows_tool_paths, ';') . ';' . $PATH
     let $CC = expand('~/scoop/apps/mingw/current/bin/gcc.exe')
     let $CXX = expand('~/scoop/apps/mingw/current/bin/g++.exe')
-    let g:python3_host_prog = exepath('python')
 
     " Keep short-lived external commands on Windows' lightweight native shell.
     let &shell = 'cmd.exe'
@@ -24,9 +26,6 @@ if has('win32')
     let &shellpipe = '2>&1| tee'
     let &shellquote = ''
     let &shellxquote = '"'
-
-else
-    let g:python3_host_prog = 'python3'
 endif
 
 " Required by UI plugins such as nvim-colorizer on modern terminals/Neovide.
@@ -39,17 +38,38 @@ let mapleader = ","
 " Load Plugins {{{
 lua <<EOF
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+local lockfile = vim.fn.stdpath("config") .. "/lazy-lock.json"
+local lock = vim.json.decode(table.concat(vim.fn.readfile(lockfile), "\n"))
+local lazy_lock = assert(lock["lazy.nvim"], "lazy.nvim is missing from lazy-lock.json")
+
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
   vim.api.nvim_echo({{ "Installing lazy.nvim...", "WarningMsg" }}, true, {})
-  vim.fn.system({
+  local clone_output = vim.fn.system({
     "git",
     "clone",
     "--filter=blob:none",
     "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
     lazypath,
   })
+  if vim.v.shell_error ~= 0 then
+    error("Failed to clone lazy.nvim:\n" .. clone_output)
+  end
   vim.api.nvim_echo({{ "Installing lazy.nvim complete", "WarningMsg" }}, true, {})
+end
+
+-- lazy.nvim must be restored before it reads the lockfile. Otherwise a newer
+-- manager checkout can rewrite its own lock entry during startup.
+local lazy_head = vim.trim(vim.fn.system({ "git", "-C", lazypath, "rev-parse", "HEAD" }))
+if vim.v.shell_error ~= 0 then
+  error("Failed to read lazy.nvim revision:\n" .. lazy_head)
+end
+if lazy_head ~= lazy_lock.commit then
+  local checkout_output = vim.fn.system({
+    "git", "-C", lazypath, "checkout", lazy_lock.commit,
+  })
+  if vim.v.shell_error ~= 0 then
+    error("Failed to restore locked lazy.nvim commit:\n" .. checkout_output)
+  end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -952,7 +972,7 @@ local plugins = {
       },
       opts = {
         libgit2_path = vim.fn.has("win32") == 1
-          and (vim.fn.stdpath("data") .. "/libgit2/bin/git2.dll")
+          and (vim.fn.stdpath("data") .. "/libgit2/bin/libgit2.dll")
           or "/opt/homebrew/lib/libgit2.dylib",
         width = 100,
       },
@@ -1038,7 +1058,7 @@ local plugins = {
       "iamcco/markdown-preview.nvim",
       cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
       ft = { "markdown" },
-      build = function() vim.fn["mkdp#util#install_sync"](true) end,
+      build = "cd app && npx --yes yarn install --frozen-lockfile",
     },
 
     -- Language Specific Plugins
@@ -1648,47 +1668,7 @@ EOF
 
 " nvim-treesitter {{{
 lua << EOF
-local treesitter = require('nvim-treesitter')
-treesitter.setup({
-  install_dir = vim.fn.stdpath('data') .. '/site',
-})
-
--- nvim-treesitter main no longer supports the old ensure_installed option.
--- install() is its asynchronous equivalent and skips parsers already present.
-treesitter.install({
-  'javascript',
-  'typescript',
-  'tsx',
-  'python',
-  'java',
-  'c',
-  'cpp',
-  'go',
-  'rust',
-  'bash',
-  'markdown',
-  'markdown_inline',
-  'sql',
-})
-
--- The main branch delegates highlighting to Neovim's built-in Treesitter API.
-vim.api.nvim_create_autocmd('FileType', {
-  group = vim.api.nvim_create_augroup('treesitter_features', { clear = true }),
-  callback = function(args)
-    local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
-    if not lang then
-      return
-    end
-
-    local ok, parser_loaded = pcall(vim.treesitter.language.add, lang)
-    if not ok or not parser_loaded then
-      return
-    end
-
-    vim.treesitter.start(args.buf, lang)
-    vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-  end,
-})
+require('dotfiles.treesitter').setup()
 EOF
 " }}}
 

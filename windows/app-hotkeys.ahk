@@ -73,25 +73,25 @@ capsLockCtrlDown := false
 ; Alt+I: activate Chrome, or start it when it is not running.
 !i::ActivateOrRun(
     "ahk_exe chrome.exe",
-    "C:\Program Files\Google\Chrome\Application\chrome.exe"
+    EnvGet("USERPROFILE") "\scoop\apps\googlechrome\current\chrome.exe"
 )
 
 ; Alt+E: activate Neovide, or start it when it is not running.
 !e::ActivateOrRun(
     "ahk_exe neovide.exe",
-    "C:\Users\TONGYU\scoop\apps\neovide\current\neovide.exe"
+    EnvGet("USERPROFILE") "\scoop\apps\neovide\current\neovide.exe"
 )
 
 ; Ctrl+Alt+N: activate Notion, or start it when it is not running.
 ^!n::ActivateOrRun(
     "ahk_exe Notion.exe",
-    "C:\Users\TONGYU\scoop\apps\notion\current\Notion.exe"
+    EnvGet("USERPROFILE") "\scoop\apps\notion\current\Notion.exe"
 )
 
 ; Ctrl+Alt+I: activate IntelliJ IDEA, or start it when it is not running.
 ^!i::ActivateOrRun(
     "ahk_exe idea64.exe",
-    "C:\Users\TONGYU\scoop\apps\idea\current\IDE\bin\idea64.exe"
+    EnvGet("USERPROFILE") "\scoop\apps\idea\current\IDE\bin\idea64.exe"
 )
 
 ; Alt+U: activate Codex, or start the installed Windows app.
@@ -142,7 +142,7 @@ LogScriptExit(exitReason, exitCode) {
 }
 
 LogEvent(eventType, details := "") {
-    static logDirectory := A_ScriptDir "\logs"
+    static logDirectory := EnvGet("LOCALAPPDATA") "\AutoHotkey\logs"
     static logFile := logDirectory "\app-hotkeys.log"
     static backupFile := logFile ".1"
     static maxLogBytes := 512 * 1024
@@ -163,5 +163,11 @@ LogEvent(eventType, details := "") {
             details
         )
         FileAppend(line, logFile, "UTF-8")
+    } catch as error {
+        try FileAppend(
+            Format("{} {}`n", FormatTime(, "yyyy-MM-dd HH:mm:ss"), error.Message),
+            EnvGet("TEMP") "\app-hotkeys-error.log",
+            "UTF-8"
+        )
     }
 }
