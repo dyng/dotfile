@@ -1308,8 +1308,8 @@ tnoremap <D-v> <C-\><C-N>"+pI
 " windows
 vnoremap <C-C> "+y
 nnoremap <C-Q> "+p
-inoremap <C-Q> <C-R>+
-cnoremap <C-Q> <C-R>+
+inoremap <C-V> <C-R>+
+cnoremap <C-V> <C-R>+
 " Copy filename
 nnoremap <silent> yf :let @+ = expand('%')<CR>
 nnoremap <silent> yF :let @+ = expand('%:p')<CR>
