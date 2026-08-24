@@ -44,9 +44,11 @@ foreach ($path in $desiredPaths) {
 }
 
 function Get-CurrentExclusions {
-    return @((Get-MpPreference).ExclusionPath | ForEach-Object {
-        [IO.Path]::GetFullPath($_).TrimEnd('\')
-    })
+    return @(
+        (Get-MpPreference).ExclusionPath |
+            Where-Object { -not [string]::IsNullOrWhiteSpace($_) } |
+            ForEach-Object { [IO.Path]::GetFullPath($_).TrimEnd('\') }
+    )
 }
 
 $before = Get-CurrentExclusions
