@@ -301,11 +301,15 @@ local plugins = {
                   {
                     name = "JavaSE-1.8",
                     path = vim.fn.expand("~/scoop/apps/temurin8-jdk/current"),
-                    default = true,
                   },
                   {
                     name = "JavaSE-21",
                     path = vim.fn.expand("~/scoop/apps/temurin21-jdk/current"),
+                  },
+                  {
+                    name = "JavaSE-25",
+                    path = vim.fn.expand("~/scoop/apps/temurin25-jdk/current"),
+                    default = true,
                   },
                 },
               },
