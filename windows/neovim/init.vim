@@ -294,6 +294,9 @@ local plugins = {
       config = function(_, opts)
         require("java").setup(opts)
         vim.lsp.config("jdtls", {
+          before_init = function(params, config)
+            params.initializationOptions.settings = config.settings
+          end,
           settings = {
             java = {
               configuration = {
