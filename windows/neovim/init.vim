@@ -293,7 +293,18 @@ local plugins = {
       },
       config = function(_, opts)
         require("java").setup(opts)
+        local jdtls_cmd_env = vim.tbl_extend(
+          "force",
+          {},
+          vim.lsp.config.jdtls.cmd_env or {},
+          {
+            -- nvim-java sets -Xms1G but no upper bound. Keep one monorepo
+            -- workspace from growing with the host's ergonomically sized heap.
+            JDK_JAVA_OPTIONS = "-Xmx4g",
+          }
+        )
         vim.lsp.config("jdtls", {
+          cmd_env = jdtls_cmd_env,
           before_init = function(params, config)
             params.initializationOptions.settings = config.settings
           end,
