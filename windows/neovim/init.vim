@@ -855,8 +855,18 @@ local plugins = {
         },
       },
       keys = {
-        { "ga", "<cmd>AerialNavOpen<cr>" },
-        { "gA", "<cmd>AerialToggle!<cr>" },
+        { "ga", function()
+          vim.b.aerial_filter_kind = nil
+          local aerial = require("aerial")
+          aerial.refetch_symbols()
+          aerial.nav_open()
+        end },
+        { "gA", function()
+          vim.b.aerial_filter_kind = false
+          local aerial = require("aerial")
+          aerial.refetch_symbols()
+          aerial.nav_open()
+        end },
       },
     },
 
