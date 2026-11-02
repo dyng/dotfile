@@ -293,6 +293,15 @@ local plugins = {
         },
       },
       config = function(_, opts)
+        -- JDT virtual sources must not create a swap file while being populated.
+        -- Register before nvim-java's BufReadCmd handler writes the source text.
+        vim.api.nvim_create_autocmd({ "BufAdd", "BufReadCmd" }, {
+          group = vim.api.nvim_create_augroup("JavaVirtualSourceNoSwap", { clear = true }),
+          pattern = "jdt://*",
+          callback = function(event)
+            vim.bo[event.buf].swapfile = false
+          end,
+        })
         require("java").setup(opts)
         local jdtls_cmd_env = vim.tbl_extend(
           "force",
