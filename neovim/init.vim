@@ -1,4 +1,9 @@
 " Before lazy.nvim {{{
+" vim-polyglot uses legacy mkd* groups which conflict with Neovim's Java
+" Markdown-doc syntax. Skip only that optional include; normal Java syntax
+" highlighting remains enabled.
+let g:java_ignore_markdown = 1
+
 " python provider
 let g:python3_host_prog = 'python3'
 
@@ -72,6 +77,8 @@ local plugins = {
     -- nvim-treesitter
     {
         "nvim-treesitter/nvim-treesitter",
+        branch = "main",
+        lazy = false,
         build = ":TSUpdate"
     },
 
@@ -440,6 +447,12 @@ local plugins = {
     -- fugit2.nvim
     {
       'SuperBo/fugit2.nvim',
+      init = function()
+        -- fugit2 main currently loads this module from its former core path.
+        package.preload['fugit2.core.pendulum'] = function()
+          return require('fugit2.util.pendulum')
+        end
+      end,
       dependencies = {
         'MunifTanjim/nui.nvim',
         'nvim-tree/nvim-web-devicons',
@@ -1282,18 +1295,33 @@ EOF
 
 " nvim-treesitter {{{
 lua << EOF
-require('nvim-treesitter.configs').setup({
-  auto_install = true,
-  ensure_installed = { "regex", "markdown", "markdown_inline" },
-  highlight = {
-    enable = true,
-  },
-  indent = {
-    enable = true,
-  },
-  matchup = {
-    enable = true,
-  },
+local treesitter = require('nvim-treesitter')
+local treesitter_languages = { "regex", "markdown", "markdown_inline" }
+
+treesitter.setup({
+  install_dir = vim.fn.stdpath('data') .. '/site',
+})
+
+-- Installation is asynchronous and is a no-op for parsers already present.
+treesitter.install(treesitter_languages)
+
+-- The main branch delegates highlighting to Neovim's built-in Treesitter API.
+vim.api.nvim_create_autocmd('FileType', {
+  group = vim.api.nvim_create_augroup('treesitter_features', { clear = true }),
+  callback = function(args)
+    local lang = vim.treesitter.language.get_lang(vim.bo[args.buf].filetype)
+    if not lang then
+      return
+    end
+
+    local ok, parser_loaded = pcall(vim.treesitter.language.add, lang)
+    if not ok or not parser_loaded then
+      return
+    end
+
+    vim.treesitter.start(args.buf, lang)
+    vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
 })
 EOF
 " }}}
