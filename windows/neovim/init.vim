@@ -225,6 +225,7 @@ local plugins = {
         })
 
         vim.lsp.config("pyright", {
+          before_init = require("dotfiles.python").before_init,
           settings = {
             python = {
               analysis = {
@@ -820,14 +821,17 @@ local plugins = {
     {
       "linux-cultist/venv-selector.nvim",
       opts = {
-        debug = true,
-        enable_cached_venvs = false,
-        cached_venv_automatic_activation = false,
-        activate_venv_in_terminal = false,
-        notify_user_on_venv_activation = true,
+        options = {
+          enable_cached_venvs = true,
+          cached_venv_automatic_activation = true,
+          activate_venv_in_terminal = false,
+          notify_user_on_venv_activation = true,
+          -- Noice owns vim.notify; use it without replacing its handler.
+          override_notify = false,
+        },
       },
       ft = { "python" },
-      cmd = { "VenvInfo", "VenvDeactivate", "VenvSelect", "VenvSelectCached" },
+      cmd = { "VenvInfo", "VenvDeactivate", "VenvSelect" },
       config = function(_, opts)
         local venv = require("venv-selector")
         venv.setup(opts)
