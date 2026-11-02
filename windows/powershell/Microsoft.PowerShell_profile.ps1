@@ -29,6 +29,17 @@ function tis {
     tig status @args
 }
 
+# Start Claude Code in Tokyo time and restore the shell's timezone afterwards.
+function claude {
+    $previousTZ = $env:TZ
+    try {
+        $env:TZ = 'Asia/Tokyo'
+        & "$HOME\.local\bin\claude.exe" @args
+    } finally {
+        $env:TZ = $previousTZ
+    }
+}
+
 # PSReadLine: history search, predictions, and an ergonomic editing baseline.
 Import-Module PSReadLine
 Set-PSReadLineOption -EditMode Emacs
